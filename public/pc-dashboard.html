@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>Program Coordinator Dashboard</title>
+</head>
+
+<body>
+
+<h2>Daily MIS Monitoring</h2>
+
+<table border="1" id="dashboard">
+
+<tr>
+<th>Yellow Room</th>
+<th>Date</th>
+<th>Sessions Logged</th>
+<th>Status</th>
+</tr>
+
+</table>
+
+<script>
+
+async function loadDashboard(){
+
+const res = await fetch("/pc-dashboard-data");
+const data = await res.json();
+
+const table = document.getElementById("dashboard");
+
+data.forEach(r => {
+
+let row = table.insertRow();
+
+row.insertCell(0).innerText = r.yellow_room;
+row.insertCell(1).innerText = r.date;
+row.insertCell(2).innerText = r.sessions_logged;
+
+let statusCell = row.insertCell(3);
+statusCell.innerText = r.status;
+
+if(r.status === "Missing"){
+statusCell.style.color = "red";
+}
+
+if(r.status === "Partial"){
+statusCell.style.color = "orange";
+}
+
+if(r.status === "Complete"){
+statusCell.style.color = "green";
+}
+
+});
+
+}
+
+loadDashboard();
+
+</script>
+
+</body>
+
+</html>

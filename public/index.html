@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>Yellow Room MIS</title>
+
+<link href="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/css/tom-select.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js"></script>
+
+</head>
+
+<body>
+
+<h2>Daily Lesson Entry</h2>
+
+<input type="text" id="educator" placeholder="Educator Name"><br><br>
+
+<input type="date" id="date"><br><br>
+
+<select id="room">
+
+<option value="">Select Yellow Room</option>
+
+<option>Abhay Nagar</option>
+<option>Bahadurpur</option>
+<option>Badi kalan</option>
+<option>Beniganj</option>
+<option>Bhadrukh</option>
+<option>Bhitauli Khurd</option>
+<option>Chinhat</option>
+<option>Garden Bay</option>
+<option>Gandhi Nagar</option>
+<option>Hans kheda</option>
+<option>Hardasi Kheda</option>
+<option>Hasanpur Khewali</option>
+<option>Hussainganj</option>
+<option>Ismailganj</option>
+<option>Jarhara</option>
+<option>Jodaura</option>
+<option>Jugguar</option>
+<option>Jyotishah Alampur</option>
+<option>Kalli Paschim</option>
+<option>Kashyap Nagar</option>
+<option>Kaudiyamau</option>
+<option>Khazoor Gaon</option>
+<option>Kumharan</option>
+<option>Kutubpur</option>
+<option>Laulai</option>
+<option>Macchli Mohal</option>
+<option>Mahmoodpur</option>
+<option>Malhaur</option>
+<option>Mannat</option>
+<option>Matiyari</option>
+<option>Meesa</option>
+<option>Mozzam Nagar</option>
+<option>Munshipulia</option>
+<option>Nanda Kheda</option>
+<option>Nat Kheda</option>
+<option>Noida Sec 122</option>
+<option>Noida Sec 17</option>
+<option>One world</option>
+<option>Pani Gaon</option>
+<option>Ram Das Hata</option>
+<option>Ram Nagar</option>
+<option>Roshanabad</option>
+<option>Sandauli</option>
+<option>Sikandar Nagar</option>
+<option>Sitarasoi</option>
+<option>Tindola</option>
+<option>Ujariyaon</option>
+<option>Vishundaspur</option>
+
+</select>
+
+<br><br>
+
+<select id="daySelect">
+<option value="">Select Day</option>
+<option value="1">Day 1</option>
+<option value="2">Day 2</option>
+<option value="3">Day 3</option>
+</select>
+
+<button onclick="loadDay()">Load Day</button>
+
+<br><br>
+
+<table border="1" id="dailyTable">
+
+<tr>
+<th>Batch</th>
+<th>Slot</th>
+<th>Subject</th>
+<th>Chapter</th>
+<th>Index</th>
+<th>Lesson</th>
+</tr>
+
+</table>
+
+<br>
+
+<button onclick="saveDay()">Save Full Day</button>
+
+
+<script>
+
+document.getElementById("date").value=new Date().toISOString().split("T")[0];
+
+new TomSelect("#room");
+
+async function loadDay(){
+
+const day=document.getElementById("daySelect").value;
+
+const res=await fetch(`/day-plan/${day}`);
+const data=await res.json();
+
+const table=document.getElementById("dailyTable");
+
+table.innerHTML=`
+<tr>
+<th>Batch</th>
+<th>Slot</th>
+<th>Subject</th>
+<th>Chapter</th>
+<th>Index</th>
+<th>Lesson</th>
+</tr>
+`;
+
+for(const d of data){
+
+let row=table.insertRow();
+
+row.insertCell(0).innerText=d.batch;
+row.insertCell(1).innerText=d.slot_number;
+row.insertCell(2).innerText=d.subject;
+
+let chapterCell=row.insertCell(3);
+let indexCell=row.insertCell(4);
+let titleCell=row.insertCell(5);
+
+let chapter=document.createElement("select");
+let index=document.createElement("select");
+
+chapterCell.appendChild(chapter);
+indexCell.appendChild(index);
+
+const chRes=await fetch(`/chapters/${d.batch}/${d.subject}`);
+const chapters=await chRes.json();
+
+chapter.innerHTML="<option>Select Chapter</option>";
+
+chapters.forEach(c=>{
+chapter.innerHTML+=`<option value="${c.chapter_name}">${c.chapter_name}</option>`;
+});
+
+chapter.addEventListener("change",async ()=>{
+
+const ch=chapter.value;
+
+const indRes=await fetch(`/indexes/${d.batch}/${d.subject}/${encodeURIComponent(ch)}`);
+const indexes=await indRes.json();
+
+index.innerHTML="<option>Select Index</option>";
+
+indexes.forEach(i=>{
+index.innerHTML+=`<option value="${i.index_code}">${i.index_code}</option>`;
+});
+
+index.addEventListener("change",async ()=>{
+
+const code=index.value;
+
+const res=await fetch(`/lesson/${code}`);
+const data=await res.json();
+
+titleCell.innerText=data.lesson_plan_title;
+
+});
+
+});
+
+}
+
+}
+
+
+async function saveDay(){
+
+const rows=document.querySelectorAll("#dailyTable tr");
+
+const educator=document.getElementById("educator").value;
+const date=document.getElementById("date").value;
+const room=document.getElementById("room").value;
+
+for(let i=1;i<rows.length;i++){
+
+const cells=rows[i].cells;
+
+const payload={
+
+educator_name:educator,
+level:cells[0].innerText,
+slot_number:cells[1].innerText,
+subject:cells[2].innerText,
+chapter_name:cells[3].querySelector("select").value,
+index_code:cells[4].querySelector("select").value,
+session_date:date,
+yellow_room:room
+
+};
+
+await fetch("/add-session",{
+
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify(payload)
+
+});
+
+}
+
+alert("Saved");
+
+}
+
+</script>
+
+</body>
+
+</html>
