@@ -21,9 +21,18 @@ pool.connect()
 
 
 // =============================
+// HOME ROUTE (optional)
+// =============================
+app.get("/", (req, res) => {
+  res.send("NGO MIS API is running");
+});
+
+
+// =============================
 // GET CHAPTERS
 // =============================
 app.get("/chapters/:batch/:subject", async (req,res)=>{
+try{
 
 const {batch,subject}=req.params;
 
@@ -39,6 +48,10 @@ ORDER BY chapter_name
 
 res.json(result.rows);
 
+}catch(error){
+console.error(error);
+res.status(500).json({error:"Server error"});
+}
 });
 
 
@@ -46,6 +59,7 @@ res.json(result.rows);
 // GET INDEX CODES
 // =============================
 app.get("/indexes/:batch/:subject/:chapter", async (req,res)=>{
+try{
 
 const {batch,subject,chapter}=req.params;
 
@@ -63,6 +77,10 @@ ORDER BY index_code
 
 res.json(result.rows);
 
+}catch(error){
+console.error(error);
+res.status(500).json({error:"Server error"});
+}
 });
 
 
@@ -70,6 +88,7 @@ res.json(result.rows);
 // GET LESSON TITLE
 // =============================
 app.get("/lesson/:code", async (req,res)=>{
+try{
 
 const {code}=req.params;
 
@@ -82,15 +101,24 @@ WHERE index_code=$1
 [code]
 );
 
+if(result.rows.length===0){
+  return res.status(404).json({error:"Lesson not found"});
+}
+
 res.json(result.rows[0]);
 
+}catch(error){
+console.error(error);
+res.status(500).json({error:"Server error"});
+}
 });
 
 
 // =============================
-// GET TIMETABLE
+// GET TIMETABLE (OLD - optional)
 // =============================
 app.get("/day-plan/:day", async (req,res)=>{
+try{
 
 const {day}=req.params;
 
@@ -106,6 +134,37 @@ ORDER BY batch,slot_number
 
 res.json(result.rows);
 
+}catch(error){
+console.error(error);
+res.status(500).json({error:"Server error"});
+}
+});
+
+
+// =============================
+// GET TIMETABLE (NEW - WEEK + DAY)
+// =============================
+app.get("/day-plan/:week/:day", async (req,res)=>{
+try{
+
+const {week, day} = req.params;
+
+const result = await pool.query(
+`
+SELECT *
+FROM yellow_room_timetable
+WHERE week_number=$1 AND day_number=$2
+ORDER BY batch, slot_number
+`,
+[week, day]
+);
+
+res.json(result.rows);
+
+}catch(error){
+console.error(error);
+res.status(500).json({error:"Server error"});
+}
 });
 
 
@@ -113,6 +172,7 @@ res.json(result.rows);
 // SAVE SESSION ENTRY
 // =============================
 app.post("/add-session", async (req,res)=>{
+try{
 
 const {
 educator_name,
@@ -145,6 +205,10 @@ slot_number
 
 res.json({message:"saved"});
 
+}catch(error){
+console.error(error);
+res.status(500).json({error:"Server error"});
+}
 });
 
 
@@ -152,13 +216,12 @@ res.json({message:"saved"});
 // PROGRAM COORDINATOR DASHBOARD
 // =============================
 app.get("/pc-dashboard-data", async (req,res)=>{
-
 try{
 
 const result = await pool.query(`
 SELECT 
 y.yellow_room,
-CURRENT_DATE AS date,
+TO_CHAR(CURRENT_DATE, 'DD-MM-YYYY') AS date,
 COUNT(s.id) AS sessions_logged,
 
 CASE
@@ -180,12 +243,9 @@ ORDER BY y.yellow_room
 res.json(result.rows);
 
 }catch(error){
-
 console.error(error);
 res.status(500).json({error:"Server error"});
-
 }
-
 });
 
 
