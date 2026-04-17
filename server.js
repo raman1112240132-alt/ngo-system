@@ -8,6 +8,8 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
+
+// 🔥 THIS SERVES YOUR MIS UI
 app.use(express.static("public"));
 
 const pool = new Pool({
@@ -21,9 +23,9 @@ pool.connect()
 
 
 // =============================
-// HOME ROUTE (optional)
+// OPTIONAL API CHECK ROUTE
 // =============================
-app.get("/", (req, res) => {
+app.get("/api", (req, res) => {
   res.send("NGO MIS API is running");
 });
 
@@ -115,7 +117,7 @@ res.status(500).json({error:"Server error"});
 
 
 // =============================
-// GET TIMETABLE (OLD - optional)
+// GET TIMETABLE (OLD)
 // =============================
 app.get("/day-plan/:day", async (req,res)=>{
 try{
@@ -142,7 +144,7 @@ res.status(500).json({error:"Server error"});
 
 
 // =============================
-// GET TIMETABLE (NEW - WEEK + DAY)
+// GET TIMETABLE (NEW WEEK + DAY)
 // =============================
 app.get("/day-plan/:week/:day", async (req,res)=>{
 try{
