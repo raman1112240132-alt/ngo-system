@@ -1,8 +1,9 @@
 <!DOCTYPE html>
+
 <html>
 
 <head>
-<title>Yellow Room MIS</title>
+<title>YR Lesson Plan MIS</title>
 
 <link href="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/css/tom-select.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js"></script>
@@ -11,14 +12,14 @@
 
 <body>
 
-<h2>Daily Lesson Entry</h2>
+<h2>YR Lesson Plan MIS</h2>
+<h4>Daily Session Tracking System</h4>
 
 <input type="text" id="educator" placeholder="Educator Name"><br><br>
 
 <input type="date" id="date"><br><br>
 
 <select id="room">
-
 <option value="">Select Yellow Room</option>
 
 <option>Abhay Nagar</option>
@@ -74,11 +75,24 @@
 
 <br><br>
 
+<select id="weekSelect">
+<option value="">Select Week</option>
+<option value="1">Week 1</option>
+<option value="2">Week 2</option>
+<option value="3">Week 3</option>
+<option value="4">Week 4</option>
+</select>
+
+<br><br>
+
 <select id="daySelect">
 <option value="">Select Day</option>
 <option value="1">Day 1</option>
 <option value="2">Day 2</option>
 <option value="3">Day 3</option>
+<option value="4">Day 4</option>
+<option value="5">Day 5</option>
+<option value="6">Day 6</option>
 </select>
 
 <button onclick="loadDay()">Load Day</button>
@@ -102,7 +116,6 @@
 
 <button onclick="saveDay()">Save Full Day</button>
 
-
 <script>
 
 document.getElementById("date").value=new Date().toISOString().split("T")[0];
@@ -111,9 +124,10 @@ new TomSelect("#room");
 
 async function loadDay(){
 
+const week=document.getElementById("weekSelect").value;
 const day=document.getElementById("daySelect").value;
 
-const res=await fetch(`/day-plan/${day}`);
+const res=await fetch(`/day-plan/${week}/${day}`);
 const data=await res.json();
 
 const table=document.getElementById("dailyTable");
@@ -222,7 +236,7 @@ body:JSON.stringify(payload)
 
 }
 
-alert("Saved");
+alert("Saved Successfully");
 
 }
 
