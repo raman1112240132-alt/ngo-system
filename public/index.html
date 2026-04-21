@@ -127,8 +127,26 @@ async function loadDay(){
 const week=document.getElementById("weekSelect").value;
 const day=document.getElementById("daySelect").value;
 
+if(!week || !day){
+alert("Please select Week and Day");
+return;
+}
+
+try{
+
 const res=await fetch(`/day-plan/${week}/${day}`);
+
+if(!res.ok){
+alert("Server error");
+return;
+}
+
 const data=await res.json();
+
+if(data.length===0){
+alert("No data found for selected week/day");
+return;
+}
 
 const table=document.getElementById("dailyTable");
 
@@ -190,12 +208,17 @@ const code=index.value;
 const res=await fetch(`/lesson/${code}`);
 const data=await res.json();
 
-titleCell.innerText=data.lesson_plan_title;
+titleCell.innerText=data.lesson_plan_title || "No title";
 
 });
 
 });
 
+}
+
+}catch(error){
+console.error(error);
+alert("Error loading timetable");
 }
 
 }
@@ -208,6 +231,11 @@ const rows=document.querySelectorAll("#dailyTable tr");
 const educator=document.getElementById("educator").value;
 const date=document.getElementById("date").value;
 const room=document.getElementById("room").value;
+
+if(!educator || !room){
+alert("Please fill Educator and Room");
+return;
+}
 
 for(let i=1;i<rows.length;i++){
 
