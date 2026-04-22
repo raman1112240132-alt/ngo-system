@@ -18,54 +18,54 @@
 <select id="room">
 <option value="">Select Yellow Room</option>
 
-<option>Abhay Nagar</option>
-<option>Bahadurpur</option>
-<option>Badi kalan</option>
-<option>Beniganj</option>
-<option>Bhadrukh</option>
-<option>Bhitauli Khurd</option>
-<option>Chinhat</option>
-<option>Garden Bay</option>
-<option>Gandhi Nagar</option>
-<option>Hans kheda</option>
-<option>Hardasi Kheda</option>
-<option>Hasanpur Khewali</option>
-<option>Hussainganj</option>
-<option>Ismailganj</option>
-<option>Jarhara</option>
-<option>Jodaura</option>
-<option>Jugguar</option>
-<option>Jyotishah Alampur</option>
-<option>Kalli Paschim</option>
-<option>Kashyap Nagar</option>
-<option>Kaudiyamau</option>
-<option>Khazoor Gaon</option>
-<option>Kumharan</option>
-<option>Kutubpur</option>
-<option>Laulai</option>
-<option>Macchli Mohal</option>
-<option>Mahmoodpur</option>
-<option>Malhaur</option>
-<option>Mannat</option>
-<option>Matiyari</option>
-<option>Meesa</option>
-<option>Mozzam Nagar</option>
-<option>Munshipulia</option>
-<option>Nanda Kheda</option>
-<option>Nat Kheda</option>
-<option>Noida Sec 122</option>
-<option>Noida Sec 17</option>
-<option>One world</option>
-<option>Pani Gaon</option>
-<option>Ram Das Hata</option>
-<option>Ram Nagar</option>
-<option>Roshanabad</option>
-<option>Sandauli</option>
-<option>Sikandar Nagar</option>
-<option>Sitarasoi</option>
-<option>Tindola</option>
-<option>Ujariyaon</option>
-<option>Vishundaspur</option>
+<option value="Abhay Nagar">Abhay Nagar</option>
+<option value="Bahadurpur">Bahadurpur</option>
+<option value="Badi kalan">Badi kalan</option>
+<option value="Beniganj">Beniganj</option>
+<option value="Bhadrukh">Bhadrukh</option>
+<option value="Bhitauli Khurd">Bhitauli Khurd</option>
+<option value="Chinhat">Chinhat</option>
+<option value="Garden Bay">Garden Bay</option>
+<option value="Gandhi Nagar">Gandhi Nagar</option>
+<option value="Hans kheda">Hans kheda</option>
+<option value="Hardasi Kheda">Hardasi Kheda</option>
+<option value="Hasanpur Khewali">Hasanpur Khewali</option>
+<option value="Hussainganj">Hussainganj</option>
+<option value="Ismailganj">Ismailganj</option>
+<option value="Jarhara">Jarhara</option>
+<option value="Jodaura">Jodaura</option>
+<option value="Jugguar">Jugguar</option>
+<option value="Jyotishah Alampur">Jyotishah Alampur</option>
+<option value="Kalli Paschim">Kalli Paschim</option>
+<option value="Kashyap Nagar">Kashyap Nagar</option>
+<option value="Kaudiyamau">Kaudiyamau</option>
+<option value="Khazoor Gaon">Khazoor Gaon</option>
+<option value="Kumharan">Kumharan</option>
+<option value="Kutubpur">Kutubpur</option>
+<option value="Laulai">Laulai</option>
+<option value="Macchli Mohal">Macchli Mohal</option>
+<option value="Mahmoodpur">Mahmoodpur</option>
+<option value="Malhaur">Malhaur</option>
+<option value="Mannat">Mannat</option>
+<option value="Matiyari">Matiyari</option>
+<option value="Meesa">Meesa</option>
+<option value="Mozzam Nagar">Mozzam Nagar</option>
+<option value="Munshipulia">Munshipulia</option>
+<option value="Nanda Kheda">Nanda Kheda</option>
+<option value="Nat Kheda">Nat Kheda</option>
+<option value="Noida Sec 122">Noida Sec 122</option>
+<option value="Noida Sec 17">Noida Sec 17</option>
+<option value="One world">One world</option>
+<option value="Pani Gaon">Pani Gaon</option>
+<option value="Ram Das Hata">Ram Das Hata</option>
+<option value="Ram Nagar">Ram Nagar</option>
+<option value="Roshanabad">Roshanabad</option>
+<option value="Sandauli">Sandauli</option>
+<option value="Sikandar Nagar">Sikandar Nagar</option>
+<option value="Sitarasoi">Sitarasoi</option>
+<option value="Tindola">Tindola</option>
+<option value="Ujariyaon">Ujariyaon</option>
+<option value="Vishundaspur">Vishundaspur</option>
 
 </select>
 
@@ -80,53 +80,12 @@
 
 <br><br>
 
-<select id="weekSelect">
-<option value="">Select Week</option>
-<option value="1">Week 1</option>
-<option value="2">Week 2</option>
-<option value="3">Week 3</option>
-<option value="4">Week 4</option>
-</select>
-
-<br><br>
-
-<select id="daySelect">
-<option value="">Select Day</option>
-<option value="1">Day 1</option>
-<option value="2">Day 2</option>
-<option value="3">Day 3</option>
-<option value="4">Day 4</option>
-<option value="5">Day 5</option>
-<option value="6">Day 6</option>
-</select>
-
-<button onclick="loadDay()">Load Day</button>
-
-<br><br>
-
-<table border="1" id="dailyTable">
-<tr>
-<th>Batch</th>
-<th>Slot</th>
-<th>Subject</th>
-<th>Chapter</th>
-<th>Index</th>
-<th>Lesson</th>
-</tr>
-</table>
-
-<br>
-
-<button onclick="saveDay()">Save Full Day</button>
-
 <script>
-
-window.onload = function(){
 
 // AUTO DATE
 document.getElementById("date").value = new Date().toISOString().split("T")[0];
 
-// ROOM → TYPE MAPPING
+// MAPPING
 const roomTypeMapping = {
 "Abhay Nagar":"1-5 Years",
 "Bahadurpur":"1-5 Years",
@@ -181,14 +140,12 @@ const roomTypeMapping = {
 // AUTO FILL
 document.getElementById("room").addEventListener("change", function(){
 
-const room = this.value;
-const type = roomTypeMapping[room] || "";
+const selectedRoom = this.value;
+const type = roomTypeMapping[selectedRoom] || "";
 
 document.getElementById("roomType").value = type;
 
 });
-
-};
 
 </script>
 

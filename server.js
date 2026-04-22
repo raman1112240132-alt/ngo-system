@@ -215,47 +215,42 @@ res.status(500).json({error:"Server error"});
 
 
 // =============================
-// PROGRAM COORDINATOR DASHBOARD
+// PROGRAM COORDINATOR DASHBOARD (WITH DATE FILTER)
 // =============================
 app.get("/pc-dashboard-data", async (req,res)=>{
-try{
+  try{
 
-const result = await pool.query(`
-SELECT 
-y.yellow_room,
-TO_CHAR(CURRENT_DATE, 'DD-MM-YYYY') AS date,
-COUNT(s.id) AS sessions_logged,
+    const { date } = req.query;
 
-CASE
-WHEN COUNT(s.id) = 0 THEN 'Missing'
-WHEN COUNT(s.id) < 8 THEN 'Partial'
-ELSE 'Complete'
-END AS status
+    // If no date passed → use today
+    const selectedDate = date || new Date().toISOString().split("T")[0];
 
-FROM yellow_rooms y
+    const result = await pool.query(`
+      SELECT 
+      y.yellow_room,
+      TO_CHAR($1::date, 'DD-MM-YYYY') AS date,
+      COUNT(s.id) AS sessions_logged,
 
-LEFT JOIN session_entries s
-ON y.yellow_room = s.yellow_room
-AND s.session_date = CURRENT_DATE
+      CASE
+      WHEN COUNT(s.id) = 0 THEN 'Missing'
+      WHEN COUNT(s.id) < 8 THEN 'Partial'
+      ELSE 'Complete'
+      END AS status
 
-GROUP BY y.yellow_room
-ORDER BY y.yellow_room
-`);
+      FROM yellow_rooms y
 
-res.json(result.rows);
+      LEFT JOIN session_entries s
+      ON y.yellow_room = s.yellow_room
+      AND s.session_date = $1
 
-}catch(error){
-console.error(error);
-res.status(500).json({error:"Server error"});
-}
-});
+      GROUP BY y.yellow_room
+      ORDER BY y.yellow_room
+    `, [selectedDate]);
 
+    res.json(result.rows);
 
-// =============================
-// START SERVER
-// =============================
-const PORT=process.env.PORT||5000;
-
-app.listen(PORT,()=>{
-console.log("Server running on port "+PORT);
+  }catch(error){
+    console.error(error);
+    res.status(500).json({error:"Server error"});
+  }
 });
