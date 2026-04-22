@@ -2,14 +2,37 @@
 <html>
 
 <head>
-<title>PC Dashboard</title>
+<title>Program Coordinator Dashboard</title>
 </head>
 
 <body>
 
-<h2>Program Coordinator Dashboard</h2>
+<h2>📊 Daily MIS Monitoring</h2>
 
-<table border="1" id="dashboardTable">
+<!-- FILTERS -->
+<label>Date:</label>
+<input type="date" id="filterDate">
+
+<label>Room Type:</label>
+<select id="filterType">
+<option value="">All</option>
+<option value="1-5 Years">1-5 Years</option>
+<option value="5-10 Years">5-10 Years</option>
+<option value="10-15 Years">10-15 Years</option>
+</select>
+
+<button onclick="loadDashboard()">Load</button>
+
+<br><br>
+
+<!-- SUMMARY -->
+<h3>Summary</h3>
+<p id="summary"></p>
+
+<br>
+
+<!-- TABLE -->
+<table border="1" id="dashboard">
 
 <tr>
 <th>Yellow Room</th>
@@ -22,39 +45,126 @@
 
 <script>
 
+// 🔥 SAME MAPPING USED IN MIS
+const roomTypeMapping = {
+"Abhay Nagar":"1-5 Years",
+"Bahadurpur":"1-5 Years",
+"Badi kalan":"1-5 Years",
+"Beniganj":"1-5 Years",
+"Bhadrukh":"1-5 Years",
+"Bhitauli Khurd":"1-5 Years",
+"Chinhat":"10-15 Years",
+"Garden Bay":"1-5 Years",
+"Gandhi Nagar":"1-5 Years",
+"Hans kheda":"1-5 Years",
+"Hardasi Kheda":"1-5 Years",
+"Hasanpur Khewali":"1-5 Years",
+"Hussainganj":"1-5 Years",
+"Ismailganj":"5-10 Years",
+"Jarhara":"1-5 Years",
+"Jodaura":"1-5 Years",
+"Jugguar":"1-5 Years",
+"Jyotishah Alampur":"1-5 Years",
+"Kalli Paschim":"1-5 Years",
+"Kashyap Nagar":"1-5 Years",
+"Kaudiyamau":"1-5 Years",
+"Khazoor Gaon":"1-5 Years",
+"Kumharan":"1-5 Years",
+"Kutubpur":"1-5 Years",
+"Laulai":"1-5 Years",
+"Macchli Mohal":"1-5 Years",
+"Mahmoodpur":"1-5 Years",
+"Malhaur":"10-15 Years",
+"Mannat":"1-5 Years",
+"Matiyari":"1-5 Years",
+"Meesa":"1-5 Years",
+"Mozzam Nagar":"1-5 Years",
+"Munshipulia":"10-15 Years",
+"Nanda Kheda":"1-5 Years",
+"Nat Kheda":"1-5 Years",
+"Noida Sec 122":"1-5 Years",
+"Noida Sec 17":"1-5 Years",
+"One world":"1-5 Years",
+"Pani Gaon":"1-5 Years",
+"Ram Das Hata":"1-5 Years",
+"Ram Nagar":"1-5 Years",
+"Roshanabad":"1-5 Years",
+"Sandauli":"1-5 Years",
+"Sikandar Nagar":"1-5 Years",
+"Sitarasoi":"1-5 Years",
+"Tindola":"1-5 Years",
+"Ujariyaon":"1-5 Years",
+"Vishundaspur":"1-5 Years"
+};
+
+// DEFAULT DATE
+document.getElementById("filterDate").value =
+new Date().toISOString().split("T")[0];
+
 async function loadDashboard(){
 
-const res = await fetch("/pc-dashboard-data");
+const date = document.getElementById("filterDate").value;
+const selectedType = document.getElementById("filterType").value;
+
+const res = await fetch(`/pc-dashboard-data?date=${date}`);
 const data = await res.json();
 
-const table = document.getElementById("dashboardTable");
+const table = document.getElementById("dashboard");
 
-data.forEach(d => {
+// RESET TABLE
+table.innerHTML = `
+<tr>
+<th>Yellow Room</th>
+<th>Date</th>
+<th>Sessions Logged</th>
+<th>Status</th>
+</tr>
+`;
+
+// SUMMARY COUNTERS
+let total = 0;
+let complete = 0;
+let partial = 0;
+let missing = 0;
+
+data.forEach(r => {
+
+const roomType = roomTypeMapping[r.yellow_room] || "";
+
+// 🔥 FILTER LOGIC
+if(selectedType && roomType !== selectedType){
+return;
+}
+
+total++;
+
+if(r.status === "Complete") complete++;
+if(r.status === "Partial") partial++;
+if(r.status === "Missing") missing++;
 
 let row = table.insertRow();
 
-row.insertCell(0).innerText = d.yellow_room;
-row.insertCell(1).innerText = d.date;
-row.insertCell(2).innerText = d.sessions_logged;
+row.insertCell(0).innerText = r.yellow_room;
+row.insertCell(1).innerText = r.date;
+row.insertCell(2).innerText = r.sessions_logged;
 
 let statusCell = row.insertCell(3);
-statusCell.innerText = d.status;
+statusCell.innerText = r.status;
 
-// 🎨 COLOR LOGIC
-if(d.status === "Complete"){
-statusCell.style.color = "green";
-}
-else if(d.status === "Partial"){
-statusCell.style.color = "orange";
-}
-else{
-statusCell.style.color = "red";
-}
+// COLOR
+if(r.status === "Missing") statusCell.style.color = "red";
+if(r.status === "Partial") statusCell.style.color = "orange";
+if(r.status === "Complete") statusCell.style.color = "green";
 
 });
 
+// UPDATE SUMMARY
+document.getElementById("summary").innerText =
+`Total: ${total} | Complete: ${complete} | Partial: ${partial} | Missing: ${missing}`;
+
 }
 
+// LOAD DEFAULT
 loadDashboard();
 
 </script>
