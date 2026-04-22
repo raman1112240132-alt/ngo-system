@@ -75,6 +75,19 @@
 
 <br><br>
 
+<!-- ✅ UPDATED ROOM TYPE -->
+
+<select id="roomType">
+<option value="">Select Yellow Room Type</option>
+<option value="0 Years Old">0 Years Old</option>
+<option value="1-5 Years Old">1-5 Years Old</option>
+<option value="5-10 Years Old">5-10 Years Old</option>
+<option value="10+ Years Old">10+ Years Old</option>
+<option value="Shalimar Sites">Shalimar Sites</option>
+</select>
+
+<br><br>
+
 <select id="weekSelect">
 <option value="">Select Week</option>
 <option value="1">Week 1</option>
@@ -124,11 +137,13 @@ new TomSelect("#room");
 
 async function loadDay(){
 
+const room=document.getElementById("room").value;
+const roomType=document.getElementById("roomType").value;
 const week=document.getElementById("weekSelect").value;
 const day=document.getElementById("daySelect").value;
 
-if(!week || !day){
-alert("Please select Week and Day");
+if(!room || !roomType || !week || !day){
+alert("Please fill all fields");
 return;
 }
 
@@ -144,7 +159,7 @@ return;
 const data=await res.json();
 
 if(data.length===0){
-alert("No data found for selected week/day");
+alert("No data found");
 return;
 }
 
@@ -231,9 +246,10 @@ const rows=document.querySelectorAll("#dailyTable tr");
 const educator=document.getElementById("educator").value;
 const date=document.getElementById("date").value;
 const room=document.getElementById("room").value;
+const roomType=document.getElementById("roomType").value;
 
-if(!educator || !room){
-alert("Please fill Educator and Room");
+if(!educator || !room || !roomType){
+alert("Please fill all details");
 return;
 }
 
@@ -250,7 +266,8 @@ subject:cells[2].innerText,
 chapter_name:cells[3].querySelector("select").value,
 index_code:cells[4].querySelector("select").value,
 session_date:date,
-yellow_room:room
+yellow_room:room,
+yellow_room_type:roomType
 
 };
 
