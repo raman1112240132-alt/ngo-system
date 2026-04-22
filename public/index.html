@@ -4,10 +4,6 @@
 
 <head>
 <title>YR Lesson Plan MIS</title>
-
-<link href="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/css/tom-select.css" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js"></script>
-
 </head>
 
 <body>
@@ -75,15 +71,11 @@
 
 <br><br>
 
-<!-- ✅ UPDATED ROOM TYPE -->
-
 <select id="roomType">
-<option value="">Select Yellow Room Type</option>
-<option value="0 Years Old">0 Years Old</option>
-<option value="1-5 Years Old">1-5 Years Old</option>
-<option value="5-10 Years Old">5-10 Years Old</option>
-<option value="10+ Years Old">10+ Years Old</option>
-<option value="Shalimar Sites">Shalimar Sites</option>
+<option value="">Auto Filled</option>
+<option value="1-5 Years">1-5 Years</option>
+<option value="5-10 Years">5-10 Years</option>
+<option value="10-15 Years">10-15 Years</option>
 </select>
 
 <br><br>
@@ -113,7 +105,6 @@
 <br><br>
 
 <table border="1" id="dailyTable">
-
 <tr>
 <th>Batch</th>
 <th>Slot</th>
@@ -122,7 +113,6 @@
 <th>Index</th>
 <th>Lesson</th>
 </tr>
-
 </table>
 
 <br>
@@ -131,159 +121,74 @@
 
 <script>
 
-document.getElementById("date").value=new Date().toISOString().split("T")[0];
+window.onload = function(){
 
-new TomSelect("#room");
+// AUTO DATE
+document.getElementById("date").value = new Date().toISOString().split("T")[0];
 
-async function loadDay(){
-
-const room=document.getElementById("room").value;
-const roomType=document.getElementById("roomType").value;
-const week=document.getElementById("weekSelect").value;
-const day=document.getElementById("daySelect").value;
-
-if(!room || !roomType || !week || !day){
-alert("Please fill all fields");
-return;
-}
-
-try{
-
-const res=await fetch(`/day-plan/${week}/${day}`);
-
-if(!res.ok){
-alert("Server error");
-return;
-}
-
-const data=await res.json();
-
-if(data.length===0){
-alert("No data found");
-return;
-}
-
-const table=document.getElementById("dailyTable");
-
-table.innerHTML=`
-<tr>
-<th>Batch</th>
-<th>Slot</th>
-<th>Subject</th>
-<th>Chapter</th>
-<th>Index</th>
-<th>Lesson</th>
-</tr>
-`;
-
-for(const d of data){
-
-let row=table.insertRow();
-
-row.insertCell(0).innerText=d.batch;
-row.insertCell(1).innerText=d.slot_number;
-row.insertCell(2).innerText=d.subject;
-
-let chapterCell=row.insertCell(3);
-let indexCell=row.insertCell(4);
-let titleCell=row.insertCell(5);
-
-let chapter=document.createElement("select");
-let index=document.createElement("select");
-
-chapterCell.appendChild(chapter);
-indexCell.appendChild(index);
-
-const chRes=await fetch(`/chapters/${d.batch}/${d.subject}`);
-const chapters=await chRes.json();
-
-chapter.innerHTML="<option>Select Chapter</option>";
-
-chapters.forEach(c=>{
-chapter.innerHTML+=`<option value="${c.chapter_name}">${c.chapter_name}</option>`;
-});
-
-chapter.addEventListener("change",async ()=>{
-
-const ch=chapter.value;
-
-const indRes=await fetch(`/indexes/${d.batch}/${d.subject}/${encodeURIComponent(ch)}`);
-const indexes=await indRes.json();
-
-index.innerHTML="<option>Select Index</option>";
-
-indexes.forEach(i=>{
-index.innerHTML+=`<option value="${i.index_code}">${i.index_code}</option>`;
-});
-
-index.addEventListener("change",async ()=>{
-
-const code=index.value;
-
-const res=await fetch(`/lesson/${code}`);
-const data=await res.json();
-
-titleCell.innerText=data.lesson_plan_title || "No title";
-
-});
-
-});
-
-}
-
-}catch(error){
-console.error(error);
-alert("Error loading timetable");
-}
-
-}
-
-
-async function saveDay(){
-
-const rows=document.querySelectorAll("#dailyTable tr");
-
-const educator=document.getElementById("educator").value;
-const date=document.getElementById("date").value;
-const room=document.getElementById("room").value;
-const roomType=document.getElementById("roomType").value;
-
-if(!educator || !room || !roomType){
-alert("Please fill all details");
-return;
-}
-
-for(let i=1;i<rows.length;i++){
-
-const cells=rows[i].cells;
-
-const payload={
-
-educator_name:educator,
-level:cells[0].innerText,
-slot_number:cells[1].innerText,
-subject:cells[2].innerText,
-chapter_name:cells[3].querySelector("select").value,
-index_code:cells[4].querySelector("select").value,
-session_date:date,
-yellow_room:room,
-yellow_room_type:roomType
-
+// ROOM → TYPE MAPPING
+const roomTypeMapping = {
+"Abhay Nagar":"1-5 Years",
+"Bahadurpur":"1-5 Years",
+"Badi kalan":"1-5 Years",
+"Beniganj":"1-5 Years",
+"Bhadrukh":"1-5 Years",
+"Bhitauli Khurd":"1-5 Years",
+"Chinhat":"10-15 Years",
+"Garden Bay":"1-5 Years",
+"Gandhi Nagar":"1-5 Years",
+"Hans kheda":"1-5 Years",
+"Hardasi Kheda":"1-5 Years",
+"Hasanpur Khewali":"1-5 Years",
+"Hussainganj":"1-5 Years",
+"Ismailganj":"5-10 Years",
+"Jarhara":"1-5 Years",
+"Jodaura":"1-5 Years",
+"Jugguar":"1-5 Years",
+"Jyotishah Alampur":"1-5 Years",
+"Kalli Paschim":"1-5 Years",
+"Kashyap Nagar":"1-5 Years",
+"Kaudiyamau":"1-5 Years",
+"Khazoor Gaon":"1-5 Years",
+"Kumharan":"1-5 Years",
+"Kutubpur":"1-5 Years",
+"Laulai":"1-5 Years",
+"Macchli Mohal":"1-5 Years",
+"Mahmoodpur":"1-5 Years",
+"Malhaur":"10-15 Years",
+"Mannat":"1-5 Years",
+"Matiyari":"1-5 Years",
+"Meesa":"1-5 Years",
+"Mozzam Nagar":"1-5 Years",
+"Munshipulia":"10-15 Years",
+"Nanda Kheda":"1-5 Years",
+"Nat Kheda":"1-5 Years",
+"Noida Sec 122":"1-5 Years",
+"Noida Sec 17":"1-5 Years",
+"One world":"1-5 Years",
+"Pani Gaon":"1-5 Years",
+"Ram Das Hata":"1-5 Years",
+"Ram Nagar":"1-5 Years",
+"Roshanabad":"1-5 Years",
+"Sandauli":"1-5 Years",
+"Sikandar Nagar":"1-5 Years",
+"Sitarasoi":"1-5 Years",
+"Tindola":"1-5 Years",
+"Ujariyaon":"1-5 Years",
+"Vishundaspur":"1-5 Years"
 };
 
-await fetch("/add-session",{
+// AUTO FILL
+document.getElementById("room").addEventListener("change", function(){
 
-method:"POST",
-headers:{"Content-Type":"application/json"},
-body:JSON.stringify(payload)
+const room = this.value;
+const type = roomTypeMapping[room] || "";
+
+document.getElementById("roomType").value = type;
 
 });
 
-}
-
-alert("Saved Successfully");
-
-}
+};
 
 </script>
 
