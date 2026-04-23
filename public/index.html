@@ -127,6 +127,24 @@
 document.getElementById("date").value =
 new Date().toISOString().split("T")[0];
 
+// SORT YELLOW ROOMS A→Z
+function sortDropdown(){
+
+const dropdown = document.getElementById("room");
+
+let options = Array.from(dropdown.options).slice(1);
+
+options.sort((a,b) => a.text.localeCompare(b.text));
+
+dropdown.innerHTML = '<option value="">Select Yellow Room</option>';
+
+options.forEach(opt => dropdown.add(opt));
+
+}
+
+// CALL FUNCTION
+sortDropdown();
+
 // ROOM TYPE AUTO
 const roomTypeMapping = {
 "One world":"Shalimar Sites",
@@ -153,6 +171,23 @@ return [
 {batch:"Learners", subject:"Games"},
 {batch:"Advancers", subject:"Children Panchayat"}
 ];
+}
+
+// =============================
+// SORT YELLOW ROOMS A→Z
+// =============================
+function sortDropdown(){
+
+const dropdown = document.getElementById("room");
+
+let options = Array.from(dropdown.options).slice(1);
+
+options.sort((a,b) => a.text.localeCompare(b.text));
+
+dropdown.innerHTML = '<option value="">Select Yellow Room</option>';
+
+options.forEach(opt => dropdown.add(opt));
+
 }
 
 // LOAD DAY
