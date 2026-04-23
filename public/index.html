@@ -1,106 +1,111 @@
-<script>
 
-// AUTO DATE
-document.getElementById("date").value =
-new Date().toISOString().split("T")[0];
+<!DOCTYPE html>
 
-// =============================
-// ROOM TYPE AUTO
-// =============================
-const roomTypeMapping = {
+<html>
 
-"One world":"Shalimar Sites",
-"Garden Bay":"Shalimar Sites",
-"Mannat":"Shalimar Sites",
+<head>
+<title>YR Lesson Plan MIS</title>
+</head>
 
-"Chinhat":"10-15 Years",
-"Malhaur":"10-15 Years",
-"Munshipulia":"10-15 Years",
+<body>
 
-"Ismailganj":"5-10 Years"
+<h2>YR Lesson Plan MIS</h2>
+<h4>Daily Session Tracking System</h4>
 
-};
+<input type="text" id="educator" placeholder="Educator Name"><br><br>
 
-document.getElementById("room").addEventListener("change", function(){
+<input type="date" id="date"><br><br>
 
-const type = roomTypeMapping[this.value] || "1-5 Years";
-document.getElementById("roomType").value = type;
+<select id="room">
+<option value="">Select Yellow Room</option>
 
-});
+<option>Abhay Nagar</option>
+<option>Bahadurpur</option>
+<option>Badi kalan</option>
+<option>Beniganj</option>
+<option>Bhadrukh</option>
+<option>Bhitauli Khurd</option>
+<option>Chinhat</option>
+<option>Garden Bay</option>
+<option>Gandhi Nagar</option>
+<option>Hans kheda</option>
+<option>Hardasi Kheda</option>
+<option>Hasanpur Khewali</option>
+<option>Hussainganj</option>
+<option>Ismailganj</option>
+<option>Jarhara</option>
+<option>Jodaura</option>
+<option>Jugguar</option>
+<option>Jyotishah Alampur</option>
+<option>Kalli Paschim</option>
+<option>Kashyap Nagar</option>
+<option>Kaudiyamau</option>
+<option>Khazoor Gaon</option>
+<option>Kumharan</option>
+<option>Kutubpur</option>
+<option>Laulai</option>
+<option>Macchli Mohal</option>
+<option>Mahmoodpur</option>
+<option>Malhaur</option>
+<option>Mannat</option>
+<option>Matiyari</option>
+<option>Meesa</option>
+<option>Mozzam Nagar</option>
+<option>Munshipulia</option>
+<option>Nanda Kheda</option>
+<option>Nat Kheda</option>
+<option>Noida Sec 122</option>
+<option>Noida Sec 17</option>
+<option>One world</option>
+<option>Pani Gaon</option>
+<option>Ram Das Hata</option>
+<option>Ram Nagar</option>
+<option>Roshanabad</option>
+<option>Sandauli</option>
+<option>Sikandar Nagar</option>
+<option>Sitarasoi</option>
+<option>Tindola</option>
+<option>Ujariyaon</option>
+<option>Vishundaspur</option>
 
-// =============================
-// SPECIAL SUBJECTS (1/0)
-// =============================
-const specialSubjects = [
-"Games",
-"Library session",
-"Children Panchayat",
-"Animal Management",
-"Padho Padhao",
-"PTM"
-];
+</select>
 
-// =============================
-// SHALIMAR TIMETABLE
-// =============================
-function getShalimarDay(day){
+<br><br>
 
-return [
-{batch:"Tenderfeet", subject:"Linguistic"},
-{batch:"Learners", subject:"Maths"},
-{batch:"Advancers", subject:"Maths"},
+<select id="roomType">
+<option value="">Auto Filled</option>
+<option value="1-5 Years">1-5 Years</option>
+<option value="5-10 Years">5-10 Years</option>
+<option value="10-15 Years">10-15 Years</option>
+</select>
 
-{batch:"Learners", subject:"Library session"},
+<br><br>
 
-{batch:"Advancers", subject:"WHY"},
-{batch:"Advancers", subject:"GA"}
-];
+<select id="weekSelect">
+<option value="">Select Week</option>
+<option value="1">Week 1</option>
+<option value="2">Week 2</option>
+<option value="3">Week 3</option>
+<option value="4">Week 4</option>
+</select>
 
-}
+<br><br>
 
-// =============================
-// NORMAL TIMETABLE
-// =============================
-function getNormalDay(day){
+<select id="daySelect">
+<option value="">Select Day</option>
+<option value="1">Day 1</option>
+<option value="2">Day 2</option>
+<option value="3">Day 3</option>
+<option value="4">Day 4</option>
+<option value="5">Day 5</option>
+<option value="6">Day 6</option>
+</select>
 
-return [
-{batch:"Tenderfeet", subject:"Linguistic"},
-{batch:"Learners", subject:"Maths"},
-{batch:"Advancers", subject:"Maths"},
+<button onclick="loadDay()">Load Day</button>
 
-{batch:"Learners", subject:"Games"},
+<br><br>
 
-{batch:"Advancers", subject:"Children Panchayat"},
-{batch:"Advancers", subject:"Animal Management"}
-];
-
-}
-
-// =============================
-// LOAD DAY (FINAL WORKING)
-// =============================
-async function loadDay(){
-
-const day = parseInt(document.getElementById("daySelect").value);
-const type = document.getElementById("roomType").value;
-
-if(!day || !type){
-alert("Select Room Type & Day");
-return;
-}
-
-let data = [];
-
-if(type === "Shalimar Sites"){
-data = getShalimarDay(day);
-}else{
-data = getNormalDay(day);
-}
-
-const table = document.getElementById("dailyTable");
-
-// ✅ ONLY HEADER (NOT TABLE)
-table.innerHTML = `
+<table border="1" id="dailyTable">
 <tr>
 <th>Batch</th>
 <th>Subject</th>
@@ -108,64 +113,85 @@ table.innerHTML = `
 <th>Index</th>
 <th>Lesson</th>
 </tr>
-`;
+</table>
 
-// ADD ROWS
-for(let i=0;i<data.length;i++){
+<br>
 
-let d = data[i];
+<button onclick="saveDay()">Save Full Day</button>
 
-let row = table.insertRow();
+<script>
 
-row.insertCell(0).innerText = d.batch;
-row.insertCell(1).innerText = d.subject;
+window.onload = function(){
 
-let chapterCell = row.insertCell(2);
-let indexCell = row.insertCell(3);
-let lessonCell = row.insertCell(4);
+// AUTO DATE
+document.getElementById("date").value = new Date().toISOString().split("T")[0];
 
-// SPECIAL SUBJECT → 1/0
-if(specialSubjects.includes(d.subject)){
+// ROOM → TYPE MAPPING
+const roomTypeMapping = {
+"Abhay Nagar":"1-5 Years",
+"Bahadurpur":"1-5 Years",
+"Badi kalan":"1-5 Years",
+"Beniganj":"1-5 Years",
+"Bhadrukh":"1-5 Years",
+"Bhitauli Khurd":"1-5 Years",
+"Chinhat":"10-15 Years",
+"Garden Bay":"1-5 Years",
+"Gandhi Nagar":"1-5 Years",
+"Hans kheda":"1-5 Years",
+"Hardasi Kheda":"1-5 Years",
+"Hasanpur Khewali":"1-5 Years",
+"Hussainganj":"1-5 Years",
+"Ismailganj":"5-10 Years",
+"Jarhara":"1-5 Years",
+"Jodaura":"1-5 Years",
+"Jugguar":"1-5 Years",
+"Jyotishah Alampur":"1-5 Years",
+"Kalli Paschim":"1-5 Years",
+"Kashyap Nagar":"1-5 Years",
+"Kaudiyamau":"1-5 Years",
+"Khazoor Gaon":"1-5 Years",
+"Kumharan":"1-5 Years",
+"Kutubpur":"1-5 Years",
+"Laulai":"1-5 Years",
+"Macchli Mohal":"1-5 Years",
+"Mahmoodpur":"1-5 Years",
+"Malhaur":"10-15 Years",
+"Mannat":"1-5 Years",
+"Matiyari":"1-5 Years",
+"Meesa":"1-5 Years",
+"Mozzam Nagar":"1-5 Years",
+"Munshipulia":"10-15 Years",
+"Nanda Kheda":"1-5 Years",
+"Nat Kheda":"1-5 Years",
+"Noida Sec 122":"1-5 Years",
+"Noida Sec 17":"1-5 Years",
+"One world":"1-5 Years",
+"Pani Gaon":"1-5 Years",
+"Ram Das Hata":"1-5 Years",
+"Ram Nagar":"1-5 Years",
+"Roshanabad":"1-5 Years",
+"Sandauli":"1-5 Years",
+"Sikandar Nagar":"1-5 Years",
+"Sitarasoi":"1-5 Years",
+"Tindola":"1-5 Years",
+"Ujariyaon":"1-5 Years",
+"Vishundaspur":"1-5 Years"
+};
 
-let select = document.createElement("select");
+// AUTO FILL
+document.getElementById("room").addEventListener("change", function(){
 
-select.innerHTML = `
-<option value="">Select</option>
-<option value="1">1</option>
-<option value="0">0</option>
-`;
+const room = this.value;
+const type = roomTypeMapping[room] || "";
 
-chapterCell.appendChild(select);
-indexCell.innerText = "-";
-lessonCell.innerText = "-";
+document.getElementById("roomType").value = type;
 
-}
+});
 
-// NORMAL SUBJECT
-else{
-
-let chapter = document.createElement("select");
-let index = document.createElement("select");
-
-chapterCell.appendChild(chapter);
-indexCell.appendChild(index);
-
-chapter.innerHTML = "<option>Select Chapter</option>";
-index.innerHTML = "<option>Select Index</option>";
-
-lessonCell.innerText = "";
-
-}
-
-}
-
-}
-
-// =============================
-// SAVE
-// =============================
-async function saveDay(){
-alert("Saved Successfully");
-}
+};
 
 </script>
+
+</body>
+
+</html>
