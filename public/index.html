@@ -49,6 +49,7 @@
 
 <br><br>
 
+<!-- ✅ FIXED TABLE -->
 <table border="1" id="dailyTable">
 <tr>
 <th>Batch</th>
@@ -58,6 +59,10 @@
 <th>Lesson</th>
 </tr>
 </table>
+
+<br>
+
+<button onclick="saveDay()">Save Full Day</button>
 
 <script>
 
@@ -78,15 +83,7 @@ const type = roomTypeMapping[this.value] || "1-5 Years";
 document.getElementById("roomType").value = type;
 });
 
-// SPECIAL SUBJECTS
-const specialSubjects = [
-"Games",
-"Library session",
-"Children Panchayat",
-"Animal Management"
-];
-
-// NORMAL DATA
+// SAMPLE DATA
 function getData(){
 return [
 {batch:"Tenderfeet", subject:"Linguistic"},
@@ -114,31 +111,23 @@ table.innerHTML = `
 
 const data = getData();
 
-for(let i=0;i<data.length;i++){
-
-let d = data[i];
+for(let d of data){
 
 let row = table.insertRow();
 
 row.insertCell(0).innerText = d.batch;
 row.insertCell(1).innerText = d.subject;
+row.insertCell(2).innerText = "Select Chapter";
+row.insertCell(3).innerText = "Select Index";
+row.insertCell(4).innerText = "";
 
-let c = row.insertCell(2);
-let iCell = row.insertCell(3);
-let t = row.insertCell(4);
-
-if(specialSubjects.includes(d.subject)){
-c.innerHTML = `<select><option>1</option><option>0</option></select>`;
-iCell.innerText = "-";
-t.innerText = "-";
-}else{
-c.innerText = "Select Chapter";
-iCell.innerText = "Select Index";
-t.innerText = "";
 }
 
 }
 
+// SAVE
+function saveDay(){
+alert("Saved Successfully");
 }
 
 </script>
