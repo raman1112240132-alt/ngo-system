@@ -35,6 +35,16 @@
 
 <br><br>
 
+<select id="weekSelect">
+<option value="">Select Week</option>
+<option value="1">Week 1</option>
+<option value="2">Week 2</option>
+<option value="3">Week 3</option>
+<option value="4">Week 4</option>
+</select>
+
+<br><br>
+
 <select id="daySelect">
 <option value="">Select Day</option>
 <option value="1">Day 1</option>
@@ -97,6 +107,67 @@ return [
 // LOAD DAY
 function loadDay(){
 
+const week = parseInt(document.getElementById("weekSelect").value);
+const day = parseInt(document.getElementById("daySelect").value);
+const room = document.getElementById("room").value;
+let type = document.getElementById("roomType").value;
+
+// DEFAULT TYPE
+if(!type){
+type = "1-5 Years";
+}
+
+// VALIDATION (IMPROVED)
+if(!room){
+alert("Please select Yellow Room");
+return;
+}
+
+if(!week || !day){
+alert("Please select Week and Day");
+return;
+}
+
+// GLOBAL DAY (1–24)
+const globalDay = (week - 1) * 6 + day;
+
+// 🎯 REALISTIC STRUCTURE (not random now)
+let data = [];
+
+switch(globalDay){
+
+case 1:
+data = [
+{batch:"Tenderfeet", subject:"Linguistic"},
+{batch:"Learners", subject:"Maths"},
+{batch:"Advancers", subject:"Maths"}
+];
+break;
+
+case 2:
+data = [
+{batch:"Learners", subject:"EVS"},
+{batch:"Advancers", subject:"EVS"},
+{batch:"Learners", subject:"Yoga"}
+];
+break;
+
+case 3:
+data = [
+{batch:"Learners", subject:"Games"},
+{batch:"Advancers", subject:"Children Panchayat"}
+];
+break;
+
+default:
+data = [
+{batch:"Tenderfeet", subject:"Drawing"},
+{batch:"Learners", subject:"Maths"},
+{batch:"Advancers", subject:"Science"}
+];
+}
+
+// TABLE
 const table = document.getElementById("dailyTable");
 
 table.innerHTML = `
@@ -109,19 +180,23 @@ table.innerHTML = `
 </tr>
 `;
 
-const data = getData();
-
-for(let d of data){
+// ROWS
+data.forEach(d => {
 
 let row = table.insertRow();
 
 row.insertCell(0).innerText = d.batch;
 row.insertCell(1).innerText = d.subject;
-row.insertCell(2).innerText = "Select Chapter";
-row.insertCell(3).innerText = "Select Index";
+
+// INPUT FIELDS (better UX)
+row.insertCell(2).innerHTML = `<select><option>Select Chapter</option></select>`;
+row.insertCell(3).innerHTML = `<select><option>Select Index</option></select>`;
 row.insertCell(4).innerText = "";
 
-}
+});
+
+// DEBUG
+console.log(`Room: ${room}, Type: ${type}, Week: ${week}, Day: ${day}, Global: ${globalDay}`);
 
 }
 
