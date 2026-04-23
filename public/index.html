@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html>
-
 <head>
-<title>YR Lesson Plan MIS v2</title>
+<title>YR Lesson Plan MIS v3</title>
 </head>
 
 <body>
@@ -73,7 +72,7 @@
 <br><br>
 
 <select id="roomType">
-<option value="">Auto Filled</option>
+<option value="">Yellow Room Type</option>
 <option value="1-5 Years">1-5 Years</option>
 <option value="5-10 Years">5-10 Years</option>
 <option value="10-15 Years">10-15 Years</option>
@@ -106,7 +105,6 @@
 
 <br><br>
 
-<!-- ✅ FIXED TABLE -->
 <table border="1" id="dailyTable">
 <tr>
 <th>Batch</th>
@@ -119,30 +117,19 @@
 
 <br>
 
-<button onclick="saveDay()">Save Full Day</button>
-
 <script>
 
 // AUTO DATE
-document.getElementById("date").value =
-new Date().toISOString().split("T")[0];
+document.getElementById("date").value = new Date().toISOString().split("T")[0];
 
-// SORT YELLOW ROOMS A→Z
+// SORT DROPDOWN
 function sortDropdown(){
-
-const dropdown = document.getElementById("room");
-
+let dropdown = document.getElementById("room");
 let options = Array.from(dropdown.options).slice(1);
-
-options.sort((a,b) => a.text.localeCompare(b.text));
-
-dropdown.innerHTML = '<option value="">Select Yellow Room</option>';
-
-options.forEach(opt => dropdown.add(opt));
-
+options.sort((a,b)=>a.text.localeCompare(b.text));
+dropdown.innerHTML='<option value="">Select Yellow Room</option>';
+options.forEach(o=>dropdown.add(o));
 }
-
-// CALL FUNCTION
 sortDropdown();
 
 // ROOM TYPE AUTO
@@ -153,107 +140,65 @@ const roomTypeMapping = {
 "Malhaur":"10-15 Years",
 "Chinhat":"10-15 Years",
 "Munshipulia":"10-15 Years",
-
 "Ismailganj":"5-10 Years"
 };
 
 document.getElementById("room").addEventListener("change", function(){
-const type = roomTypeMapping[this.value] || "1-5 Years";
-document.getElementById("roomType").value = type;
+document.getElementById("roomType").value =
+roomTypeMapping[this.value] || "1-5 Years";
 });
 
-// SAMPLE DATA
-function getData(){
-return [
-{batch:"Tenderfeet", subject:"Linguistic"},
-{batch:"Learners", subject:"Maths"},
-{batch:"Advancers", subject:"Maths"},
-{batch:"Learners", subject:"Games"},
-{batch:"Advancers", subject:"Children Panchayat"}
+// SPECIAL SUBJECTS
+const specialSubjects = [
+"Games","Library","Library Session",
+"Children Panchayat","Animal Management",
+"Padho Padhao","PTM"
 ];
-}
 
 // =============================
-// SORT YELLOW ROOMS A→Z
+// SIMPLE WORKING TIMETABLE
 // =============================
-function sortDropdown(){
-
-const dropdown = document.getElementById("room");
-
-let options = Array.from(dropdown.options).slice(1);
-
-options.sort((a,b) => a.text.localeCompare(b.text));
-
-dropdown.innerHTML = '<option value="">Select Yellow Room</option>';
-
-options.forEach(opt => dropdown.add(opt));
-
-}
+const timetable0 = {
+1:[{batch:"Tenderfeet",subject:"Linguistic"},{batch:"Learners",subject:"Maths"},{batch:"Advancers",subject:"Science"}],
+2:[{batch:"Tenderfeet",subject:"Maths"},{batch:"Learners",subject:"EVS"},{batch:"Advancers",subject:"Maths"}],
+3:[{batch:"Learners",subject:"Games"},{batch:"Advancers",subject:"Children Panchayat"}],
+4:[{batch:"Tenderfeet",subject:"Library Session"},{batch:"Learners",subject:"SEL Plans"}],
+5:[{batch:"Tenderfeet",subject:"Yoga"},{batch:"Advancers",subject:"Games"}],
+6:[{batch:"Learners",subject:"WHY"},{batch:"Learners",subject:"GA"}],
+7:[{batch:"Tenderfeet",subject:"Linguistic"}],
+8:[{batch:"Tenderfeet",subject:"Maths"}],
+9:[{batch:"Learners",subject:"SEL Plans"}],
+10:[{batch:"Learners",subject:"Cleanliness Session"}],
+11:[{batch:"Advancers",subject:"Games"}],
+12:[{batch:"Learners",subject:"WHY"},{batch:"Learners",subject:"GA"}],
+13:[{batch:"Tenderfeet",subject:"Linguistic"}],
+14:[{batch:"Tenderfeet",subject:"Linguistic"}],
+15:[{batch:"Learners",subject:"SEL Plans"}],
+16:[{batch:"Learners",subject:"Gender Session"}],
+17:[{batch:"Advancers",subject:"Games"}],
+18:[{batch:"Learners",subject:"WHY"},{batch:"Learners",subject:"GA"}],
+19:[{batch:"Tenderfeet",subject:"Library Session"}],
+20:[{batch:"Tenderfeet",subject:"Gender Session"}],
+21:[{batch:"Learners",subject:"SEL Plans"}],
+22:[{batch:"Learners",subject:"Games"}],
+23:[{batch:"Learners",subject:"PTM"}],
+24:[{batch:"Learners",subject:"WHY"},{batch:"Learners",subject:"GA"}]
+};
 
 // LOAD DAY
 function loadDay(){
 
-const week = parseInt(document.getElementById("weekSelect").value);
-const day = parseInt(document.getElementById("daySelect").value);
-const room = document.getElementById("room").value;
-let type = document.getElementById("roomType").value;
-
-// DEFAULT TYPE
-if(!type){
-type = "1-5 Years";
-}
-
-// VALIDATION (IMPROVED)
-if(!room){
-alert("Please select Yellow Room");
-return;
-}
+const week = document.getElementById("weekSelect").value;
+const day = document.getElementById("daySelect").value;
 
 if(!week || !day){
-alert("Please select Week and Day");
+alert("Select Week & Day");
 return;
 }
 
-// GLOBAL DAY (1–24)
-const globalDay = (week - 1) * 6 + day;
+const globalDay = (week - 1) * 6 + Number(day);
+let data = timetable0[globalDay] || [];
 
-// 🎯 REALISTIC STRUCTURE (not random now)
-let data = [];
-
-switch(globalDay){
-
-case 1:
-data = [
-{batch:"Tenderfeet", subject:"Linguistic"},
-{batch:"Learners", subject:"Maths"},
-{batch:"Advancers", subject:"Maths"}
-];
-break;
-
-case 2:
-data = [
-{batch:"Learners", subject:"EVS"},
-{batch:"Advancers", subject:"EVS"},
-{batch:"Learners", subject:"Yoga"}
-];
-break;
-
-case 3:
-data = [
-{batch:"Learners", subject:"Games"},
-{batch:"Advancers", subject:"Children Panchayat"}
-];
-break;
-
-default:
-data = [
-{batch:"Tenderfeet", subject:"Drawing"},
-{batch:"Learners", subject:"Maths"},
-{batch:"Advancers", subject:"Science"}
-];
-}
-
-// TABLE
 const table = document.getElementById("dailyTable");
 
 table.innerHTML = `
@@ -266,29 +211,28 @@ table.innerHTML = `
 </tr>
 `;
 
-// ROWS
 data.forEach(d => {
 
 let row = table.insertRow();
-
 row.insertCell(0).innerText = d.batch;
 row.insertCell(1).innerText = d.subject;
 
-// INPUT FIELDS (better UX)
-row.insertCell(2).innerHTML = `<select><option>Select Chapter</option></select>`;
-row.insertCell(3).innerHTML = `<select><option>Select Index</option></select>`;
-row.insertCell(4).innerText = "";
+let c = row.insertCell(2);
+let i = row.insertCell(3);
+let l = row.insertCell(4);
+
+if(specialSubjects.includes(d.subject)){
+c.innerHTML = `<select><option></option><option>1</option><option>0</option></select>`;
+i.innerText = "-";
+l.innerText = "-";
+}else{
+c.innerHTML = `<select><option>Select Chapter</option></select>`;
+i.innerHTML = `<select><option>Select Index</option></select>`;
+l.innerText = "";
+}
 
 });
 
-// DEBUG
-console.log(`Room: ${room}, Type: ${type}, Week: ${week}, Day: ${day}, Global: ${globalDay}`);
-
-}
-
-// SAVE
-function saveDay(){
-alert("Saved Successfully");
 }
 
 </script>
