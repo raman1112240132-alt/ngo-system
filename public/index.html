@@ -1,154 +1,171 @@
-<!DOCTYPE html>
-
-<html>
-
-<head>
-<title>YR Lesson Plan MIS</title>
-</head>
-
-<body>
-
-<h2>YR Lesson Plan MIS</h2>
-<h4>Daily Session Tracking System</h4>
-
-<input type="text" id="educator" placeholder="Educator Name"><br><br>
-
-<input type="date" id="date"><br><br>
-
-<select id="room">
-<option value="">Select Yellow Room</option>
-
-<option value="Abhay Nagar">Abhay Nagar</option>
-<option value="Bahadurpur">Bahadurpur</option>
-<option value="Badi kalan">Badi kalan</option>
-<option value="Beniganj">Beniganj</option>
-<option value="Bhadrukh">Bhadrukh</option>
-<option value="Bhitauli Khurd">Bhitauli Khurd</option>
-<option value="Chinhat">Chinhat</option>
-<option value="Garden Bay">Garden Bay</option>
-<option value="Gandhi Nagar">Gandhi Nagar</option>
-<option value="Hans kheda">Hans kheda</option>
-<option value="Hardasi Kheda">Hardasi Kheda</option>
-<option value="Hasanpur Khewali">Hasanpur Khewali</option>
-<option value="Hussainganj">Hussainganj</option>
-<option value="Ismailganj">Ismailganj</option>
-<option value="Jarhara">Jarhara</option>
-<option value="Jodaura">Jodaura</option>
-<option value="Jugguar">Jugguar</option>
-<option value="Jyotishah Alampur">Jyotishah Alampur</option>
-<option value="Kalli Paschim">Kalli Paschim</option>
-<option value="Kashyap Nagar">Kashyap Nagar</option>
-<option value="Kaudiyamau">Kaudiyamau</option>
-<option value="Khazoor Gaon">Khazoor Gaon</option>
-<option value="Kumharan">Kumharan</option>
-<option value="Kutubpur">Kutubpur</option>
-<option value="Laulai">Laulai</option>
-<option value="Macchli Mohal">Macchli Mohal</option>
-<option value="Mahmoodpur">Mahmoodpur</option>
-<option value="Malhaur">Malhaur</option>
-<option value="Mannat">Mannat</option>
-<option value="Matiyari">Matiyari</option>
-<option value="Meesa">Meesa</option>
-<option value="Mozzam Nagar">Mozzam Nagar</option>
-<option value="Munshipulia">Munshipulia</option>
-<option value="Nanda Kheda">Nanda Kheda</option>
-<option value="Nat Kheda">Nat Kheda</option>
-<option value="Noida Sec 122">Noida Sec 122</option>
-<option value="Noida Sec 17">Noida Sec 17</option>
-<option value="One world">One world</option>
-<option value="Pani Gaon">Pani Gaon</option>
-<option value="Ram Das Hata">Ram Das Hata</option>
-<option value="Ram Nagar">Ram Nagar</option>
-<option value="Roshanabad">Roshanabad</option>
-<option value="Sandauli">Sandauli</option>
-<option value="Sikandar Nagar">Sikandar Nagar</option>
-<option value="Sitarasoi">Sitarasoi</option>
-<option value="Tindola">Tindola</option>
-<option value="Ujariyaon">Ujariyaon</option>
-<option value="Vishundaspur">Vishundaspur</option>
-
-</select>
-
-<br><br>
-
-<select id="roomType">
-<option value="">Auto Filled</option>
-<option value="1-5 Years">1-5 Years</option>
-<option value="5-10 Years">5-10 Years</option>
-<option value="10-15 Years">10-15 Years</option>
-</select>
-
-<br><br>
-
 <script>
 
 // AUTO DATE
-document.getElementById("date").value = new Date().toISOString().split("T")[0];
+document.getElementById("date").value =
+new Date().toISOString().split("T")[0];
 
-// MAPPING
+// =============================
+// ROOM TYPE AUTO
+// =============================
 const roomTypeMapping = {
-"Abhay Nagar":"1-5 Years",
-"Bahadurpur":"1-5 Years",
-"Badi kalan":"1-5 Years",
-"Beniganj":"1-5 Years",
-"Bhadrukh":"1-5 Years",
-"Bhitauli Khurd":"1-5 Years",
+
+"One world":"Shalimar Sites",
+"Garden Bay":"Shalimar Sites",
+"Mannat":"Shalimar Sites",
+
 "Chinhat":"10-15 Years",
-"Garden Bay":"1-5 Years",
-"Gandhi Nagar":"1-5 Years",
-"Hans kheda":"1-5 Years",
-"Hardasi Kheda":"1-5 Years",
-"Hasanpur Khewali":"1-5 Years",
-"Hussainganj":"1-5 Years",
-"Ismailganj":"5-10 Years",
-"Jarhara":"1-5 Years",
-"Jodaura":"1-5 Years",
-"Jugguar":"1-5 Years",
-"Jyotishah Alampur":"1-5 Years",
-"Kalli Paschim":"1-5 Years",
-"Kashyap Nagar":"1-5 Years",
-"Kaudiyamau":"1-5 Years",
-"Khazoor Gaon":"1-5 Years",
-"Kumharan":"1-5 Years",
-"Kutubpur":"1-5 Years",
-"Laulai":"1-5 Years",
-"Macchli Mohal":"1-5 Years",
-"Mahmoodpur":"1-5 Years",
 "Malhaur":"10-15 Years",
-"Mannat":"1-5 Years",
-"Matiyari":"1-5 Years",
-"Meesa":"1-5 Years",
-"Mozzam Nagar":"1-5 Years",
 "Munshipulia":"10-15 Years",
-"Nanda Kheda":"1-5 Years",
-"Nat Kheda":"1-5 Years",
-"Noida Sec 122":"1-5 Years",
-"Noida Sec 17":"1-5 Years",
-"One world":"1-5 Years",
-"Pani Gaon":"1-5 Years",
-"Ram Das Hata":"1-5 Years",
-"Ram Nagar":"1-5 Years",
-"Roshanabad":"1-5 Years",
-"Sandauli":"1-5 Years",
-"Sikandar Nagar":"1-5 Years",
-"Sitarasoi":"1-5 Years",
-"Tindola":"1-5 Years",
-"Ujariyaon":"1-5 Years",
-"Vishundaspur":"1-5 Years"
+
+"Ismailganj":"5-10 Years"
+
 };
 
-// AUTO FILL
 document.getElementById("room").addEventListener("change", function(){
 
-const selectedRoom = this.value;
-const type = roomTypeMapping[selectedRoom] || "";
-
+const type = roomTypeMapping[this.value] || "1-5 Years";
 document.getElementById("roomType").value = type;
 
 });
 
+// =============================
+// SPECIAL SUBJECTS (1/0)
+// =============================
+const specialSubjects = [
+"Games",
+"Library session",
+"Children Panchayat",
+"Animal Management",
+"Padho Padhao",
+"PTM"
+];
+
+// =============================
+// SHALIMAR TIMETABLE
+// =============================
+function getShalimarDay(day){
+
+return [
+{batch:"Tenderfeet", subject:"Linguistic"},
+{batch:"Learners", subject:"Maths"},
+{batch:"Advancers", subject:"Maths"},
+
+{batch:"Learners", subject:"Library session"},
+
+{batch:"Advancers", subject:"WHY"},
+{batch:"Advancers", subject:"GA"}
+];
+
+}
+
+// =============================
+// NORMAL TIMETABLE
+// =============================
+function getNormalDay(day){
+
+return [
+{batch:"Tenderfeet", subject:"Linguistic"},
+{batch:"Learners", subject:"Maths"},
+{batch:"Advancers", subject:"Maths"},
+
+{batch:"Learners", subject:"Games"},
+
+{batch:"Advancers", subject:"Children Panchayat"},
+{batch:"Advancers", subject:"Animal Management"}
+];
+
+}
+
+// =============================
+// LOAD DAY (FINAL WORKING)
+// =============================
+async function loadDay(){
+
+const day = parseInt(document.getElementById("daySelect").value);
+const type = document.getElementById("roomType").value;
+
+if(!day || !type){
+alert("Select Room Type & Day");
+return;
+}
+
+let data = [];
+
+if(type === "Shalimar Sites"){
+data = getShalimarDay(day);
+}else{
+data = getNormalDay(day);
+}
+
+const table = document.getElementById("dailyTable");
+
+// ✅ ONLY HEADER (NOT TABLE)
+table.innerHTML = `
+<tr>
+<th>Batch</th>
+<th>Subject</th>
+<th>Chapter</th>
+<th>Index</th>
+<th>Lesson</th>
+</tr>
+`;
+
+// ADD ROWS
+for(let i=0;i<data.length;i++){
+
+let d = data[i];
+
+let row = table.insertRow();
+
+row.insertCell(0).innerText = d.batch;
+row.insertCell(1).innerText = d.subject;
+
+let chapterCell = row.insertCell(2);
+let indexCell = row.insertCell(3);
+let lessonCell = row.insertCell(4);
+
+// SPECIAL SUBJECT → 1/0
+if(specialSubjects.includes(d.subject)){
+
+let select = document.createElement("select");
+
+select.innerHTML = `
+<option value="">Select</option>
+<option value="1">1</option>
+<option value="0">0</option>
+`;
+
+chapterCell.appendChild(select);
+indexCell.innerText = "-";
+lessonCell.innerText = "-";
+
+}
+
+// NORMAL SUBJECT
+else{
+
+let chapter = document.createElement("select");
+let index = document.createElement("select");
+
+chapterCell.appendChild(chapter);
+indexCell.appendChild(index);
+
+chapter.innerHTML = "<option>Select Chapter</option>";
+index.innerHTML = "<option>Select Index</option>";
+
+lessonCell.innerText = "";
+
+}
+
+}
+
+}
+
+// =============================
+// SAVE
+// =============================
+async function saveDay(){
+alert("Saved Successfully");
+}
+
 </script>
-
-</body>
-
-</html>
