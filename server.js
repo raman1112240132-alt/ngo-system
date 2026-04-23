@@ -254,3 +254,11 @@ app.get("/pc-dashboard-data", async (req,res)=>{
     res.status(500).json({error:"Server error"});
   }
 });
+// =============================
+// START SERVER (CRITICAL FIX)
+// =============================
+const PORT = process.env.PORT || 10000;
+
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`Server running on port ${PORT}`);
+});
