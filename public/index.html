@@ -266,7 +266,12 @@ r.insertCell(0).innerHTML=`<span class="badge ${c}">${d.b}</span>`;
 r.insertCell(1).innerHTML=`<span class="${special.includes(d.s)?'special':''}">${d.s}</span>`;
 
 if(special.includes(d.s)){
-r.insertCell(2).innerHTML='<select><option>1</option><option>0</option></select>';
+r.insertCell(2).innerHTML=`
+<select>
+  <option value="">Select</option>
+  <option value="1">1</option>
+  <option value="0">0</option>
+</select>`;
 r.insertCell(3).innerText="-";
 r.insertCell(4).innerText="-";
 }else{
@@ -279,45 +284,66 @@ r.insertCell(4).innerHTML='<input>';
 
 // SAVE
 function save(){
-let educator=educator.value;
-let date=execDate.value;
 
-if(!educator||!date){alert("Fill required fields");return;}
+let educator=document.getElementById("educator").value;
+let date=document.getElementById("execDate").value;
+
+if(!educator||!date){
+alert("Fill required fields");
+return;
+}
 
 let rows=document.querySelectorAll("#table tr");
 let data=[];
 
-rows.forEach((row,i)=>{
-if(i===0)return;
+for(let i=1;i<rows.length;i++){
 
-let c=row.querySelectorAll("td");
+let c=rows[i].querySelectorAll("td");
 
 let chapter="",index="",lesson="";
 
+// SPECIAL SUBJECT CHECK
 if(c[2].querySelector("select") && c[3].innerText==="-"){
+
 chapter=c[2].querySelector("select").value;
-index="-"; lesson="-";
+
+if(chapter===""){
+alert("Please select 1 or 0 for all special sessions");
+return;
+}
+
+index="-";
+lesson="-";
+
 }else{
+
 chapter=c[2].querySelector("select")?.value||"";
 index=c[3].querySelector("select")?.value||"";
 lesson=c[4].querySelector("input")?.value||"";
+
 }
 
 data.push({
 batch:c[0].innerText,
 subject:c[1].innerText,
-chapter,index,lesson
-});
+chapter,
+index,
+lesson
 });
 
+}
+
+// DOWNLOAD
 let blob=new Blob([JSON.stringify(data,null,2)]);
 let a=document.createElement("a");
 a.href=URL.createObjectURL(blob);
 a.download="YR_Data.json";
 a.click();
 
-msg.style.display="block";
-setTimeout(()=>msg.style.display="none",2000);
+// SUCCESS UI
+document.getElementById("msg").style.display="block";
+setTimeout(()=>document.getElementById("msg").style.display="none",2000);
+
 }
 
 </script>
