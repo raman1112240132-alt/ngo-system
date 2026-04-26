@@ -26,7 +26,6 @@ td{padding:8px;border:1px solid #ddd;}
 .s{background:#fce7f3;}
 
 .special{background:#ede9fe;}
-
 .success{background:#d1fae5;padding:10px;margin-top:10px;display:none;}
 </style>
 </head>
@@ -44,15 +43,56 @@ td{padding:8px;border:1px solid #ddd;}
 
 <select id="room">
 <option value="">Select Yellow Room</option>
-<option>Malhaur</option>
-<option>Chinhat</option>
-<option>Munshipulia</option>
-<option>Garden Bay</option>
-<option>Mannat</option>
-<option>One world</option>
-<option>Ismailganj</option>
+
 <option>Abhay Nagar</option>
 <option>Bahadurpur</option>
+<option>Badi kalan</option>
+<option>Beniganj</option>
+<option>Bhadrukh</option>
+<option>Bhitauli Khurd</option>
+<option>Chinhat</option>
+<option>Garden Bay</option>
+<option>Gandhi Nagar</option>
+<option>Hans kheda</option>
+<option>Hardasi Kheda</option>
+<option>Hasanpur Khewali</option>
+<option>Hussainganj</option>
+<option>Ismailganj</option>
+<option>Jarhara</option>
+<option>Jodaura</option>
+<option>Jugguar</option>
+<option>Jyotishah Alampur</option>
+<option>Kalli Paschim</option>
+<option>Kashyap Nagar</option>
+<option>Kaudiyamau</option>
+<option>Khazoor Gaon</option>
+<option>Kumharan</option>
+<option>Kutubpur</option>
+<option>Laulai</option>
+<option>Macchli Mohal</option>
+<option>Mahmoodpur</option>
+<option>Malhaur</option>
+<option>Mannat</option>
+<option>Matiyari</option>
+<option>Meesa</option>
+<option>Mozzam Nagar</option>
+<option>Munshipulia</option>
+<option>Nanda Kheda</option>
+<option>Nat Kheda</option>
+<option>Noida Sec 122</option>
+<option>Noida Sec 17</option>
+<option>One world</option>
+<option>Pani Gaon</option>
+<option>Ram Das Hata</option>
+<option>Ram Nagar</option>
+<option>Roshanabad</option>
+<option>Sandauli</option>
+<option>Sikandar Nagar</option>
+<option>Sitarasoi</option>
+<option>Tindola</option>
+<option>Ujariyaon</option>
+<option>Vishundaspur</option>
+
 </select>
 
 <select id="roomType">
@@ -105,9 +145,29 @@ td{padding:8px;border:1px solid #ddd;}
 
 <script>
 
-// AUTO DATE
+// ON LOAD
+window.onload = function(){
+
 document.getElementById("date").value =
 new Date().toISOString().split("T")[0];
+
+document.getElementById("execDate").value =
+new Date().toISOString().split("T")[0];
+
+sortRooms();
+
+};
+
+// SORT ROOMS
+function sortRooms(){
+let dropdown = document.getElementById("room");
+let options = Array.from(dropdown.options).slice(1);
+
+options.sort((a,b)=>a.text.localeCompare(b.text));
+
+dropdown.innerHTML = '<option value="">Select Yellow Room</option>';
+options.forEach(opt=>dropdown.add(opt));
+}
 
 // ROOM TYPE AUTO
 const roomMap = {
@@ -124,15 +184,12 @@ document.getElementById("room").addEventListener("change", function(){
 document.getElementById("roomType").value = roomMap[this.value] || "1";
 });
 
-// WEEK → DAY (1–24)
+// WEEK → DAY
 document.getElementById("weekSelect").addEventListener("change", function(){
-let w = this.value;
+let start = (this.value-1)*6+1;
 let d = document.getElementById("daySelect");
 
 d.innerHTML='<option>Select Day</option>';
-
-let start = (w-1)*6+1;
-
 for(let i=0;i<6;i++){
 d.innerHTML+=`<option value="${start+i}">Day ${start+i}</option>`;
 }
@@ -142,9 +199,8 @@ d.innerHTML+=`<option value="${start+i}">Day ${start+i}</option>`;
 const TF=s=>({b:"Tenderfeet",s});
 const LN=s=>({b:"Learners",s});
 const AV=s=>({b:"Advancers",s});
-const AS=s=>({b:"Aspirers",s});
 
-// SPECIAL SUBJECTS
+// SPECIAL
 const special=[
 "Games","Library Session","Children Panchayat",
 "Animal Management","Padho Padhao","PTM",
@@ -152,7 +208,7 @@ const special=[
 "Yoga","Drawing","WHY","GA"
 ];
 
-// BASE (0 YEAR CORE)
+// BASE + TIMETABLE
 const base={
 1:[TF("Linguistic"),TF("Maths"),TF("Naitik Shiksha"),LN("FLN"),LN("Linguistic"),LN("Maths"),LN("Naitik Shiksha"),AV("Maths"),AV("Linguistic"),AV("Science")],
 3:[TF("Linguistic"),TF("Maths"),TF("Cleanliness Session"),LN("FLN"),LN("Linguistic"),LN("Maths"),LN("Naitik Shiksha"),AV("Maths"),AV("Linguistic"),AV("Science")],
@@ -161,7 +217,6 @@ const base={
 6:[TF("Drawing"),TF("EVS"),TF("Games"),LN("WHY"),LN("GA"),LN("Yoga"),LN("EVS"),LN("Drawing"),AV("WHY"),AV("GA"),AV("Drawing"),AV("Library Session")]
 };
 
-// TRUE 24 DAY MAP
 const timetable={
 1:base[1],2:base[1],3:base[3],4:base[4],5:base[5],6:base[6],
 7:base[1],8:base[1],9:base[1],10:base[4],11:base[5],12:base[6],
@@ -169,130 +224,100 @@ const timetable={
 19:base[4],20:base[1],21:base[4],22:base[3],23:base[5],24:base[6]
 };
 
-// TYPE TRANSFORM
-function transform(type, data){
+// TRANSFORM
+function transform(type,data){
+let x=[...data];
 
-let x = [...data];
-
-// 1–5 & 5–10 → remove FLN
-if(type==="1" || type==="2"){
-  x = x.filter(d => d.s !== "FLN");
+if(type==="1"||type==="2"){
+x=x.filter(d=>d.s!=="FLN");
 }
 
-// ✅ FIXED Aspirers logic
 if(type==="3"){
-
-  // get only Advancers subjects
-  let advancers = x.filter(d => d.b === "Advancers");
-
-  // create Aspirers from Advancers ONLY
-  let aspirers = advancers.map(d => ({
-    b: "Aspirers",
-    s: d.s
-  }));
-
-  x = [...x, ...aspirers];
+let adv=x.filter(d=>d.b==="Advancers");
+let asp=adv.map(d=>({b:"Aspirers",s:d.s}));
+x=[...x,...asp];
 }
 
-// Shalimar → Tenderfeet Slot 2
 if(type==="S"){
-  x.unshift({ b:"Tenderfeet Slot 2", s:"Maths" });
+x.unshift({b:"Tenderfeet Slot 2",s:"Maths"});
 }
 
 return x;
 }
 
-// LOAD DAY
+// LOAD
 function loadDay(){
+let day=daySelect.value;
+let type=roomType.value;
 
-let day=document.getElementById("daySelect").value;
-let type=document.getElementById("roomType").value;
-
-if(!day||!type){
-alert("Select Room Type & Day");
-return;
-}
+if(!day||!type){alert("Select type & day");return;}
 
 let data=transform(type,timetable[day]);
 
-let table=document.getElementById("table");
-
 table.innerHTML=`<tr>
-<th>Batch</th>
-<th>Subject</th>
-<th>Chapter</th>
-<th>Index</th>
-<th>Lesson</th>
+<th>Batch</th><th>Subject</th><th>Chapter</th><th>Index</th><th>Lesson</th>
 </tr>`;
 
 data.forEach(d=>{
-
-let row=table.insertRow();
-
+let r=table.insertRow();
 let c=d.b==="Tenderfeet"?"t":d.b==="Learners"?"l":d.b==="Advancers"?"a":"s";
 
-row.insertCell(0).innerHTML=`<span class="badge ${c}">${d.b}</span>`;
-row.insertCell(1).innerHTML=`<span class="${special.includes(d.s)?'special':''}">${d.s}</span>`;
+r.insertCell(0).innerHTML=`<span class="badge ${c}">${d.b}</span>`;
+r.insertCell(1).innerHTML=`<span class="${special.includes(d.s)?'special':''}">${d.s}</span>`;
 
 if(special.includes(d.s)){
-row.insertCell(2).innerHTML='<select><option>1</option><option>0</option></select>';
-row.insertCell(3).innerText="-";
-row.insertCell(4).innerText="-";
+r.insertCell(2).innerHTML='<select><option>1</option><option>0</option></select>';
+r.insertCell(3).innerText="-";
+r.insertCell(4).innerText="-";
 }else{
-row.insertCell(2).innerHTML='<select><option>Select Chapter</option></select>';
-row.insertCell(3).innerHTML='<select><option>Select Index</option></select>';
-row.insertCell(4).innerHTML='<input>';
+r.insertCell(2).innerHTML='<select><option>Select Chapter</option></select>';
+r.insertCell(3).innerHTML='<select><option>Select Index</option></select>';
+r.insertCell(4).innerHTML='<input>';
 }
-
 });
-
 }
 
-// SAVE (REAL DATA)
+// SAVE
 function save(){
+let educator=educator.value;
+let date=execDate.value;
 
-let educator=document.getElementById("educator").value;
-let date=document.getElementById("execDate").value;
-let day=document.getElementById("daySelect").value;
-let type=document.getElementById("roomType").value;
-
-if(!educator||!date){
-alert("Fill Educator Name & Execution Date");
-return;
-}
+if(!educator||!date){alert("Fill required fields");return;}
 
 let rows=document.querySelectorAll("#table tr");
 let data=[];
 
 rows.forEach((row,i)=>{
-if(i===0) return;
+if(i===0)return;
 
-let cells=row.querySelectorAll("td");
+let c=row.querySelectorAll("td");
+
+let chapter="",index="",lesson="";
+
+if(c[2].querySelector("select") && c[3].innerText==="-"){
+chapter=c[2].querySelector("select").value;
+index="-"; lesson="-";
+}else{
+chapter=c[2].querySelector("select")?.value||"";
+index=c[3].querySelector("select")?.value||"";
+lesson=c[4].querySelector("input")?.value||"";
+}
 
 data.push({
-batch:cells[0].innerText,
-subject:cells[1].innerText,
-chapter:cells[2].innerText,
-index:cells[3].innerText,
-lesson:cells[4].innerText
+batch:c[0].innerText,
+subject:c[1].innerText,
+chapter,index,lesson
+});
 });
 
-});
-
-let finalData={educator,date,day,type,data};
-
-let blob=new Blob([JSON.stringify(finalData,null,2)],{type:"application/json"});
+let blob=new Blob([JSON.stringify(data,null,2)]);
 let a=document.createElement("a");
 a.href=URL.createObjectURL(blob);
 a.download="YR_Data.json";
 a.click();
 
-document.getElementById("msg").style.display="block";
-
-setTimeout(()=>{
-document.getElementById("msg").style.display="none";
-},2000);
-
+msg.style.display="block";
+setTimeout(()=>msg.style.display="none",2000);
 }
 
 </script>
