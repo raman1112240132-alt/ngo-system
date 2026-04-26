@@ -1,85 +1,70 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>YR Lesson Plan MIS v3</title>
+<title>YR Lesson Plan MIS</title>
+
+<style>
+body{font-family:Arial;background:#f5f7fb;margin:0;}
+h2{background:#1f2937;color:#fff;padding:15px;margin:0;}
+.container{padding:20px;}
+
+select,input{padding:8px;margin:5px;border-radius:6px;border:1px solid #ccc;}
+
+button{padding:10px 16px;border:none;border-radius:6px;cursor:pointer;font-weight:bold;}
+.load-btn{background:#facc15;}
+.save-btn{background:#16a34a;color:white;}
+.save-btn:hover{background:#15803d;}
+
+table{width:100%;border-collapse:collapse;margin-top:20px;background:white;}
+th{background:#111827;color:#facc15;padding:10px;}
+td{padding:8px;border:1px solid #ddd;}
+
+.badge{padding:3px 8px;border-radius:6px;font-size:12px;font-weight:bold;}
+.t{background:#dbeafe;}
+.l{background:#dcfce7;}
+.a{background:#fee2e2;}
+.s{background:#fce7f3;}
+
+.special{background:#ede9fe;}
+
+.success{background:#d1fae5;padding:10px;margin-top:10px;display:none;}
+</style>
 </head>
 
 <body>
 
 <h2>YR Lesson Plan MIS</h2>
-<h4>Daily Session Tracking System</h4>
 
-<input type="text" id="educator" placeholder="Educator Name"><br><br>
+<div class="container">
 
-<input type="date" id="date"><br><br>
+<input type="text" id="educator" placeholder="Educator Name">
+<input type="date" id="date">
+
+<br>
 
 <select id="room">
 <option value="">Select Yellow Room</option>
-
-<option value="Mozzam Nagar">Mozzam Nagar</option>
-<option value="Malhaur">Malhaur</option>
-<option value="Chinhat">Chinhat</option>
-<option value="Nat Kheda">Nat Kheda</option>
-<option value="Hans Kheda">Hans Kheda</option>
-<option value="Badi Kalan">Badi Kalan</option>
-<option value="Kaudiyamau">Kaudiyamau</option>
-<option value="Hardasi Kheda">Hardasi Kheda</option>
-<option value="Ram Das Hata">Ram Das Hata</option>
-<option value="Juggaur">Juggaur</option>
-<option value="Bhitauli Khurd">Bhitauli Khurd</option>
-<option value="Sandauli">Sandauli</option>
-<option value="Jarhara">Jarhara</option>
-<option value="Pani Gaon">Pani Gaon</option>
-<option value="Hasanpur Khewali">Hasanpur Khewali</option>
-<option value="Roshanabad">Roshanabad</option>
-<option value="Matiyari">Matiyari</option>
-<option value="Laulai">Laulai</option>
-<option value="Kumharan">Kumharan</option>
-<option value="Jodaura">Jodaura</option>
-<option value="Hussainganj">Hussainganj</option>
-<option value="Jyotishah Alampur">Jyotishah Alampur</option>
-<option value="Macchli Mohal">Macchli Mohal</option>
-<option value="Kutubpur">Kutubpur</option>
-
-<option value="Noida Sec 17">Noida Sec 17</option>
-<option value="Noida Sec 122">Noida Sec 122</option>
-
-<option value="One world">One world</option>
-<option value="Garden Bay">Garden Bay</option>
-<option value="Ujariyaon">Ujariyaon</option>
-<option value="Mannat">Mannat</option>
-<option value="Meesa">Meesa</option>
-<option value="Mahmoodpur">Mahmoodpur</option>
-<option value="Kalli Paschim">Kalli Paschim</option>
-<option value="Nanda Kheda">Nanda Kheda</option>
-<option value="Bhadrukh">Bhadrukh</option>
-<option value="Ram Nagar">Ram Nagar</option>
-<option value="Beniganj">Beniganj</option>
-<option value="Sikandar Nagar">Sikandar Nagar</option>
-<option value="Kashyap Nagar">Kashyap Nagar</option>
-<option value="Tindola">Tindola</option>
-<option value="Bahadurpur">Bahadurpur</option>
-<option value="Khazoor Gaon">Khazoor Gaon</option>
-<option value="Gandhi Nagar">Gandhi Nagar</option>
-<option value="Abhay Nagar">Abhay Nagar</option>
-<option value="Sita Rasoi">Sita Rasoi</option>
-<option value="Vishundaspur">Vishundaspur</option>
-<option value="Munshipulia">Munshipulia</option>
-<option value="Ismailganj">Ismailganj</option>
-
+<option>Malhaur</option>
+<option>Chinhat</option>
+<option>Munshipulia</option>
+<option>Garden Bay</option>
+<option>Mannat</option>
+<option>One world</option>
+<option>Ismailganj</option>
+<option>Abhay Nagar</option>
+<option>Bahadurpur</option>
 </select>
-
-<br><br>
 
 <select id="roomType">
 <option value="">Yellow Room Type</option>
-<option value="1-5 Years">1-5 Years</option>
-<option value="5-10 Years">5-10 Years</option>
-<option value="10-15 Years">10-15 Years</option>
-<option value="Shalimar Sites">Shalimar Sites</option>
+<option value="0">0 Years</option>
+<option value="1">1-5 Years</option>
+<option value="2">5-10 Years</option>
+<option value="3">10-15 Years</option>
+<option value="S">Shalimar</option>
 </select>
 
-<br><br>
+<br>
 
 <select id="weekSelect">
 <option value="">Select Week</option>
@@ -89,23 +74,13 @@
 <option value="4">Week 4</option>
 </select>
 
-<br><br>
-
 <select id="daySelect">
 <option value="">Select Day</option>
-<option value="1">Day 1</option>
-<option value="2">Day 2</option>
-<option value="3">Day 3</option>
-<option value="4">Day 4</option>
-<option value="5">Day 5</option>
-<option value="6">Day 6</option>
 </select>
 
-<button onclick="loadDay()">Load Day</button>
+<button class="load-btn" onclick="loadDay()">Load Day</button>
 
-<br><br>
-
-<table border="1" id="dailyTable">
+<table id="table">
 <tr>
 <th>Batch</th>
 <th>Subject</th>
@@ -117,121 +92,193 @@
 
 <br>
 
+<label>Execution Date:</label>
+<input type="date" id="execDate">
+
+<br><br>
+
+<button class="save-btn" onclick="save()">Save Full Day</button>
+
+<div id="msg" class="success">Saved Successfully ✅</div>
+
+</div>
+
 <script>
 
 // AUTO DATE
-document.getElementById("date").value = new Date().toISOString().split("T")[0];
-
-// SORT DROPDOWN
-function sortDropdown(){
-let dropdown = document.getElementById("room");
-let options = Array.from(dropdown.options).slice(1);
-options.sort((a,b)=>a.text.localeCompare(b.text));
-dropdown.innerHTML='<option value="">Select Yellow Room</option>';
-options.forEach(o=>dropdown.add(o));
-}
-sortDropdown();
+document.getElementById("date").value =
+new Date().toISOString().split("T")[0];
 
 // ROOM TYPE AUTO
-const roomTypeMapping = {
-"One world":"Shalimar Sites",
-"Garden Bay":"Shalimar Sites",
-"Mannat":"Shalimar Sites",
-"Malhaur":"10-15 Years",
-"Chinhat":"10-15 Years",
-"Munshipulia":"10-15 Years",
-"Ismailganj":"5-10 Years"
+const roomMap = {
+"Malhaur":"3",
+"Chinhat":"3",
+"Munshipulia":"3",
+"Ismailganj":"2",
+"Garden Bay":"S",
+"Mannat":"S",
+"One world":"S"
 };
 
 document.getElementById("room").addEventListener("change", function(){
-document.getElementById("roomType").value =
-roomTypeMapping[this.value] || "1-5 Years";
+document.getElementById("roomType").value = roomMap[this.value] || "1";
 });
 
+// WEEK → DAY (1–24)
+document.getElementById("weekSelect").addEventListener("change", function(){
+let w = this.value;
+let d = document.getElementById("daySelect");
+
+d.innerHTML='<option>Select Day</option>';
+
+let start = (w-1)*6+1;
+
+for(let i=0;i<6;i++){
+d.innerHTML+=`<option value="${start+i}">Day ${start+i}</option>`;
+}
+});
+
+// HELPERS
+const TF=s=>({b:"Tenderfeet",s});
+const LN=s=>({b:"Learners",s});
+const AV=s=>({b:"Advancers",s});
+const AS=s=>({b:"Aspirers",s});
+
 // SPECIAL SUBJECTS
-const specialSubjects = [
-"Games","Library","Library Session",
-"Children Panchayat","Animal Management",
-"Padho Padhao","PTM"
+const special=[
+"Games","Library Session","Children Panchayat",
+"Animal Management","Padho Padhao","PTM",
+"Cleanliness Session","Gender Session","SEL Plans",
+"Yoga","Drawing","WHY","GA"
 ];
 
-// =============================
-// SIMPLE WORKING TIMETABLE
-// =============================
-const timetable0 = {
-1:[{batch:"Tenderfeet",subject:"Linguistic"},{batch:"Learners",subject:"Maths"},{batch:"Advancers",subject:"Science"}],
-2:[{batch:"Tenderfeet",subject:"Maths"},{batch:"Learners",subject:"EVS"},{batch:"Advancers",subject:"Maths"}],
-3:[{batch:"Learners",subject:"Games"},{batch:"Advancers",subject:"Children Panchayat"}],
-4:[{batch:"Tenderfeet",subject:"Library Session"},{batch:"Learners",subject:"SEL Plans"}],
-5:[{batch:"Tenderfeet",subject:"Yoga"},{batch:"Advancers",subject:"Games"}],
-6:[{batch:"Learners",subject:"WHY"},{batch:"Learners",subject:"GA"}],
-7:[{batch:"Tenderfeet",subject:"Linguistic"}],
-8:[{batch:"Tenderfeet",subject:"Maths"}],
-9:[{batch:"Learners",subject:"SEL Plans"}],
-10:[{batch:"Learners",subject:"Cleanliness Session"}],
-11:[{batch:"Advancers",subject:"Games"}],
-12:[{batch:"Learners",subject:"WHY"},{batch:"Learners",subject:"GA"}],
-13:[{batch:"Tenderfeet",subject:"Linguistic"}],
-14:[{batch:"Tenderfeet",subject:"Linguistic"}],
-15:[{batch:"Learners",subject:"SEL Plans"}],
-16:[{batch:"Learners",subject:"Gender Session"}],
-17:[{batch:"Advancers",subject:"Games"}],
-18:[{batch:"Learners",subject:"WHY"},{batch:"Learners",subject:"GA"}],
-19:[{batch:"Tenderfeet",subject:"Library Session"}],
-20:[{batch:"Tenderfeet",subject:"Gender Session"}],
-21:[{batch:"Learners",subject:"SEL Plans"}],
-22:[{batch:"Learners",subject:"Games"}],
-23:[{batch:"Learners",subject:"PTM"}],
-24:[{batch:"Learners",subject:"WHY"},{batch:"Learners",subject:"GA"}]
+// BASE (0 YEAR CORE)
+const base={
+1:[TF("Linguistic"),TF("Maths"),TF("Naitik Shiksha"),LN("FLN"),LN("Linguistic"),LN("Maths"),LN("Naitik Shiksha"),AV("Maths"),AV("Linguistic"),AV("Science")],
+3:[TF("Linguistic"),TF("Maths"),TF("Cleanliness Session"),LN("FLN"),LN("Linguistic"),LN("Maths"),LN("Naitik Shiksha"),AV("Maths"),AV("Linguistic"),AV("Science")],
+4:[TF("Linguistic"),TF("Maths"),TF("Library Session"),LN("FLN"),LN("Linguistic"),LN("Maths"),LN("SEL Plans"),AV("Maths"),AV("Naitik Shiksha"),AV("Science")],
+5:[TF("Linguistic"),TF("EVS"),TF("Yoga"),LN("FLN"),LN("Library Session"),LN("EVS"),LN("Children Panchayat"),LN("Animal Management"),AV("Gender Session"),AV("Yoga"),AV("Games")],
+6:[TF("Drawing"),TF("EVS"),TF("Games"),LN("WHY"),LN("GA"),LN("Yoga"),LN("EVS"),LN("Drawing"),AV("WHY"),AV("GA"),AV("Drawing"),AV("Library Session")]
 };
+
+// TRUE 24 DAY MAP
+const timetable={
+1:base[1],2:base[1],3:base[3],4:base[4],5:base[5],6:base[6],
+7:base[1],8:base[1],9:base[1],10:base[4],11:base[5],12:base[6],
+13:base[1],14:base[1],15:base[1],16:base[4],17:base[5],18:base[6],
+19:base[4],20:base[1],21:base[4],22:base[3],23:base[5],24:base[6]
+};
+
+// TYPE TRANSFORM
+function transform(type,data){
+
+let x=[...data];
+
+if(type==="1"||type==="2"){
+x=x.filter(d=>d.s!=="FLN");
+}
+
+if(type==="3"){
+x=[...x,...x.map(d=>({b:"Aspirers",s:d.s}))];
+}
+
+if(type==="S"){
+x.unshift({b:"Tenderfeet Slot 2",s:"Maths"});
+}
+
+return x;
+}
 
 // LOAD DAY
 function loadDay(){
 
-const week = document.getElementById("weekSelect").value;
-const day = document.getElementById("daySelect").value;
+let day=document.getElementById("daySelect").value;
+let type=document.getElementById("roomType").value;
 
-if(!week || !day){
-alert("Select Week & Day");
+if(!day||!type){
+alert("Select Room Type & Day");
 return;
 }
 
-const globalDay = (week - 1) * 6 + Number(day);
-let data = timetable0[globalDay] || [];
+let data=transform(type,timetable[day]);
 
-const table = document.getElementById("dailyTable");
+let table=document.getElementById("table");
 
-table.innerHTML = `
-<tr>
+table.innerHTML=`<tr>
 <th>Batch</th>
 <th>Subject</th>
 <th>Chapter</th>
 <th>Index</th>
 <th>Lesson</th>
-</tr>
-`;
+</tr>`;
 
-data.forEach(d => {
+data.forEach(d=>{
 
-let row = table.insertRow();
-row.insertCell(0).innerText = d.batch;
-row.insertCell(1).innerText = d.subject;
+let row=table.insertRow();
 
-let c = row.insertCell(2);
-let i = row.insertCell(3);
-let l = row.insertCell(4);
+let c=d.b==="Tenderfeet"?"t":d.b==="Learners"?"l":d.b==="Advancers"?"a":"s";
 
-if(specialSubjects.includes(d.subject)){
-c.innerHTML = `<select><option></option><option>1</option><option>0</option></select>`;
-i.innerText = "-";
-l.innerText = "-";
+row.insertCell(0).innerHTML=`<span class="badge ${c}">${d.b}</span>`;
+row.insertCell(1).innerHTML=`<span class="${special.includes(d.s)?'special':''}">${d.s}</span>`;
+
+if(special.includes(d.s)){
+row.insertCell(2).innerHTML='<select><option>1</option><option>0</option></select>';
+row.insertCell(3).innerText="-";
+row.insertCell(4).innerText="-";
 }else{
-c.innerHTML = `<select><option>Select Chapter</option></select>`;
-i.innerHTML = `<select><option>Select Index</option></select>`;
-l.innerText = "";
+row.insertCell(2).innerHTML='<select><option>Select Chapter</option></select>';
+row.insertCell(3).innerHTML='<select><option>Select Index</option></select>';
+row.insertCell(4).innerHTML='<input>';
 }
 
 });
+
+}
+
+// SAVE (REAL DATA)
+function save(){
+
+let educator=document.getElementById("educator").value;
+let date=document.getElementById("execDate").value;
+let day=document.getElementById("daySelect").value;
+let type=document.getElementById("roomType").value;
+
+if(!educator||!date){
+alert("Fill Educator Name & Execution Date");
+return;
+}
+
+let rows=document.querySelectorAll("#table tr");
+let data=[];
+
+rows.forEach((row,i)=>{
+if(i===0) return;
+
+let cells=row.querySelectorAll("td");
+
+data.push({
+batch:cells[0].innerText,
+subject:cells[1].innerText,
+chapter:cells[2].innerText,
+index:cells[3].innerText,
+lesson:cells[4].innerText
+});
+
+});
+
+let finalData={educator,date,day,type,data};
+
+let blob=new Blob([JSON.stringify(finalData,null,2)],{type:"application/json"});
+let a=document.createElement("a");
+a.href=URL.createObjectURL(blob);
+a.download="YR_Data.json";
+a.click();
+
+document.getElementById("msg").style.display="block";
+
+setTimeout(()=>{
+document.getElementById("msg").style.display="none";
+},2000);
 
 }
 
