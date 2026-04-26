@@ -170,20 +170,33 @@ const timetable={
 };
 
 // TYPE TRANSFORM
-function transform(type,data){
+function transform(type, data){
 
-let x=[...data];
+let x = [...data];
 
-if(type==="1"||type==="2"){
-x=x.filter(d=>d.s!=="FLN");
+// 1–5 & 5–10 → remove FLN
+if(type==="1" || type==="2"){
+  x = x.filter(d => d.s !== "FLN");
 }
 
+// ✅ FIXED Aspirers logic
 if(type==="3"){
-x=[...x,...x.map(d=>({b:"Aspirers",s:d.s}))];
+
+  // get only Advancers subjects
+  let advancers = x.filter(d => d.b === "Advancers");
+
+  // create Aspirers from Advancers ONLY
+  let aspirers = advancers.map(d => ({
+    b: "Aspirers",
+    s: d.s
+  }));
+
+  x = [...x, ...aspirers];
 }
 
+// Shalimar → Tenderfeet Slot 2
 if(type==="S"){
-x.unshift({b:"Tenderfeet Slot 2",s:"Maths"});
+  x.unshift({ b:"Tenderfeet Slot 2", s:"Maths" });
 }
 
 return x;
