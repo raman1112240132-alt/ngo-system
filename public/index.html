@@ -4,29 +4,88 @@
 <title>YR Lesson Plan MIS</title>
 
 <style>
-body{font-family:Arial;background:#f5f7fb;margin:0;}
-h2{background:#1f2937;color:#fff;padding:15px;margin:0;}
-.container{padding:20px;}
+body{
+  font-family: Arial;
+  background: #FEF08A; /* stronger visible yellow */
+  margin: 0;
+}
 
-select,input{padding:8px;margin:5px;border-radius:6px;border:1px solid #ccc;}
+/* HEADER */
+h2{
+  background:#1f2937;
+  color:#fff;
+  padding:15px;
+  margin:0;
+  text-align:center;
+}
 
-button{padding:10px 16px;border:none;border-radius:6px;cursor:pointer;font-weight:bold;}
-.load-btn{background:#facc15;}
-.save-btn{background:#16a34a;color:white;}
-.save-btn:hover{background:#15803d;}
+/* MAIN CARD */
+.container{
+  padding:20px;
+  background:white;
+  margin:20px auto;
+  border-radius:12px;
+  box-shadow:0 6px 15px rgba(0,0,0,0.15);
+  max-width:1200px;
+}
 
-table{width:100%;border-collapse:collapse;margin-top:20px;background:white;}
-th{background:#111827;color:#facc15;padding:10px;}
-td{padding:8px;border:1px solid #ddd;}
+/* INPUTS */
+select,input{
+  padding:8px;
+  margin:5px;
+  border-radius:6px;
+  border:1px solid #ccc;
+}
 
-.badge{padding:3px 8px;border-radius:6px;font-size:12px;font-weight:bold;}
-.t{background:#dbeafe;}
-.l{background:#dcfce7;}
-.a{background:#fee2e2;}
-.s{background:#fce7f3;}
+/* BUTTONS */
+button{
+  padding:10px 16px;
+  border:none;
+  border-radius:6px;
+  cursor:pointer;
+  font-weight:bold;
+}
 
-.special{background:#ede9fe;}
-.success{background:#d1fae5;padding:10px;margin-top:10px;display:none;}
+.load-btn{
+  background:#facc15;
+}
+
+.save-btn{
+  background:#16a34a;
+  color:white;
+}
+
+.save-btn:hover{
+  background:#15803d;
+}
+
+/* TABLE */
+table{
+  width:100%;
+  border-collapse:collapse;
+  margin-top:20px;
+  background:white;
+}
+
+th{
+  background:#111827;
+  color:#facc15;
+  padding:10px;
+}
+
+td{
+  padding:8px;
+  border:1px solid #ddd;
+}
+
+/* SUCCESS */
+.success{
+  background:#d1fae5;
+  padding:10px;
+  margin-top:10px;
+  display:none;
+  border-radius:6px;
+}
 </style>
 </head>
 
@@ -447,12 +506,32 @@ lesson
 
 }
 
-// DOWNLOAD
-let blob=new Blob([JSON.stringify(data,null,2)]);
-let a=document.createElement("a");
-a.href=URL.createObjectURL(blob);
-a.download="YR_Data.json";
-a.click();
+// SEND DATA TO SERVER
+
+data.forEach((row, index) => {
+
+fetch("/add-session", {
+method: "POST",
+headers: {
+"Content-Type": "application/json"
+},
+body: JSON.stringify({
+educator_name: document.getElementById("educator").value,
+level: document.getElementById("roomType").value,
+subject: row.subject,
+chapter_name: row.chapter,
+index_code: row.index,
+session_date: document.getElementById("execDate").value,
+yellow_room: document.getElementById("room").value,
+slot_number: index + 1
+})
+});
+
+});
+
+// SUCCESS UI
+document.getElementById("msg").style.display="block";
+setTimeout(()=>document.getElementById("msg").style.display="none",2000);
 
 // SUCCESS UI
 document.getElementById("msg").style.display="block";
