@@ -200,6 +200,36 @@ const TF=s=>({b:"Tenderfeet",s});
 const LN=s=>({b:"Learners",s});
 const AV=s=>({b:"Advancers",s});
 
+// =============================
+// 0 YEARS
+// =============================
+const timetable0 = {
+1:[TF("Linguistic"),TF("Maths"),TF("Naitik Shiksha"),LN("FLN"),LN("Linguistic"),LN("Maths"),LN("Naitik Shiksha"),AV("Maths"),AV("Linguistic"),AV("Science")],
+2:[TF("Linguistic"),TF("Maths"),TF("Naitik Shiksha"),LN("FLN"),LN("Linguistic"),LN("Maths"),LN("Naitik Shiksha"),AV("Maths"),AV("Linguistic"),AV("Science")],
+3:[TF("Linguistic"),TF("Maths"),TF("Cleanliness Session"),LN("FLN"),LN("Linguistic"),LN("Maths"),LN("Naitik Shiksha"),AV("Maths"),AV("Linguistic"),AV("Science")],
+4:[TF("Linguistic"),TF("Maths"),TF("Library Session"),LN("FLN"),LN("Linguistic"),LN("Maths"),LN("SEL Plans"),AV("Maths"),AV("Linguistic"),AV("Science")],
+5:[TF("Linguistic"),TF("EVS"),TF("Yoga"),LN("FLN"),LN("Library Session"),LN("EVS"),LN("Children Panchayat"),LN("Animal Management"),AV("Gender Session"),AV("Yoga"),AV("Games")],
+6:[TF("Drawing"),TF("EVS"),TF("Games"),LN("Why"),LN("GA"),LN("Yoga"),LN("Drawing"),AV("Why"),AV("GA"),AV("Drawing"),AV("Library Session")],
+7:[TF("Linguistic"),TF("Maths"),TF("Naitik Shiksha"),LN("FLN"),LN("Linguistic"),LN("Maths"),LN("Naitik Shiksha"),AV("Maths"),AV("Linguistic"),AV("Science")],
+8:[TF("Linguistic"),TF("Maths"),TF("Naitik Shiksha"),LN("FLN"),LN("Linguistic"),LN("Maths"),LN("Naitik Shiksha"),AV("Maths"),AV("Linguistic"),AV("Science")],
+9:[TF("Linguistic"),TF("Maths"),TF("Naitik Shiksha"),LN("FLN"),LN("Linguistic"),LN("Maths"),LN("SEL Plans"),AV("Maths"),AV("Linguistic"),AV("Science")],
+10:[TF("Linguistic"),TF("Maths"),TF("Library Session"),LN("FLN"),LN("Linguistic"),LN("Maths"),LN("Cleanliness Session"),AV("Maths"),AV("Naitik Shiksha"),AV("Science")],
+11:[TF("Linguistic"),TF("EVS"),TF("Yoga"),LN("FLN"),LN("Library Session"),LN("EVS"),LN("Children Panchayat"),LN("Animal Management"),AV("Cleanliness Session"),AV("Yoga"),AV("Games")],
+12:[TF("Drawing"),TF("EVS"),TF("Games"),LN("Why"),LN("GA"),LN("Yoga"),LN("EVS"),LN("Drawing"),AV("Why"),AV("GA"),AV("Drawing"),AV("Library Session")],
+13:[TF("Linguistic"),TF("Maths"),TF("Naitik Shiksha"),LN("FLN"),LN("Linguistic"),LN("Maths"),LN("Naitik Shiksha"),AV("Maths"),AV("Linguistic"),AV("Science")],
+14:[TF("Linguistic"),TF("Maths"),TF("Naitik Shiksha"),LN("FLN"),LN("Linguistic"),LN("Maths"),LN("Naitik Shiksha"),AV("Maths"),AV("Linguistic"),AV("Science")],
+15:[TF("Linguistic"),TF("Maths"),TF("Naitik Shiksha"),LN("FLN"),LN("Linguistic"),LN("Maths"),LN("SEL Plans"),AV("Maths"),AV("Naitik Shiksha"),AV("Science")],
+16:[TF("Linguistic"),TF("Maths"),TF("Library Session"),LN("FLN"),LN("Linguistic"),LN("Maths"),LN("Gender Session"),AV("Maths"),AV("Naitik Shiksha"),AV("Science")],
+17:[TF("Linguistic"),TF("EVS"),TF("Yoga"),LN("FLN"),LN("Library Session"),LN("EVS"),LN("Children Panchayat"),LN("Animal Management"),AV("Maths"),AV("Yoga"),AV("Games")],
+18:[TF("Drawing"),TF("EVS"),TF("Games"),LN("Why"),LN("GA"),LN("Yoga"),LN("EVS"),LN("Drawing"),AV("Why"),AV("GA"),AV("Drawing"),AV("Library Session")],
+19:[TF("Linguistic"),TF("Maths"),TF("Library Session"),LN("FLN"),LN("Linguistic"),LN("Maths"),LN("Cleanliness Session"),AV("Maths"),AV("Linguistic"),AV("Science")],
+20:[TF("Linguistic"),TF("Maths"),TF("Gender Session"),LN("FLN"),LN("Linguistic"),LN("Maths"),LN("Naitik Shiksha"),AV("Maths"),AV("Linguistic"),AV("Science")],
+21:[TF("Linguistic"),TF("Maths"),TF("Library Session"),LN("FLN"),LN("Linguistic"),LN("Maths"),LN("SEL Plans"),AV("Maths"),AV("Naitik Shiksha"),AV("Science")],
+22:[TF("Linguistic"),TF("Maths"),TF("Cleanliness Session"),LN("FLN"),LN("Linguistic"),LN("Maths"),LN("Games"),AV("Maths"),AV("Naitik Shiksha"),AV("Science")],
+23:[TF("Linguistic"),TF("EVS"),TF("Yoga"),LN("FLN"),LN("PTM"),LN("EVS"),LN("Children Panchayat"),LN("Animal Management"),AV("PTM"),AV("Yoga"),AV("Padho Padhao")],
+24:[TF("Drawing"),TF("EVS"),TF("Games"),LN("Why"),LN("GA"),LN("Yoga"),LN("EVS"),LN("Drawing"),AV("Why"),AV("GA"),AV("Drawing"),AV("Library Session")]
+};
+
 // SPECIAL
 const special=[
 "Games","Library Session","Children Panchayat",
@@ -252,7 +282,11 @@ let type=roomType.value;
 
 if(!day||!type){alert("Select type & day");return;}
 
-let data=transform(type,timetable[day]);
+let data = [];
+
+if(type==="0"){
+  data = timetable0[day] || [];
+}
 
 table.innerHTML=`<tr>
 <th>Batch</th><th>Subject</th><th>Chapter</th><th>Index</th><th>Lesson</th>
