@@ -4,13 +4,13 @@
 <title>YR Lesson Plan MIS</title>
 
 <style>
-
 body{
   font-family: Arial;
-  background: #FEF08A;
+  background: #FEF08A; /* stronger visible yellow */
   margin: 0;
 }
 
+/* HEADER */
 h2{
   background:#1f2937;
   color:#fff;
@@ -19,57 +19,120 @@ h2{
   text-align:center;
 }
 
+/* MAIN CARD */
 .container{
-  padding:20px;
+  padding:30px;
   background:white;
-  margin:20px auto;
-  border-radius:12px;
-  box-shadow:0 6px 15px rgba(0,0,0,0.15);
-  max-width:1200px;
+  margin:40px auto;
+  border-radius:16px;
+  box-shadow:0 8px 20px rgba(0,0,0,0.15);
+  max-width:900px;   /* 👈 controls width */
 }
 
-/* ✅ ADD YOUR TABLE CSS BELOW */
+/* TOP FORM LAYOUT */
+.form-row{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  margin-bottom:15px;
+}
 
+/* INPUTS */
+select,input{
+  padding:10px;
+  border-radius:8px;
+  border:1px solid #ccc;
+  min-width:150px;
+  font-size:14px;
+}
+
+/* BUTTONS */
+button{
+  padding:10px 18px;
+  border:none;
+  border-radius:8px;
+  cursor:pointer;
+  font-weight:bold;
+  font-size:14px;
+}
+
+.load-btn{
+  background:#facc15;
+}
+
+.save-btn{
+  background:#16a34a;
+  color:white;
+  margin-top:10px;
+}
+
+/* HEADER */
+h2{
+  background:#1f2937;
+  color:#fff;
+  padding:18px;
+  margin:0;
+  text-align:center;
+  font-size:22px;
+}
+
+/* INPUTS */
+select,input{
+  padding:8px;
+  margin:5px;
+  border-radius:6px;
+  border:1px solid #ccc;
+}
+
+/* BUTTONS */
+button{
+  padding:10px 16px;
+  border:none;
+  border-radius:6px;
+  cursor:pointer;
+  font-weight:bold;
+}
+
+.load-btn{
+  background:#facc15;
+}
+
+.save-btn{
+  background:#16a34a;
+  color:white;
+}
+
+.save-btn:hover{
+  background:#15803d;
+}
+
+/* TABLE */
 table{
   width:100%;
   border-collapse:collapse;
   margin-top:20px;
   background:white;
-  border-radius:10px;
-  overflow:hidden;
 }
 
 th{
   background:#111827;
   color:#facc15;
-  padding:12px;
-  text-align:left;
+  padding:10px;
 }
 
 td{
+  padding:8px;
+  border:1px solid #ddd;
+}
+
+/* SUCCESS */
+.success{
+  background:#d1fae5;
   padding:10px;
-  border:1px solid #eee;
+  margin-top:10px;
+  display:none;
+  border-radius:6px;
 }
-
-tr:nth-child(even){
-  background:#f9fafb;
-}
-
-tr:hover{
-  background:#fef3c7;
-  transition:0.2s;
-}
-
-.tf{ background:#e0f2fe !important; }
-.ln{ background:#ecfccb !important; }
-.av{ background:#fce7f3 !important; }
-.as{ background:#ede9fe !important; }
-
-.special{
-  background:#fde68a !important;
-  font-weight:bold;
-}
-
 </style>
 </head>
 
