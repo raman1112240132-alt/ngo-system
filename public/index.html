@@ -117,7 +117,9 @@ table{
 th{
   background:#111827;
   color:#facc15;
-  padding:10px;
+  padding:14px;
+  text-align:center;
+  font-size:15px;
 }
 
 td{
@@ -135,6 +137,114 @@ td{
 }
 </style>
 </head>
+<style>
+
+body{
+  font-family: Arial;
+  background: linear-gradient(to right,#fde68a,#fef9c3);
+  margin:0;
+}
+
+h2{
+  background:#1f2937;
+  color:white;
+  padding:18px;
+  margin:0;
+  text-align:center;
+}
+
+/* CONTAINER */
+.container{
+  max-width:1000px;
+  margin:40px auto;
+  background:white;
+  padding:25px;
+  border-radius:15px;
+  box-shadow:0 10px 25px rgba(0,0,0,0.2);
+}
+
+/* FORM */
+.form-row{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  margin-bottom:15px;
+}
+
+input,select{
+  padding:10px;
+  border-radius:8px;
+  border:1px solid #ccc;
+  font-size:14px;
+  min-width:160px;
+}
+
+/* BUTTONS */
+button{
+  padding:10px 18px;
+  border:none;
+  border-radius:8px;
+  cursor:pointer;
+  font-weight:bold;
+}
+
+.load-btn{
+  background:#facc15;
+}
+
+.save-btn{
+  background:#16a34a;
+  color:white;
+}
+
+/* TABLE */
+table{
+  width:100%;
+  border-collapse:collapse;
+  margin-top:20px;
+  border-radius:10px;
+  overflow:hidden;
+}
+
+th{
+  background:#111827;
+  color:#facc15;
+  padding:14px;
+  text-align:center;
+}
+
+td{
+  padding:12px;
+  border:1px solid #eee;
+  text-align:center;
+}
+
+tr:nth-child(even){
+  background:#f9fafb;
+}
+
+tr:hover{
+  background:#fef3c7;
+}
+
+.tf{ background:#e0f2fe !important; }
+.ln{ background:#ecfccb !important; }
+.av{ background:#fce7f3 !important; }
+.as{ background:#ede9fe !important; }
+
+.special{
+  background:#fde68a !important;
+  font-weight:bold;
+}
+
+.success{
+  display:none;
+  margin-top:10px;
+  color:green;
+  font-weight:bold;
+}
+
+</style>
 
 <body>
 
@@ -142,90 +252,95 @@ td{
 
 <div class="container">
 
-<input type="text" id="educator" placeholder="Educator Name">
-<input type="date" id="date">
+<!-- ROW 1 -->
+<div class="form-row">
+  <input type="text" id="educator" placeholder="Educator Name">
+  <input type="date" id="date">
+</div>
 
-<br>
+<!-- ROW 2 -->
+<div class="form-row">
+  <select id="room">
+    <option value="">Select Yellow Room</option>
 
-<select id="room">
-<option value="">Select Yellow Room</option>
+    <option>Abhay Nagar</option>
+    <option>Bahadurpur</option>
+    <option>Badi kalan</option>
+    <option>Beniganj</option>
+    <option>Bhadrukh</option>
+    <option>Bhitauli Khurd</option>
+    <option>Chinhat</option>
+    <option>Garden Bay</option>
+    <option>Gandhi Nagar</option>
+    <option>Hans kheda</option>
+    <option>Hardasi Kheda</option>
+    <option>Hasanpur Khewali</option>
+    <option>Hussainganj</option>
+    <option>Ismailganj</option>
+    <option>Jarhara</option>
+    <option>Jodaura</option>
+    <option>Jugguar</option>
+    <option>Jyotishah Alampur</option>
+    <option>Kalli Paschim</option>
+    <option>Kashyap Nagar</option>
+    <option>Kaudiyamau</option>
+    <option>Khazoor Gaon</option>
+    <option>Kumharan</option>
+    <option>Kutubpur</option>
+    <option>Laulai</option>
+    <option>Macchli Mohal</option>
+    <option>Mahmoodpur</option>
+    <option>Malhaur</option>
+    <option>Mannat</option>
+    <option>Matiyari</option>
+    <option>Meesa</option>
+    <option>Mozzam Nagar</option>
+    <option>Munshipulia</option>
+    <option>Nanda Kheda</option>
+    <option>Nat Kheda</option>
+    <option>Noida Sec 122</option>
+    <option>Noida Sec 17</option>
+    <option>One world</option>
+    <option>Pani Gaon</option>
+    <option>Ram Das Hata</option>
+    <option>Ram Nagar</option>
+    <option>Roshanabad</option>
+    <option>Sandauli</option>
+    <option>Sikandar Nagar</option>
+    <option>Sitarasoi</option>
+    <option>Tindola</option>
+    <option>Ujariyaon</option>
+    <option>Vishundaspur</option>
+  </select>
 
-<option>Abhay Nagar</option>
-<option>Bahadurpur</option>
-<option>Badi kalan</option>
-<option>Beniganj</option>
-<option>Bhadrukh</option>
-<option>Bhitauli Khurd</option>
-<option>Chinhat</option>
-<option>Garden Bay</option>
-<option>Gandhi Nagar</option>
-<option>Hans kheda</option>
-<option>Hardasi Kheda</option>
-<option>Hasanpur Khewali</option>
-<option>Hussainganj</option>
-<option>Ismailganj</option>
-<option>Jarhara</option>
-<option>Jodaura</option>
-<option>Jugguar</option>
-<option>Jyotishah Alampur</option>
-<option>Kalli Paschim</option>
-<option>Kashyap Nagar</option>
-<option>Kaudiyamau</option>
-<option>Khazoor Gaon</option>
-<option>Kumharan</option>
-<option>Kutubpur</option>
-<option>Laulai</option>
-<option>Macchli Mohal</option>
-<option>Mahmoodpur</option>
-<option>Malhaur</option>
-<option>Mannat</option>
-<option>Matiyari</option>
-<option>Meesa</option>
-<option>Mozzam Nagar</option>
-<option>Munshipulia</option>
-<option>Nanda Kheda</option>
-<option>Nat Kheda</option>
-<option>Noida Sec 122</option>
-<option>Noida Sec 17</option>
-<option>One world</option>
-<option>Pani Gaon</option>
-<option>Ram Das Hata</option>
-<option>Ram Nagar</option>
-<option>Roshanabad</option>
-<option>Sandauli</option>
-<option>Sikandar Nagar</option>
-<option>Sitarasoi</option>
-<option>Tindola</option>
-<option>Ujariyaon</option>
-<option>Vishundaspur</option>
+  <select id="roomType">
+    <option value="">Yellow Room Type</option>
+    <option value="0">0 Years</option>
+    <option value="1">1-5 Years</option>
+    <option value="2">5-10 Years</option>
+    <option value="3">10-15 Years</option>
+    <option value="S">Shalimar</option>
+  </select>
+</div>
 
-</select>
+<!-- ROW 3 -->
+<div class="form-row">
+  <select id="weekSelect">
+    <option value="">Select Week</option>
+    <option value="1">Week 1</option>
+    <option value="2">Week 2</option>
+    <option value="3">Week 3</option>
+    <option value="4">Week 4</option>
+  </select>
 
-<select id="roomType">
-<option value="">Yellow Room Type</option>
-<option value="0">0 Years</option>
-<option value="1">1-5 Years</option>
-<option value="2">5-10 Years</option>
-<option value="3">10-15 Years</option>
-<option value="S">Shalimar</option>
-</select>
+  <select id="daySelect">
+    <option value="">Select Day</option>
+  </select>
 
-<br>
+  <button class="load-btn" onclick="loadDay()">Load Day</button>
+</div>
 
-<select id="weekSelect">
-<option value="">Select Week</option>
-<option value="1">Week 1</option>
-<option value="2">Week 2</option>
-<option value="3">Week 3</option>
-<option value="4">Week 4</option>
-</select>
-
-<select id="daySelect">
-<option value="">Select Day</option>
-</select>
-
-<button class="load-btn" onclick="loadDay()">Load Day</button>
-
+<!-- TABLE -->
 <table id="table">
 <tr>
 <th>Batch</th>
@@ -236,15 +351,18 @@ td{
 </tr>
 </table>
 
-<br>
+<!-- EXECUTION DATE -->
+<div class="form-row">
+  <label style="align-self:center;">Execution Date:</label>
+  <input type="date" id="execDate">
+</div>
 
-<label>Execution Date:</label>
-<input type="date" id="execDate">
+<!-- SAVE BUTTON -->
+<div class="form-row">
+  <button class="save-btn" onclick="save()">Save Full Day</button>
+</div>
 
-<br><br>
-
-<button class="save-btn" onclick="save()">Save Full Day</button>
-
+<!-- SUCCESS MESSAGE -->
 <div id="msg" class="success">Saved Successfully ✅</div>
 
 </div>
