@@ -1,770 +1,766 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>YR Lesson Plan MIS</title>
-
+<title>LP.MIS</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Space+Mono:wght@700&display=swap" rel="stylesheet">
 <style>
-body{
-  font-family: Arial;
-  background: #FEF08A; /* stronger visible yellow */
-  margin: 0;
+:root{
+  --yellow:#FBBF24;
+  --dark:#111827;
+  --mid:#374151;
+  --light:#F9FAFB;
+  --border:#E5E7EB;
+  --tf:#DBEAFE;
+  --ln:#DCFCE7;
+  --av:#FCE7F3;
+  --as:#EDE9FE;
+  --special:#FEF3C7;
+  --radius:10px;
 }
-
-/* HEADER */
-h2{
-  background:#1f2937;
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Sans',sans-serif;background:#FFFBEB;min-height:100vh;}
+input:hover,select:hover{border-color:#FBBF24;background:#FFFDF5;}
+.card{transition:box-shadow .2s;}
+.card:hover{box-shadow:0 4px 20px rgba(251,191,36,0.18);}
+tr:not(:first-child):hover td{filter:brightness(0.95);cursor:default;}
+.btn-load:hover{background:#F59E0B;transform:translateY(-1px);box-shadow:0 4px 12px rgba(251,191,36,0.4);}
+.btn-save:hover{background:#15803D;transform:translateY(-1px);box-shadow:0 4px 12px rgba(22,163,74,0.35);}
+header{
+  background:var(--dark);
   color:#fff;
-  padding:15px;
-  margin:0;
-  text-align:center;
-}
-
-/* MAIN CARD */
-.container{
-  padding:30px;
-  background:white;
-  margin:40px auto;
-  border-radius:16px;
-  box-shadow:0 8px 20px rgba(0,0,0,0.15);
-  max-width:900px;   /* 👈 controls width */
-}
-
-/* TOP FORM LAYOUT */
-.form-row{
+  padding:18px 30px;
   display:flex;
-  flex-wrap:wrap;
-  gap:10px;
-  margin-bottom:15px;
+  align-items:center;
+  gap:14px;
 }
-
-/* INPUTS */
-select,input{
-  padding:10px;
+header .logo{
+  font-family:'Space Mono',monospace;
+  font-size:20px;
+  color:var(--yellow);
+  letter-spacing:1px;
+}
+header .sub{font-size:13px;color:#9CA3AF;margin-top:2px;}
+.wrap{max-width:960px;margin:32px auto;padding:0 16px;}
+.card{
+  background:#fff;
+  border-radius:var(--radius);
+  box-shadow:0 2px 12px rgba(0,0,0,0.07);
+  padding:24px;
+  margin-bottom:20px;
+}
+.card-title{
+  font-family:'Space Mono',monospace;
+  font-size:11px;
+  text-transform:uppercase;
+  letter-spacing:1.5px;
+  color:#6B7280;
+  margin-bottom:16px;
+}
+.form-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(200px,1fr));
+  gap:12px;
+}
+label.field{display:flex;flex-direction:column;gap:5px;}
+label.field span{font-size:12px;font-weight:600;color:var(--mid);}
+input,select{
+  padding:9px 12px;
   border-radius:8px;
-  border:1px solid #ccc;
-  min-width:150px;
-  font-size:14px;
-}
-
-/* BUTTONS */
-button{
-  padding:10px 18px;
-  border:none;
-  border-radius:8px;
-  cursor:pointer;
-  font-weight:bold;
-  font-size:14px;
-}
-
-.load-btn{
-  background:#facc15;
-}
-
-.save-btn{
-  background:#16a34a;
-  color:white;
-  margin-top:10px;
-}
-
-/* HEADER */
-h2{
-  background:#1f2937;
-  color:#fff;
-  padding:18px;
-  margin:0;
-  text-align:center;
-  font-size:22px;
-}
-
-/* INPUTS */
-select,input{
-  padding:8px;
-  margin:5px;
-  border-radius:6px;
-  border:1px solid #ccc;
-}
-
-/* BUTTONS */
-button{
-  padding:10px 16px;
-  border:none;
-  border-radius:6px;
-  cursor:pointer;
-  font-weight:bold;
-}
-
-.load-btn{
-  background:#facc15;
-}
-
-.save-btn{
-  background:#16a34a;
-  color:white;
-}
-
-.save-btn:hover{
-  background:#15803d;
-}
-
-/* TABLE */
-table{
+  border:1.5px solid var(--border);
+  font-family:'DM Sans',sans-serif;
+  font-size:13px;
+  background:#fff;
+  color:var(--dark);
+  transition:border-color .15s;
   width:100%;
-  border-collapse:collapse;
-  margin-top:20px;
-  background:white;
 }
-
+input:focus,select:focus{outline:none;border-color:var(--yellow);}
+.btn-row{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap;}
+.btn{
+  padding:10px 22px;
+  border:none;
+  border-radius:8px;
+  font-family:'DM Sans',sans-serif;
+  font-weight:700;
+  font-size:13px;
+  cursor:pointer;
+  transition:opacity .15s,transform .1s;
+}
+.btn:active{transform:scale(0.97);}
+.btn:hover{opacity:.88;}
+.btn-load{background:var(--yellow);color:var(--dark);}
+.btn-save{background:#16A34A;color:#fff;}
+table{width:100%;border-collapse:collapse;font-size:13px;}
 th{
-  background:#111827;
-  color:#facc15;
-  padding:14px;
-  text-align:center;
-  font-size:15px;
+  background:var(--dark);
+  color:var(--yellow);
+  padding:11px 10px;
+  text-align:left;
+  font-size:11px;
+  font-family:'Space Mono',monospace;
+  letter-spacing:.5px;
+  white-space:nowrap;
 }
-
-td{
-  padding:8px;
-  border:1px solid #ddd;
+td{padding:7px 8px;border-bottom:1px solid var(--border);vertical-align:middle;}
+tr.tf td:first-child{border-left:4px solid #3B82F6;}
+tr.ln td:first-child{border-left:4px solid #22C55E;}
+tr.av td:first-child{border-left:4px solid #EC4899;}
+tr.as td:first-child{border-left:4px solid #8B5CF6;}
+tr.tf{background:var(--tf);}
+tr.ln{background:var(--ln);}
+tr.av{background:var(--av);}
+tr.as{background:var(--as);}
+tr.special{background:var(--special);}
+tr.special td:first-child{border-left:4px solid var(--yellow);}
+.batch-pill{
+  display:inline-block;
+  padding:3px 8px;
+  border-radius:20px;
+  font-size:11px;
+  font-weight:700;
 }
-
-/* SUCCESS */
-.success{
-  background:#d1fae5;
-  padding:10px;
-  margin-top:10px;
+.pill-tf{background:#3B82F6;color:#fff;}
+.pill-ln{background:#22C55E;color:#fff;}
+.pill-av{background:#EC4899;color:#fff;}
+.pill-as{background:#8B5CF6;color:#fff;}
+.pill-sp{background:var(--yellow);color:var(--dark);}
+td select,td input[type="text"]{
+  border:1.5px solid #D1D5DB;
+  font-size:12px;
+  padding:6px 8px;
+}
+td select:focus,td input:focus{border-color:#6366F1;}
+.toast{
+  position:fixed;bottom:28px;right:28px;
+  background:#16A34A;color:#fff;
+  padding:14px 22px;
+  border-radius:10px;
+  font-weight:700;
+  font-size:14px;
+  box-shadow:0 4px 18px rgba(0,0,0,0.18);
   display:none;
-  border-radius:6px;
+  z-index:999;
+  animation:slideUp .3s ease;
 }
+@keyframes slideUp{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
+.legend{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:16px;}
+.leg-item{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--mid);}
+.leg-dot{width:10px;height:10px;border-radius:50%;}
+.flag{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:5px 12px;border-radius:20px;
+  font-size:12px;font-weight:700;letter-spacing:.3px;
+  animation:popIn .25s ease;
+}
+.flag-late{background:#FEF2F2;color:#DC2626;border:1.5px solid #FECACA;}
+.flag-incomplete{background:#FFF7ED;color:#C2410C;border:1.5px solid #FED7AA;}
+#tableWrap{overflow-x:auto;}
+/* Incomplete fields modal */
+.modal-overlay{
+  display:none;position:fixed;inset:0;
+  background:rgba(0,0,0,0.45);z-index:1000;
+  align-items:center;justify-content:center;
+}
+.modal-overlay.active{display:flex;}
+.modal-box{
+  background:#fff;border-radius:14px;padding:28px 32px;
+  max-width:420px;width:90%;box-shadow:0 8px 40px rgba(0,0,0,0.18);
+  animation:popIn .2s ease;
+}
+@keyframes popIn{from{transform:scale(0.92);opacity:0}to{transform:scale(1);opacity:1}}
+.modal-icon{font-size:32px;margin-bottom:10px;}
+.modal-title{font-family:'Space Mono',monospace;font-size:14px;font-weight:700;color:var(--dark);margin-bottom:8px;}
+.modal-body{font-size:13px;color:#6B7280;line-height:1.6;margin-bottom:20px;}
+.modal-body ul{margin:8px 0 0 16px;}
+.modal-body li{margin-bottom:4px;}
+.modal-btns{display:flex;gap:10px;justify-content:flex-end;}
+.modal-btn-cancel{padding:9px 18px;border:1.5px solid var(--border);border-radius:8px;background:#fff;font-family:'DM Sans',sans-serif;font-weight:600;font-size:13px;cursor:pointer;}
+.modal-btn-cancel:hover{background:#F9FAFB;}
+.modal-btn-submit{padding:9px 18px;border:none;border-radius:8px;background:#16A34A;color:#fff;font-family:'DM Sans',sans-serif;font-weight:700;font-size:13px;cursor:pointer;}
+.modal-btn-submit:hover{background:#15803D;}
 </style>
 </head>
-<style>
-
-body{
-  font-family: Arial;
-  background: linear-gradient(to right,#fde68a,#fef9c3);
-  margin:0;
-}
-
-h2{
-  background:#1f2937;
-  color:white;
-  padding:18px;
-  margin:0;
-  text-align:center;
-}
-
-/* CONTAINER */
-.container{
-  max-width:1000px;
-  margin:40px auto;
-  background:white;
-  padding:25px;
-  border-radius:15px;
-  box-shadow:0 10px 25px rgba(0,0,0,0.2);
-}
-
-/* FORM */
-.form-row{
-  display:flex;
-  flex-wrap:wrap;
-  gap:10px;
-  margin-bottom:15px;
-}
-
-input,select{
-  padding:10px;
-  border-radius:8px;
-  border:1px solid #ccc;
-  font-size:14px;
-  min-width:160px;
-}
-
-/* BUTTONS */
-button{
-  padding:10px 18px;
-  border:none;
-  border-radius:8px;
-  cursor:pointer;
-  font-weight:bold;
-}
-
-.load-btn{
-  background:#facc15;
-}
-
-.save-btn{
-  background:#16a34a;
-  color:white;
-}
-
-/* TABLE */
-table{
-  width:100%;
-  border-collapse:collapse;
-  margin-top:20px;
-  border-radius:10px;
-  overflow:hidden;
-}
-
-th{
-  background:#111827;
-  color:#facc15;
-  padding:14px;
-  text-align:center;
-}
-
-td{
-  padding:12px;
-  border:1px solid #eee;
-  text-align:center;
-}
-
-tr:nth-child(even){
-  background:#f9fafb;
-}
-
-tr:hover{
-  background:#fef3c7;
-}
-
-.tf{ background:#e0f2fe !important; }
-.ln{ background:#ecfccb !important; }
-.av{ background:#fce7f3 !important; }
-.as{ background:#ede9fe !important; }
-
-.special{
-  background:#fde68a !important;
-  font-weight:bold;
-}
-
-.success{
-  display:none;
-  margin-top:10px;
-  color:green;
-  font-weight:bold;
-}
-
-</style>
-
 <body>
+<header>
+  <div>
+    <div class="logo">LP · MIS</div>
+    <div class="sub">Lesson Plan Management Information System</div>
+  </div>
+</header>
 
-<h2>YR Lesson Plan MIS</h2>
+<div id="restoreBanner" style="display:none;background:#FEF3C7;border-bottom:2px solid #FBBF24;padding:10px 30px;font-size:13px;font-family:'DM Sans',sans-serif;color:#92400E;display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+  <span>🕐 <strong>Last session found:</strong> <span id="restoreInfo"></span></span>
+  <button onclick="restoreLastSession()" style="background:#FBBF24;border:none;border-radius:6px;padding:5px 14px;font-weight:700;font-size:12px;cursor:pointer;">Restore</button>
+  <button onclick="document.getElementById('restoreBanner').style.display='none'" style="background:none;border:none;font-size:16px;cursor:pointer;color:#92400E;">✕</button>
+</div>
+<div class="wrap">
 
-<div class="container">
+  <!-- SESSION INFO -->
+  <div class="card">
+    <div class="card-title">Session Info</div>
+    <div class="form-grid">
+      <label class="field"><span>Educator Name</span><input type="text" id="educator" placeholder="Enter name"></label>
+      <label class="field"><span>Yellow Room</span>
+        <select id="room">
+          <option value="">Select Room</option>
+          <option>Abhay Nagar</option><option>Bahadurpur</option><option>Badi kalan</option>
+          <option>Beniganj</option><option>Bhadrukh</option><option>Bhitauli Khurd</option>
+          <option>Chinhat</option><option>Garden Bay</option><option>Gandhi Nagar</option>
+          <option>Hans kheda</option><option>Hardasi Kheda</option><option>Hasanpur Khewali</option>
+          <option>Hussainganj</option><option>Ismailganj</option><option>Jarhara</option>
+          <option>Jodaura</option><option>Jugguar</option><option>Jyotishah Alampur</option>
+          <option>Kalli Paschim</option><option>Kashyap Nagar</option><option>Kaudiyamau</option>
+          <option>Khazoor Gaon</option><option>Kumharan</option><option>Kutubpur</option>
+          <option>Laulai</option><option>Macchli Mohal</option><option>Mahmoodpur</option>
+          <option>Malhaur</option><option>Mannat</option><option>Matiyari</option>
+          <option>Meesa</option><option>Mozzam Nagar</option><option>Munshipulia</option>
+          <option>Nanda Kheda</option><option>Nat Kheda</option><option>Noida Sec 122</option>
+          <option>Noida Sec 17</option><option>One world</option><option>Pani Gaon</option>
+          <option>Ram Das Hata</option><option>Ram Nagar</option><option>Roshanabad</option>
+          <option>Sandauli</option><option>Sikandar Nagar</option><option>Sitarasoi</option>
+          <option>Tindola</option><option>Ujariyaon</option><option>Vishundaspur</option>
+        </select>
+      </label>
+      <label class="field"><span>Room Type</span>
+        <select id="roomType">
+          <option value="">Select Type</option>
+          <option value="0">0 Years</option>
+          <option value="1">1–5 Years</option>
+          <option value="2">5–10 Years</option>
+          <option value="3">10–15 Years</option>
+          <option value="S">Shalimar</option>
+        </select>
+      </label>
+      <label class="field"><span>Week</span>
+        <select id="weekSelect"><option value="">Select Week</option>
+          <option value="1">Week 1</option><option value="2">Week 2</option>
+          <option value="3">Week 3</option><option value="4">Week 4</option>
+        </select>
+      </label>
+      <label class="field"><span>Day</span>
+        <select id="daySelect"><option value="">Select Day</option></select>
+      </label>
+      <label class="field">
+        <span>Today's Date</span>
+        <input type="text" id="todayDisplay" readonly
+          style="background:#F3F4F6;color:#6B7280;cursor:not-allowed;border-color:#E5E7EB;font-weight:600;">
+      </label>
+      <label class="field"><span>Execution Date</span><input type="date" id="execDate" onchange="checkLateSubmission()"></label>
+    </div>
+    <!-- Status flags row -->
+    <div style="display:flex;gap:10px;margin-top:14px;flex-wrap:wrap;" id="flagsRow"></div>
+    <div class="btn-row">
+      <button class="btn btn-load" onclick="loadDay()">▶ Load Day</button>
+    </div>
+  </div>
 
-<!-- ROW 1 -->
-<div class="form-row">
-  <input type="text" id="educator" placeholder="Educator Name">
-  <input type="date" id="date">
+  <!-- TIMETABLE -->
+  <div class="card">
+    <div class="card-title">Lesson Plan</div>
+    <div class="legend">
+      <div class="leg-item"><div class="leg-dot" style="background:#3B82F6"></div> Tenderfeet</div>
+      <div class="leg-item"><div class="leg-dot" style="background:#22C55E"></div> Learners</div>
+      <div class="leg-item"><div class="leg-dot" style="background:#EC4899"></div> Advancers</div>
+      <div class="leg-item"><div class="leg-dot" style="background:#8B5CF6"></div> Aspirers</div>
+      <div class="leg-item"><div class="leg-dot" style="background:#FBBF24"></div> Special Session</div>
+    </div>
+    <div id="tableWrap">
+      <table id="table">
+        <tr><th>Batch</th><th>Subject</th><th>Chapter</th><th>Index</th><th>Lesson</th></tr>
+      </table>
+    </div>
+    <div class="btn-row" style="margin-top:20px;">
+      <button class="btn btn-save" onclick="save()">💾 Save Full Day</button>
+    </div>
+  </div>
+
 </div>
 
-<!-- ROW 2 -->
-<div class="form-row">
-  <select id="room">
-    <option value="">Select Yellow Room</option>
-
-    <option>Abhay Nagar</option>
-    <option>Bahadurpur</option>
-    <option>Badi kalan</option>
-    <option>Beniganj</option>
-    <option>Bhadrukh</option>
-    <option>Bhitauli Khurd</option>
-    <option>Chinhat</option>
-    <option>Garden Bay</option>
-    <option>Gandhi Nagar</option>
-    <option>Hans kheda</option>
-    <option>Hardasi Kheda</option>
-    <option>Hasanpur Khewali</option>
-    <option>Hussainganj</option>
-    <option>Ismailganj</option>
-    <option>Jarhara</option>
-    <option>Jodaura</option>
-    <option>Jugguar</option>
-    <option>Jyotishah Alampur</option>
-    <option>Kalli Paschim</option>
-    <option>Kashyap Nagar</option>
-    <option>Kaudiyamau</option>
-    <option>Khazoor Gaon</option>
-    <option>Kumharan</option>
-    <option>Kutubpur</option>
-    <option>Laulai</option>
-    <option>Macchli Mohal</option>
-    <option>Mahmoodpur</option>
-    <option>Malhaur</option>
-    <option>Mannat</option>
-    <option>Matiyari</option>
-    <option>Meesa</option>
-    <option>Mozzam Nagar</option>
-    <option>Munshipulia</option>
-    <option>Nanda Kheda</option>
-    <option>Nat Kheda</option>
-    <option>Noida Sec 122</option>
-    <option>Noida Sec 17</option>
-    <option>One world</option>
-    <option>Pani Gaon</option>
-    <option>Ram Das Hata</option>
-    <option>Ram Nagar</option>
-    <option>Roshanabad</option>
-    <option>Sandauli</option>
-    <option>Sikandar Nagar</option>
-    <option>Sitarasoi</option>
-    <option>Tindola</option>
-    <option>Ujariyaon</option>
-    <option>Vishundaspur</option>
-  </select>
-
-  <select id="roomType">
-    <option value="">Yellow Room Type</option>
-    <option value="0">0 Years</option>
-    <option value="1">1-5 Years</option>
-    <option value="2">5-10 Years</option>
-    <option value="3">10-15 Years</option>
-    <option value="S">Shalimar</option>
-  </select>
+<div class="modal-overlay" id="incompleteModal">
+  <div class="modal-box">
+    <div class="modal-icon">⚠️</div>
+    <div class="modal-title">Some fields are not filled</div>
+    <div class="modal-body" id="modalBody">Some areas are incomplete. Do you still want to submit?</div>
+    <div class="modal-btns">
+      <button class="modal-btn-cancel" onclick="closeModal()">Go Back & Fill</button>
+      <button class="modal-btn-submit" onclick="submitAnyway()">Submit Anyway</button>
+    </div>
+  </div>
 </div>
 
-<!-- ROW 3 -->
-<div class="form-row">
-  <select id="weekSelect">
-    <option value="">Select Week</option>
-    <option value="1">Week 1</option>
-    <option value="2">Week 2</option>
-    <option value="3">Week 3</option>
-    <option value="4">Week 4</option>
-  </select>
-
-  <select id="daySelect">
-    <option value="">Select Day</option>
-  </select>
-
-  <button class="load-btn" onclick="loadDay()">Load Day</button>
-</div>
-
-<!-- TABLE -->
-<table id="table">
-<tr>
-<th>Batch</th>
-<th>Subject</th>
-<th>Chapter</th>
-<th>Index</th>
-<th>Lesson</th>
-</tr>
-</table>
-
-<!-- EXECUTION DATE -->
-<div class="form-row">
-  <label style="align-self:center;">Execution Date:</label>
-  <input type="date" id="execDate">
-</div>
-
-<!-- SAVE BUTTON -->
-<div class="form-row">
-  <button class="save-btn" onclick="save()">Save Full Day</button>
-</div>
-
-<!-- SUCCESS MESSAGE -->
-<div id="msg" class="success">Saved Successfully ✅</div>
-
-</div>
+<div class="toast" id="toast">✅ Saved Successfully!</div>
 
 <script>
-
-// ON LOAD
+// ── INIT ──
 window.onload = function(){
-
-document.getElementById("date").value =
-new Date().toISOString().split("T")[0];
-
-document.getElementById("execDate").value =
-new Date().toISOString().split("T")[0];
-
-sortRooms();
-
+  const today = new Date();
+  const todayStr = today.toISOString().split("T")[0];
+  // Human-readable locked display
+  const fmt = today.toLocaleDateString("en-IN",{weekday:"short",day:"2-digit",month:"short",year:"numeric"});
+  document.getElementById("todayDisplay").value = fmt;
+  document.getElementById("todayDisplay").dataset.iso = todayStr; // store ISO for comparison
+  document.getElementById("execDate").value = todayStr;
+  sortRooms();
+  try {
+    const last = JSON.parse(localStorage.getItem("lastSession"));
+    if(last){
+      const typeLabel = {"0":"0 Yrs","1":"1–5 Yrs","2":"5–10 Yrs","3":"10–15 Yrs","S":"Shalimar"};
+      document.getElementById("restoreInfo").innerText =
+        `${last.educator} · ${last.room} · ${typeLabel[last.roomType]||last.roomType} · ${last.execDate} (${last.payload.length} rows)`;
+      document.getElementById("restoreBanner").style.display = "flex";
+    }
+  } catch(e){}
 };
 
-// SORT ROOMS
+// ── LATE SUBMISSION FLAG ──
+function checkLateSubmission(){
+  const todayStr = document.getElementById("todayDisplay").dataset.iso;
+  const execDate = document.getElementById("execDate").value;
+  updateFlags(todayStr, execDate);
+}
+
+// ── INCOMPLETE FLAG (called after loadDay) ──
+function checkIncompleteFlag(){
+  const rows = document.querySelectorAll("#table tr");
+  const todayStr = document.getElementById("todayDisplay").dataset.iso;
+  const execDate = document.getElementById("execDate").value;
+  updateFlags(todayStr, execDate, rows.length > 1);
+}
+
+function updateFlags(todayStr, execDate, tableLoaded){
+  const flagsRow = document.getElementById("flagsRow");
+  flagsRow.innerHTML = "";
+  if(execDate && execDate < todayStr){
+    flagsRow.innerHTML += `<span class="flag flag-late">🕐 Late Submission — execution date is in the past</span>`;
+  }
+  if(tableLoaded){
+    const rows = document.querySelectorAll("#table tr");
+    let missing = 0;
+    for(let i=1;i<rows.length;i++){
+      const cells = rows[i].cells;
+      const subject = cells[1]?.innerText?.trim();
+      if(SPECIALS.has(subject)){
+        const v = cells[2]?.querySelector("select")?.value;
+        if(!v) missing++;
+      } else {
+        const ch = cells[2]?.querySelector("select")?.value;
+        const idx = cells[3]?.querySelector("select")?.value;
+        if(!ch||!idx) missing++;
+      }
+    }
+    if(missing > 0){
+      flagsRow.innerHTML += `<span class="flag flag-incomplete">⚠️ ${missing} incomplete entr${missing>1?"ies":"y"} detected</span>`;
+    }
+  }
+}
+
+function restoreLastSession(){
+  try {
+    const last = JSON.parse(localStorage.getItem("lastSession"));
+    if(!last) return;
+    document.getElementById("educator").value = last.educator;
+    document.getElementById("room").value = last.room;
+    document.getElementById("roomType").value = last.roomType;
+    document.getElementById("execDate").value = last.execDate;
+    document.getElementById("restoreBanner").style.display = "none";
+    alert("✅ Session info restored! Select Week & Day, then Load Day to continue.");
+  } catch(e){}
+}
+
 function sortRooms(){
-let dropdown = document.getElementById("room");
-let options = Array.from(dropdown.options).slice(1);
-
-options.sort((a,b)=>a.text.localeCompare(b.text));
-
-dropdown.innerHTML = '<option value="">Select Yellow Room</option>';
-options.forEach(opt=>dropdown.add(opt));
+  const dd = document.getElementById("room");
+  const opts = Array.from(dd.options).slice(1).sort((a,b)=>a.text.localeCompare(b.text));
+  dd.innerHTML = '<option value="">Select Room</option>';
+  opts.forEach(o=>dd.add(o));
 }
 
-// ROOM TYPE AUTO
+// ── AUTO ROOM TYPE ──
 const roomMap = {
-"Malhaur":"3",
-"Chinhat":"3",
-"Munshipulia":"3",
-"Ismailganj":"2",
-"Garden Bay":"S",
-"Mannat":"S",
-"One world":"S"
+  "Malhaur":"3","Chinhat":"3","Munshipulia":"3",
+  "Ismailganj":"2","Garden Bay":"S","Mannat":"S","One world":"S"
+};
+document.getElementById("room").addEventListener("change",function(){
+  document.getElementById("roomType").value = roomMap[this.value] || "1";
+});
+
+// ── WEEK → DAY ──
+document.getElementById("weekSelect").addEventListener("change",function(){
+  const week = parseInt(this.value);
+  const dd = document.getElementById("daySelect");
+  dd.innerHTML = '<option value="">Select Day</option>';
+  if(!week) return;
+  const start = (week-1)*6+1;
+  for(let i=0;i<6;i++) dd.innerHTML += `<option value="${start+i}">Day ${start+i}</option>`;
+});
+
+// ── BATCH HELPERS ──
+const TF = s => ({b:"Tenderfeet",s});
+const LN = s => ({b:"Learners",s});
+const AV = s => ({b:"Advancers",s});
+const AS = s => ({b:"Aspirers",s});
+
+// ── SPECIAL SESSIONS ──
+const SPECIALS = new Set(["Games","Library Session","Children Panchayat","Animal Management","Padho Padhao","PTM"]);
+
+// ── SUBJECT DATA ──
+// Add more subjects/chapters/indices here as your curriculum grows
+const subjectData = {
+  "Linguistic":{
+    "Chapter 1":{"L1-1":"Letter Recognition","L1-2":"Vowel Sounds","L1-3":"Simple Words"},
+    "Chapter 2":{"L2-1":"Word Formation","L2-2":"Sentence Building","L2-3":"Reading Practice"},
+    "Chapter 3":{"L3-1":"Comprehension","L3-2":"Story Narration","L3-3":"Writing Skills"}
+  },
+  "Maths":{
+    "Chapter 1":{"M1-1":"Number Recognition 1-10","M1-2":"Counting Objects","M1-3":"Before & After"},
+    "Chapter 2":{"M2-1":"Addition Basics","M2-2":"Subtraction Basics","M2-3":"Number Patterns"},
+    "Chapter 3":{"M3-1":"Shapes & Sizes","M3-2":"Measurement Intro","M3-3":"Simple Word Problems"}
+  },
+  "Science":{
+    "Chapter 1":{"S1-1":"Living vs Non-Living","S1-2":"Parts of a Plant","S1-3":"Animals Around Us"},
+    "Chapter 2":{"S2-1":"Our Body","S2-2":"Food & Nutrition","S2-3":"Water & Its Uses"},
+    "Chapter 3":{"S3-1":"Air & Weather","S3-2":"Simple Machines","S3-3":"Light & Shadow"}
+  },
+  "EVS":{
+    "Chapter 1":{"E1-1":"My Family","E1-2":"My Neighbourhood","E1-3":"Community Helpers"},
+    "Chapter 2":{"E2-1":"Plants & Trees","E2-2":"Animals & Birds","E2-3":"Water Bodies"},
+    "Chapter 3":{"E3-1":"Transport","E3-2":"Festivals","E3-3":"Our Environment"}
+  },
+  "FLN":{
+    "Unit 1":{"F1-1":"Oral Language","F1-2":"Print Awareness","F1-3":"Phonological Awareness"},
+    "Unit 2":{"F2-1":"Decoding Skills","F2-2":"Fluency Practice","F2-3":"Comprehension Strategies"}
+  },
+  "Naitik Shiksha":{
+    "Chapter 1":{"N1-1":"Honesty","N1-2":"Respect for Elders","N1-3":"Helping Others"},
+    "Chapter 2":{"N2-1":"Responsibility","N2-2":"Kindness","N2-3":"Team Work"}
+  },
+  "Yoga":{
+    "Chapter 1":{"Y1-1":"Breathing Exercise","Y1-2":"Stretching Basics","Y1-3":"Relaxation"},
+    "Chapter 2":{"Y2-1":"Surya Namaskar","Y2-2":"Balance Asanas","Y2-3":"Meditation"}
+  },
+  "WHY":{
+    "Chapter 1":{"W1-1":"Why Sky is Blue","W1-2":"Why Plants Need Sun","W1-3":"Why Rain Falls"},
+    "Chapter 2":{"W2-1":"Why We Sleep","W2-2":"Why Birds Migrate","W2-3":"Why Seasons Change"}
+  },
+  "GA":{
+    "Chapter 1":{"G1-1":"India Basics","G1-2":"National Symbols","G1-3":"States & Capitals"},
+    "Chapter 2":{"G2-1":"World Map Intro","G2-2":"Continents & Oceans","G2-3":"Famous Landmarks"}
+  },
+  "Drawing":{
+    "Chapter 1":{"D1-1":"Basic Shapes","D1-2":"Line Patterns","D1-3":"Coloring Techniques"},
+    "Chapter 2":{"D2-1":"Nature Drawing","D2-2":"Animals","D2-3":"Scenery"}
+  },
+  "Cleanliness Session":{
+    "Chapter 1":{"C1-1":"Personal Hygiene","C1-2":"Hand Washing","C1-3":"Clean Clothes"},
+    "Chapter 2":{"C2-1":"Clean Surroundings","C2-2":"Waste Management","C2-3":"Food Hygiene"}
+  },
+  "Gender Session":{
+    "Chapter 1":{"GS1-1":"Respect & Equality","GS1-2":"Roles in Society","GS1-3":"Safe Touch"},
+    "Chapter 2":{"GS2-1":"Expressions & Feelings","GS2-2":"Equal Opportunities","GS2-3":"Self-Respect"}
+  },
+  "SEL Plans":{
+    "Module 1":{"SEL1-1":"Self Awareness","SEL1-2":"Emotion Recognition","SEL1-3":"Self Regulation"},
+    "Module 2":{"SEL2-1":"Empathy","SEL2-2":"Social Skills","SEL2-3":"Responsible Decisions"}
+  }
 };
 
-document.getElementById("room").addEventListener("change", function(){
-document.getElementById("roomType").value = roomMap[this.value] || "1";
-});
-
-// WEEK → DAY
-document.getElementById("weekSelect").addEventListener("change", function(){
-
-let week = parseInt(this.value);
-let dayDropdown = document.getElementById("daySelect");
-
-dayDropdown.innerHTML = '<option value="">Select Day</option>';
-
-if(!week) return;
-
-let start = (week - 1) * 6 + 1;
-
-for(let i = 0; i < 6; i++){
-  let day = start + i;
-  dayDropdown.innerHTML += `<option value="${day}">Day ${day}</option>`;
-}
-
-});
-
-// HELPERS
-const TF=s=>({b:"Tenderfeet",s});
-const LN=s=>({b:"Learners",s});
-const AV=s=>({b:"Advancers",s});
-const AS=s=>({b:"Aspirers",s});
-
-// =============================
-// 0 YEARS
-// =============================
+// ── TIMETABLES ──
 const timetable0 = {
-1:[TF("Linguistic"),TF("Maths"),TF("Naitik Shiksha"),LN("FLN"),LN("Linguistic"),LN("Maths"),LN("Naitik Shiksha"),AV("Maths"),AV("Linguistic"),AV("Science")],
-2:[TF("Linguistic"),TF("Maths"),TF("Naitik Shiksha"),LN("FLN"),LN("Linguistic"),LN("Maths"),LN("Naitik Shiksha"),AV("Maths"),AV("Linguistic"),AV("Science")],
-3:[TF("Linguistic"),TF("Maths"),TF("Cleanliness Session"),LN("FLN"),LN("Linguistic"),LN("Maths"),LN("Naitik Shiksha"),AV("Maths"),AV("Linguistic"),AV("Science")],
-4:[TF("Linguistic"),TF("Maths"),TF("Library Session"),LN("FLN"),LN("Linguistic"),LN("Maths"),LN("SEL Plans"),AV("Maths"),AV("Naitik Shiksha"),AV("Science")],
-5:[TF("Linguistic"),TF("EVS"),TF("Yoga"),LN("FLN"),LN("Library Session"),LN("EVS"),LN("Children Panchayat"),LN("Animal Management"),AV("Gender Session"),AV("Yoga"),AV("Games")],
-6:[TF("Drawing"),TF("EVS"),TF("Games"),LN("WHY"),LN("GA"),LN("Yoga"),LN("Drawing"),AV("WHY"),AV("GA"),AV("Drawing"),AV("Library Session")],
-7:[TF("Linguistic"),TF("Maths"),TF("Naitik Shiksha"),LN("FLN"),LN("Linguistic"),LN("Maths"),LN("Naitik Shiksha"),AV("Maths"),AV("Linguistic"),AV("Science")],
-8:[TF("Linguistic"),TF("Maths"),TF("Naitik Shiksha"),LN("FLN"),LN("Linguistic"),LN("Maths"),LN("Naitik Shiksha"),AV("Maths"),AV("Linguistic"),AV("Science")],
-9:[TF("Linguistic"),TF("Maths"),TF("Naitik Shiksha"),LN("FLN"),LN("Linguistic"),LN("Maths"),LN("SEL Plans"),AV("Maths"),AV("Linguistic"),AV("Science")],
-10:[TF("Linguistic"),TF("Maths"),TF("Library Session"),LN("FLN"),LN("Linguistic"),LN("Maths"),LN("Cleanliness Session"),AV("Maths"),AV("Naitik Shiksha"),AV("Science")],
-11:[TF("Linguistic"),TF("EVS"),TF("Yoga"),LN("FLN"),LN("Library Session"),LN("EVS"),LN("Children Panchayat"),LN("Animal Management"),AV("Cleanliness Session"),AV("Yoga"),AV("Games")],
-12:[TF("Drawing"),TF("EVS"),TF("Games"),LN("WHY"),LN("GA"),LN("Yoga"),LN("EVS"),LN("Drawing"),AV("WHY"),AV("GA"),AV("Drawing"),AV("Library Session")],
-13:[TF("Linguistic"),TF("Maths"),TF("Naitik Shiksha"),LN("FLN"),LN("Linguistic"),LN("Maths"),LN("Naitik Shiksha"),AV("Maths"),AV("Linguistic"),AV("Science")],
-14:[TF("Linguistic"),TF("Maths"),TF("Naitik Shiksha"),LN("FLN"),LN("Linguistic"),LN("Maths"),LN("Naitik Shiksha"),AV("Maths"),AV("Linguistic"),AV("Science")],
-15:[TF("Linguistic"),TF("Maths"),TF("Naitik Shiksha"),LN("FLN"),LN("Linguistic"),LN("Maths"),LN("SEL Plans"),AV("Maths"),AV("Naitik Shiksha"),AV("Science")],
-16:[TF("Linguistic"),TF("Maths"),TF("Library Session"),LN("FLN"),LN("Linguistic"),LN("Maths"),LN("Gender Session"),AV("Maths"),AV("Naitik Shiksha"),AV("Science")],
-17:[TF("Linguistic"),TF("EVS"),TF("Yoga"),LN("FLN"),LN("Library Session"),LN("EVS"),LN("Children Panchayat"),LN("Animal Management"),AV("Maths"),AV("Yoga"),AV("Games")],
-18:[TF("Drawing"),TF("EVS"),TF("Games"),LN("WHY"),LN("GA"),LN("Yoga"),LN("EVS"),LN("Drawing"),AV("WHY"),AV("GA"),AV("Drawing"),AV("Library Session")],
-19:[TF("Linguistic"),TF("Maths"),TF("Library Session"),LN("FLN"),LN("Linguistic"),LN("Maths"),LN("Cleanliness Session"),AV("Maths"),AV("Linguistic"),AV("Science")],
-20:[TF("Linguistic"),TF("Maths"),TF("Gender Session"),LN("FLN"),LN("Linguistic"),LN("Maths"),LN("Naitik Shiksha"),AV("Maths"),AV("Linguistic"),AV("Science")],
-21:[TF("Linguistic"),TF("Maths"),TF("Library Session"),LN("FLN"),LN("Linguistic"),LN("Maths"),LN("SEL Plans"),AV("Maths"),AV("Naitik Shiksha"),AV("Science")],
-22:[TF("Linguistic"),TF("Maths"),TF("Cleanliness Session"),LN("FLN"),LN("Linguistic"),LN("Maths"),LN("Games"),AV("Maths"),AV("Naitik Shiksha"),AV("Science")],
-23:[TF("Linguistic"),TF("EVS"),TF("Yoga"),LN("FLN"),LN("PTM"),LN("EVS"),LN("Children Panchayat"),LN("Animal Management"),AV("PTM"),AV("Yoga"),AV("Padho Padhao")],
-24:[TF("Drawing"),TF("EVS"),TF("Games"),LN("WHY"),LN("GA"),LN("Yoga"),LN("EVS"),LN("Drawing"),AV("WHY"),AV("GA"),AV("Drawing"),AV("Library Session")]
+  1:[TF("Linguistic"),TF("Maths"),TF("Naitik Shiksha"),LN("FLN"),LN("Linguistic"),LN("Maths"),LN("Naitik Shiksha"),AV("Maths"),AV("Linguistic"),AV("Science")],
+  2:[TF("Linguistic"),TF("Maths"),TF("Naitik Shiksha"),LN("FLN"),LN("Linguistic"),LN("Maths"),LN("Naitik Shiksha"),AV("Maths"),AV("Linguistic"),AV("Science")],
+  3:[TF("Linguistic"),TF("Maths"),TF("Cleanliness Session"),LN("FLN"),LN("Linguistic"),LN("Maths"),LN("Naitik Shiksha"),AV("Maths"),AV("Linguistic"),AV("Science")],
+  4:[TF("Linguistic"),TF("Maths"),TF("Library Session"),LN("FLN"),LN("Linguistic"),LN("Maths"),LN("SEL Plans"),AV("Maths"),AV("Naitik Shiksha"),AV("Science")],
+  5:[TF("Linguistic"),TF("EVS"),TF("Yoga"),LN("FLN"),LN("Library Session"),LN("EVS"),LN("Children Panchayat"),LN("Animal Management"),AV("Gender Session"),AV("Yoga"),AV("Games")],
+  6:[TF("Drawing"),TF("EVS"),TF("Games"),LN("WHY"),LN("GA"),LN("Yoga"),LN("Drawing"),AV("WHY"),AV("GA"),AV("Drawing"),AV("Library Session")],
+  7:[TF("Linguistic"),TF("Maths"),TF("Naitik Shiksha"),LN("FLN"),LN("Linguistic"),LN("Maths"),LN("Naitik Shiksha"),AV("Maths"),AV("Linguistic"),AV("Science")],
+  8:[TF("Linguistic"),TF("Maths"),TF("Naitik Shiksha"),LN("FLN"),LN("Linguistic"),LN("Maths"),LN("Naitik Shiksha"),AV("Maths"),AV("Linguistic"),AV("Science")],
+  9:[TF("Linguistic"),TF("Maths"),TF("Naitik Shiksha"),LN("FLN"),LN("Linguistic"),LN("Maths"),LN("SEL Plans"),AV("Maths"),AV("Linguistic"),AV("Science")],
+  10:[TF("Linguistic"),TF("Maths"),TF("Library Session"),LN("FLN"),LN("Linguistic"),LN("Maths"),LN("Cleanliness Session"),AV("Maths"),AV("Naitik Shiksha"),AV("Science")],
+  11:[TF("Linguistic"),TF("EVS"),TF("Yoga"),LN("FLN"),LN("Library Session"),LN("EVS"),LN("Children Panchayat"),LN("Animal Management"),AV("Cleanliness Session"),AV("Yoga"),AV("Games")],
+  12:[TF("Drawing"),TF("EVS"),TF("Games"),LN("WHY"),LN("GA"),LN("Yoga"),LN("EVS"),LN("Drawing"),AV("WHY"),AV("GA"),AV("Drawing"),AV("Library Session")],
+  13:[TF("Linguistic"),TF("Maths"),TF("Naitik Shiksha"),LN("FLN"),LN("Linguistic"),LN("Maths"),LN("Naitik Shiksha"),AV("Maths"),AV("Linguistic"),AV("Science")],
+  14:[TF("Linguistic"),TF("Maths"),TF("Naitik Shiksha"),LN("FLN"),LN("Linguistic"),LN("Maths"),LN("Naitik Shiksha"),AV("Maths"),AV("Linguistic"),AV("Science")],
+  15:[TF("Linguistic"),TF("Maths"),TF("Naitik Shiksha"),LN("FLN"),LN("Linguistic"),LN("Maths"),LN("SEL Plans"),AV("Maths"),AV("Naitik Shiksha"),AV("Science")],
+  16:[TF("Linguistic"),TF("Maths"),TF("Library Session"),LN("FLN"),LN("Linguistic"),LN("Maths"),LN("Gender Session"),AV("Maths"),AV("Naitik Shiksha"),AV("Science")],
+  17:[TF("Linguistic"),TF("EVS"),TF("Yoga"),LN("FLN"),LN("Library Session"),LN("EVS"),LN("Children Panchayat"),LN("Animal Management"),AV("Maths"),AV("Yoga"),AV("Games")],
+  18:[TF("Drawing"),TF("EVS"),TF("Games"),LN("WHY"),LN("GA"),LN("Yoga"),LN("EVS"),LN("Drawing"),AV("WHY"),AV("GA"),AV("Drawing"),AV("Library Session")],
+  19:[TF("Linguistic"),TF("Maths"),TF("Library Session"),LN("FLN"),LN("Linguistic"),LN("Maths"),LN("Cleanliness Session"),AV("Maths"),AV("Linguistic"),AV("Science")],
+  20:[TF("Linguistic"),TF("Maths"),TF("Gender Session"),LN("FLN"),LN("Linguistic"),LN("Maths"),LN("Naitik Shiksha"),AV("Maths"),AV("Linguistic"),AV("Science")],
+  21:[TF("Linguistic"),TF("Maths"),TF("Library Session"),LN("FLN"),LN("Linguistic"),LN("Maths"),LN("SEL Plans"),AV("Maths"),AV("Naitik Shiksha"),AV("Science")],
+  22:[TF("Linguistic"),TF("Maths"),TF("Cleanliness Session"),LN("FLN"),LN("Linguistic"),LN("Maths"),LN("Games"),AV("Maths"),AV("Naitik Shiksha"),AV("Science")],
+  23:[TF("Linguistic"),TF("EVS"),TF("Yoga"),LN("FLN"),LN("PTM"),LN("EVS"),LN("Children Panchayat"),LN("Animal Management"),AV("PTM"),AV("Yoga"),AV("Padho Padhao")],
+  24:[TF("Drawing"),TF("EVS"),TF("Games"),LN("WHY"),LN("GA"),LN("Yoga"),LN("EVS"),LN("Drawing"),AV("WHY"),AV("GA"),AV("Drawing"),AV("Library Session")]
 };
-
-// =============================
-// 1-5 YEARS
-// =============================
 const timetable1_5 = {
-1:[TF("Linguistic"),TF("Maths"),TF("Naitik Shiksha"),LN("FLN"),LN("Linguistic"),LN("Maths"),LN("Naitik Shiksha"),AV("Maths"),AV("Linguistic"),AV("Science")],
-2:[TF("Linguistic"),TF("Maths"),TF("Naitik Shiksha"),LN("FLN"),LN("Linguistic"),LN("Maths"),LN("Naitik Shiksha"),AV("Maths"),AV("Linguistic"),AV("Science")],
-3:[TF("Linguistic"),TF("Maths"),TF("Cleanliness Session"),LN("FLN"),LN("Linguistic"),LN("Maths"),LN("Naitik Shiksha"),AV("Maths"),AV("Linguistic"),AV("Science")],
-4:[TF("Linguistic"),TF("Maths"),TF("Library Session"),LN("FLN"),LN("Linguistic"),LN("Maths"),LN("SEL Plans"),AV("Maths"),AV("Naitik Shiksha"),AV("Science")],
-5:[TF("Linguistic"),TF("EVS"),TF("Yoga"),LN("FLN"),LN("Library Session"),LN("EVS"),LN("Children Panchayat"),LN("Animal Management"),AV("Gender Session"),AV("Yoga"),AV("Games")],
-6:[TF("Drawing"),TF("EVS"),TF("Games"),LN("WHY"),LN("GA"),LN("Yoga"),LN("EVS"),LN("Drawing"),AV("WHY"),AV("GA"),AV("Drawing"),AV("Library Session")],
-7:[TF("Linguistic"),TF("Maths"),TF("Naitik Shiksha"),LN("FLN"),LN("Linguistic"),LN("Maths"),LN("Naitik Shiksha"),AV("Maths"),AV("Linguistic"),AV("Science")],
-8:[TF("Linguistic"),TF("Maths"),TF("Naitik Shiksha"),LN("FLN"),LN("Linguistic"),LN("Maths"),LN("Naitik Shiksha"),AV("Maths"),AV("Linguistic"),AV("Science")],
-9:[TF("Linguistic"),TF("Maths"),TF("Naitik Shiksha"),LN("FLN"),LN("Linguistic"),LN("Maths"),LN("SEL Plans"),AV("Maths"),AV("Linguistic"),AV("Science")],
-10:[TF("Linguistic"),TF("Maths"),TF("Library Session"),LN("FLN"),LN("Linguistic"),LN("Maths"),LN("Cleanliness Session"),AV("Maths"),AV("Naitik Shiksha"),AV("Science")],
-11:[TF("Linguistic"),TF("EVS"),TF("Yoga"),LN("FLN"),LN("Library Session"),LN("EVS"),LN("Children Panchayat"),LN("Animal Management"),AV("Cleanliness Session"),AV("Yoga"),AV("Games")],
-12:[TF("Drawing"),TF("EVS"),TF("Games"),LN("WHY"),LN("GA"),LN("Yoga"),LN("EVS"),LN("Drawing"),AV("WHY"),AV("GA"),AV("Drawing"),AV("Library Session")],
-13:[TF("Linguistic"),TF("Maths"),TF("Naitik Shiksha"),LN("FLN"),LN("Linguistic"),LN("Maths"),LN("Naitik Shiksha"),AV("Maths"),AV("Linguistic"),AV("Science")],
-14:[TF("Linguistic"),TF("Maths"),TF("Naitik Shiksha"),LN("FLN"),LN("Linguistic"),LN("Maths"),LN("Naitik Shiksha"),AV("Maths"),AV("Linguistic"),AV("Science")],
-15:[TF("Linguistic"),TF("Maths"),TF("Naitik Shiksha"),LN("FLN"),LN("Linguistic"),LN("Maths"),LN("SEL Plans"),AV("Maths"),AV("Naitik Shiksha"),AV("Science")],
-16:[TF("Linguistic"),TF("Maths"),TF("Library Session"),LN("FLN"),LN("Linguistic"),LN("Maths"),LN("Gender Session"),AV("Maths"),AV("Naitik Shiksha"),AV("Science")],
-17:[TF("Linguistic"),TF("EVS"),TF("Yoga"),LN("FLN"),LN("Library Session"),LN("EVS"),LN("Children Panchayat"),LN("Animal Management"),AV("Cleanliness Session"),AV("Yoga"),AV("Games")],
-18:[TF("Drawing"),TF("EVS"),TF("Games"),LN("WHY"),LN("GA"),LN("Yoga"),LN("EVS"),LN("Drawing"),AV("WHY"),AV("GA"),AV("Drawing"),AV("Library Session")],
-19:[TF("Linguistic"),TF("Maths"),TF("SEL Plans"),LN("EVS"),LN("Linguistic"),LN("Maths"),LN("Cleanliness Session"),AV("Maths"),AV("Linguistic"),AV("Science")],
-20:[TF("Linguistic"),TF("Maths"),TF("SEL Plans"),LN("FLN"),LN("Linguistic"),LN("Maths"),LN("Naitik Shiksha"),AV("Maths"),AV("Linguistic"),AV("Science")],
-21:[TF("Linguistic"),TF("Maths"),TF("Gender Session"),LN("FLN"),LN("Linguistic"),LN("Maths"),LN("SEL Plans"),AV("Maths"),AV("Naitik Shiksha"),AV("Science")],
-22:[TF("Linguistic"),TF("Maths"),TF("Cleanliness Session"),LN("FLN"),LN("Linguistic"),LN("Maths"),LN("Games"),AV("Maths"),AV("Naitik Shiksha"),AV("Science")],
-23:[TF("Linguistic"),TF("EVS"),TF("Yoga"),LN("FLN"),LN("PTM"),LN("EVS"),LN("Children Panchayat"),LN("Animal Management"),AV("PTM"),AV("Yoga"),AV("Padho Padhao")],
-24:[TF("Drawing"),TF("EVS"),TF("Games"),LN("WHY"),LN("GA"),LN("Yoga"),LN("EVS"),LN("Drawing"),AV("WHY"),AV("GA"),AV("Drawing"),AV("Library Session")]
+  1:[TF("Linguistic"),TF("Maths"),TF("Naitik Shiksha"),LN("FLN"),LN("Linguistic"),LN("Maths"),LN("Naitik Shiksha"),AV("Maths"),AV("Linguistic"),AV("Science")],
+  2:[TF("Linguistic"),TF("Maths"),TF("Naitik Shiksha"),LN("FLN"),LN("Linguistic"),LN("Maths"),LN("Naitik Shiksha"),AV("Maths"),AV("Linguistic"),AV("Science")],
+  3:[TF("Linguistic"),TF("Maths"),TF("Cleanliness Session"),LN("FLN"),LN("Linguistic"),LN("Maths"),LN("Naitik Shiksha"),AV("Maths"),AV("Linguistic"),AV("Science")],
+  4:[TF("Linguistic"),TF("Maths"),TF("Library Session"),LN("FLN"),LN("Linguistic"),LN("Maths"),LN("SEL Plans"),AV("Maths"),AV("Naitik Shiksha"),AV("Science")],
+  5:[TF("Linguistic"),TF("EVS"),TF("Yoga"),LN("FLN"),LN("Library Session"),LN("EVS"),LN("Children Panchayat"),LN("Animal Management"),AV("Gender Session"),AV("Yoga"),AV("Games")],
+  6:[TF("Drawing"),TF("EVS"),TF("Games"),LN("WHY"),LN("GA"),LN("Yoga"),LN("EVS"),LN("Drawing"),AV("WHY"),AV("GA"),AV("Drawing"),AV("Library Session")],
+  7:[TF("Linguistic"),TF("Maths"),TF("Naitik Shiksha"),LN("FLN"),LN("Linguistic"),LN("Maths"),LN("Naitik Shiksha"),AV("Maths"),AV("Linguistic"),AV("Science")],
+  8:[TF("Linguistic"),TF("Maths"),TF("Naitik Shiksha"),LN("FLN"),LN("Linguistic"),LN("Maths"),LN("Naitik Shiksha"),AV("Maths"),AV("Linguistic"),AV("Science")],
+  9:[TF("Linguistic"),TF("Maths"),TF("Naitik Shiksha"),LN("FLN"),LN("Linguistic"),LN("Maths"),LN("SEL Plans"),AV("Maths"),AV("Linguistic"),AV("Science")],
+  10:[TF("Linguistic"),TF("Maths"),TF("Library Session"),LN("FLN"),LN("Linguistic"),LN("Maths"),LN("Cleanliness Session"),AV("Maths"),AV("Naitik Shiksha"),AV("Science")],
+  11:[TF("Linguistic"),TF("EVS"),TF("Yoga"),LN("FLN"),LN("Library Session"),LN("EVS"),LN("Children Panchayat"),LN("Animal Management"),AV("Cleanliness Session"),AV("Yoga"),AV("Games")],
+  12:[TF("Drawing"),TF("EVS"),TF("Games"),LN("WHY"),LN("GA"),LN("Yoga"),LN("EVS"),LN("Drawing"),AV("WHY"),AV("GA"),AV("Drawing"),AV("Library Session")],
+  13:[TF("Linguistic"),TF("Maths"),TF("Naitik Shiksha"),LN("FLN"),LN("Linguistic"),LN("Maths"),LN("Naitik Shiksha"),AV("Maths"),AV("Linguistic"),AV("Science")],
+  14:[TF("Linguistic"),TF("Maths"),TF("Naitik Shiksha"),LN("FLN"),LN("Linguistic"),LN("Maths"),LN("Naitik Shiksha"),AV("Maths"),AV("Linguistic"),AV("Science")],
+  15:[TF("Linguistic"),TF("Maths"),TF("Naitik Shiksha"),LN("FLN"),LN("Linguistic"),LN("Maths"),LN("SEL Plans"),AV("Maths"),AV("Naitik Shiksha"),AV("Science")],
+  16:[TF("Linguistic"),TF("Maths"),TF("Library Session"),LN("FLN"),LN("Linguistic"),LN("Maths"),LN("Gender Session"),AV("Maths"),AV("Naitik Shiksha"),AV("Science")],
+  17:[TF("Linguistic"),TF("EVS"),TF("Yoga"),LN("FLN"),LN("Library Session"),LN("EVS"),LN("Children Panchayat"),LN("Animal Management"),AV("Cleanliness Session"),AV("Yoga"),AV("Games")],
+  18:[TF("Drawing"),TF("EVS"),TF("Games"),LN("WHY"),LN("GA"),LN("Yoga"),LN("EVS"),LN("Drawing"),AV("WHY"),AV("GA"),AV("Drawing"),AV("Library Session")],
+  19:[TF("Linguistic"),TF("Maths"),TF("SEL Plans"),LN("EVS"),LN("Linguistic"),LN("Maths"),LN("Cleanliness Session"),AV("Maths"),AV("Linguistic"),AV("Science")],
+  20:[TF("Linguistic"),TF("Maths"),TF("SEL Plans"),LN("FLN"),LN("Linguistic"),LN("Maths"),LN("Naitik Shiksha"),AV("Maths"),AV("Linguistic"),AV("Science")],
+  21:[TF("Linguistic"),TF("Maths"),TF("Gender Session"),LN("FLN"),LN("Linguistic"),LN("Maths"),LN("SEL Plans"),AV("Maths"),AV("Naitik Shiksha"),AV("Science")],
+  22:[TF("Linguistic"),TF("Maths"),TF("Cleanliness Session"),LN("FLN"),LN("Linguistic"),LN("Maths"),LN("Games"),AV("Maths"),AV("Naitik Shiksha"),AV("Science")],
+  23:[TF("Linguistic"),TF("EVS"),TF("Yoga"),LN("FLN"),LN("PTM"),LN("EVS"),LN("Children Panchayat"),LN("Animal Management"),AV("PTM"),AV("Yoga"),AV("Padho Padhao")],
+  24:[TF("Drawing"),TF("EVS"),TF("Games"),LN("WHY"),LN("GA"),LN("Yoga"),LN("EVS"),LN("Drawing"),AV("WHY"),AV("GA"),AV("Drawing"),AV("Library Session")]
 };
-
-// =============================
-// 5-10 YEARS
-// =============================
 const timetable5_10 = {
-1:[TF("Linguistic"),TF("Maths"),TF("Naitik Shiksha"),LN("Maths"),LN("Linguistic"),AV("Maths"),AV("Science"),AV("Linguistic"),AS("Linguistic"),AS("Maths")],
-2:[TF("Linguistic"),TF("Maths"),TF("Naitik Shiksha"),LN("Maths"),LN("Linguistic"),AV("Maths"),AV("Science"),AV("Linguistic"),AS("Linguistic"),AS("Maths")], 
-3:[TF("Linguistic"),TF("Maths"),TF("Cleanliness Session"),LN("Maths"),LN("Linguistic"),AV("Maths"),AV("Science"),AV("Naitik Shiksha"),AS("Linguistic"),AS("Maths")],
-4:[TF("Linguistic"),TF("Maths"),TF("Library Session"),LN("EVS"),LN("Drawing"),AV("Maths"),AV("Science"),AV("Yoga"),AS("Games"),AS("Science")],
-5:[TF("Linguistic"),TF("EVS"),TF("Yoga"),LN("EVS"),LN("Games"),AV("Maths"),AV("Science"),AV("Children Panchayat"),AV("Animal Management"),AV("Games"),AS("Children Panchayat"),AS("Animal Management"),AS("Science")],
-6:[TF("Drawing"),TF("EVS"),TF("Games"),LN("WHY"),LN("GA"),LN("Yoga"),AV("WHY"),AV("GA"),AV("Library Session"),AV("Drawing"),AS("Drawing"),AS("WHY"),AS("GA")],
-7:[TF("Linguistic"),TF("Maths"),TF("Naitik Shiksha"),LN("Maths"),LN("Linguistic"),AV("Maths"),AV("Science"),AV("Linguistic"),AS("Linguistic"),AS("Maths")],
-8:[TF("Linguistic"),TF("Maths"),TF("Naitik Shiksha"),LN("Maths"),LN("Linguistic"),AV("Maths"),AV("Science"),AV("Linguistic"),AS("Linguistic"),AS("Maths")],
-9:[TF("Linguistic"),TF("Maths"),TF("Library Session"),LN("Maths"),LN("Linguistic"),AV("Maths"),AV("Science"),AV("Naitik Shiksha"),AS("Linguistic"),AS("Maths")],
-10:[TF("Linguistic"),TF("Maths"),TF("Drawing"),LN("EVS"),LN("Drawing"),AV("Maths"),AV("Science"),AV("Yoga"),AS("Linguistic"),AS("Science")],
-11:[TF("Linguistic"),TF("EVS"),TF("Yoga"),LN("EVS"),LN("Games"),AV("Maths"),AV("Science"),AV("Children Panchayat"),AV("Animal Management"),AV("Games"),AS("Children Panchayat"),AS("Animal Management"),AS("Science")],
-12:[TF("Drawing"),TF("EVS"),TF("Games"),LN("WHY"),LN("GA"),LN("Yoga"),AV("WHY"),AV("GA"),AV("Library Session"),AV("Drawing"),AS("Yoga"),AS("Padho Padhao")],
-13:[TF("Linguistic"),TF("Maths"),TF("Naitik Shiksha"),LN("Maths"),LN("Linguistic"),AV("Maths"),AV("Science"),AV("Linguistic"),AS("Linguistic"),AS("Maths")],
-14:[TF("Linguistic"),TF("Maths"),TF("Naitik Shiksha"),LN("Maths"),LN("Linguistic"),AV("Maths"),AV("Science"),AV("Linguistic"),AS("Linguistic"),AS("Maths")],
-15:[TF("Linguistic"),TF("Maths"),TF("Library Session"),LN("Maths"),LN("Cleanliness Session"),AV("Maths"),AV("Science"),AV("Naitik Shiksha"),AS("Gender"),AS("Maths")],
-16:[TF("Linguistic"),TF("Maths"),TF("Drawing"),LN("EVS"),LN("Gender"),AV("Cleanliness Session"),AV("Science"),AV("Children Panchayat"),AV("Animal Management"),AV("Games"),AS("Games"),AS("Science")],
-17:[TF("Linguistic"),TF("EVS"),TF("Yoga"),LN("EVS"),LN("Drawing"),AV("WHY"),AV("GA"),AV("Science"),AV("Yoga"),AS("Children Panchayat"),AS("Animal Management"),AS("Science")],
-18:[TF("Drawing"),TF("EVS"),TF("Games"),LN("WHY"),LN("GA"),LN("Yoga"),AV("Gender Session"),AV("Library Session"),AV("Drawing"),AS("Yoga"),AS("Science")],
-19:[TF("Linguistic"),TF("Maths"),TF("SEL Plans"),LN("Maths"),LN("Linguistic"),AV("Maths"),AV("Science"),AV("Linguistic"),AS("Naitik Shiksha"),AS("Science")],
-20:[TF("Linguistic"),TF("Maths"),TF("SEL Plans"),LN("Maths"),LN("Naitik Shiksha"),AV("Maths"),AV("Science"),AV("Linguistic"),AS("Naitik Shiksha"),AS("Science")],
-21:[TF("Linguistic"),TF("Maths"),TF("Gender Session"),LN("Maths"),LN("Naitik Shiksha"),AV("Maths"),AV("Science"),AV("Linguistic"),AS("Naitik Shiksha"),AS("Cleanliness Session")],
-22:[TF("Linguistic"),TF("Maths"),TF("Cleanliness Session"),LN("EVS"),LN("Naitik Shiksha"),AV("Maths"),AV("Science"),AV("Yoga"),AS("Linguistic"),AS("Science")],
-23:[TF("Linguistic"),TF("Maths"),TF("Yoga"),LN("EVS"),LN("Yoga"),AV("PTM"),AV("Science"),AV("Children Panchayat"),AV("Animal Management"),AV("Games"),AS("Children Panchayat"),AS("Animal Management"),AS("Maths")],
-24:[TF("Drawing"),TF("EVS"),TF("Games"),LN("EVS"),LN("Drawing"),AV("WHY"),AV("GA"),AV("Science"),AV("Drawing"),AS("Drawing"),AS("Maths")]
+  1:[TF("Linguistic"),TF("Maths"),TF("Naitik Shiksha"),LN("Maths"),LN("Linguistic"),AV("Maths"),AV("Science"),AV("Linguistic"),AS("Linguistic"),AS("Maths")],
+  2:[TF("Linguistic"),TF("Maths"),TF("Naitik Shiksha"),LN("Maths"),LN("Linguistic"),AV("Maths"),AV("Science"),AV("Linguistic"),AS("Linguistic"),AS("Maths")],
+  3:[TF("Linguistic"),TF("Maths"),TF("Cleanliness Session"),LN("Maths"),LN("Linguistic"),AV("Maths"),AV("Science"),AV("Naitik Shiksha"),AS("Linguistic"),AS("Maths")],
+  4:[TF("Linguistic"),TF("Maths"),TF("Library Session"),LN("EVS"),LN("Drawing"),AV("Maths"),AV("Science"),AV("Yoga"),AS("Games"),AS("Science")],
+  5:[TF("Linguistic"),TF("EVS"),TF("Yoga"),LN("EVS"),LN("Games"),AV("Maths"),AV("Science"),AV("Children Panchayat"),AV("Animal Management"),AV("Games"),AS("Children Panchayat"),AS("Animal Management"),AS("Science")],
+  6:[TF("Drawing"),TF("EVS"),TF("Games"),LN("WHY"),LN("GA"),LN("Yoga"),AV("WHY"),AV("GA"),AV("Library Session"),AV("Drawing"),AS("Drawing"),AS("WHY"),AS("GA")],
+  7:[TF("Linguistic"),TF("Maths"),TF("Naitik Shiksha"),LN("Maths"),LN("Linguistic"),AV("Maths"),AV("Science"),AV("Linguistic"),AS("Linguistic"),AS("Maths")],
+  8:[TF("Linguistic"),TF("Maths"),TF("Naitik Shiksha"),LN("Maths"),LN("Linguistic"),AV("Maths"),AV("Science"),AV("Linguistic"),AS("Linguistic"),AS("Maths")],
+  9:[TF("Linguistic"),TF("Maths"),TF("Library Session"),LN("Maths"),LN("Linguistic"),AV("Maths"),AV("Science"),AV("Naitik Shiksha"),AS("Linguistic"),AS("Maths")],
+  10:[TF("Linguistic"),TF("Maths"),TF("Drawing"),LN("EVS"),LN("Drawing"),AV("Maths"),AV("Science"),AV("Yoga"),AS("Linguistic"),AS("Science")],
+  11:[TF("Linguistic"),TF("EVS"),TF("Yoga"),LN("EVS"),LN("Games"),AV("Maths"),AV("Science"),AV("Children Panchayat"),AV("Animal Management"),AV("Games"),AS("Children Panchayat"),AS("Animal Management"),AS("Science")],
+  12:[TF("Drawing"),TF("EVS"),TF("Games"),LN("WHY"),LN("GA"),LN("Yoga"),AV("WHY"),AV("GA"),AV("Library Session"),AV("Drawing"),AS("Yoga"),AS("Padho Padhao")],
+  13:[TF("Linguistic"),TF("Maths"),TF("Naitik Shiksha"),LN("Maths"),LN("Linguistic"),AV("Maths"),AV("Science"),AV("Linguistic"),AS("Linguistic"),AS("Maths")],
+  14:[TF("Linguistic"),TF("Maths"),TF("Naitik Shiksha"),LN("Maths"),LN("Linguistic"),AV("Maths"),AV("Science"),AV("Linguistic"),AS("Linguistic"),AS("Maths")],
+  15:[TF("Linguistic"),TF("Maths"),TF("Library Session"),LN("Maths"),LN("Cleanliness Session"),AV("Maths"),AV("Science"),AV("Naitik Shiksha"),AS("Gender"),AS("Maths")],
+  16:[TF("Linguistic"),TF("Maths"),TF("Drawing"),LN("EVS"),LN("Gender"),AV("Cleanliness Session"),AV("Science"),AV("Children Panchayat"),AV("Animal Management"),AV("Games"),AS("Games"),AS("Science")],
+  17:[TF("Linguistic"),TF("EVS"),TF("Yoga"),LN("EVS"),LN("Drawing"),AV("WHY"),AV("GA"),AV("Science"),AV("Yoga"),AS("Children Panchayat"),AS("Animal Management"),AS("Science")],
+  18:[TF("Drawing"),TF("EVS"),TF("Games"),LN("WHY"),LN("GA"),LN("Yoga"),AV("Gender Session"),AV("Library Session"),AV("Drawing"),AS("Yoga"),AS("Science")],
+  19:[TF("Linguistic"),TF("Maths"),TF("SEL Plans"),LN("Maths"),LN("Linguistic"),AV("Maths"),AV("Science"),AV("Linguistic"),AS("Naitik Shiksha"),AS("Science")],
+  20:[TF("Linguistic"),TF("Maths"),TF("SEL Plans"),LN("Maths"),LN("Naitik Shiksha"),AV("Maths"),AV("Science"),AV("Linguistic"),AS("Naitik Shiksha"),AS("Science")],
+  21:[TF("Linguistic"),TF("Maths"),TF("Gender Session"),LN("Maths"),LN("Naitik Shiksha"),AV("Maths"),AV("Science"),AV("Linguistic"),AS("Naitik Shiksha"),AS("Cleanliness Session")],
+  22:[TF("Linguistic"),TF("Maths"),TF("Cleanliness Session"),LN("EVS"),LN("Naitik Shiksha"),AV("Maths"),AV("Science"),AV("Yoga"),AS("Linguistic"),AS("Science")],
+  23:[TF("Linguistic"),TF("Maths"),TF("Yoga"),LN("EVS"),LN("Yoga"),AV("PTM"),AV("Science"),AV("Children Panchayat"),AV("Animal Management"),AV("Games"),AS("Children Panchayat"),AS("Animal Management"),AS("Maths")],
+  24:[TF("Drawing"),TF("EVS"),TF("Games"),LN("EVS"),LN("Drawing"),AV("WHY"),AV("GA"),AV("Science"),AV("Drawing"),AS("Drawing"),AS("Maths")]
 };
-
-// =============================
-// 10+ YEARS (FULL 4 BATCHES)
-// =============================
 const timetable10 = {
-1:[TF("Linguistic"),TF("Maths"),TF("Naitik Shiksha"),LN("Maths"),LN("Linguistic"),AV("Maths"),AV("Science"),AV("Linguistic"),AS("Linguistic"),AS("Maths")],
-2:[TF("Linguistic"),TF("Maths"),TF("Library Session"),LN("Maths"),LN("Linguistic"),AV("Maths"),AV("Science"),AV("Linguistic"),AS("Linguistic"),AS("Maths")],
-3:[TF("Linguistic"),TF("Maths"),TF("Cleanliness Session"),LN("Maths"),LN("Linguistic"),AV("Maths"),AV("Science"),AV("Yoga"),AS("Linguistic"),AS("Maths")],
-4:[TF("Linguistic"),TF("Maths"),TF("Yoga"),LN("EVS"),LN("Yoga"),AV("Maths"),AV("Science"),AV("Naitik Shiksha"),AS("Linguistic"),AS("Science")],
-5:[TF("Linguistic"),TF("EVS"),TF("Games"),LN("EVS"),LN("Drawing"),AV("WHY"),AV("GA"),AV("Science"),AV("Children Panchayat"),AV("Animal Management"),AV("Games"),AS("Children Panchayat"),AS("Animal Management"),AS("Games"),AS("Science")],
-6:[TF("Naitik Shiksha"),TF("EVS"),TF("Drawing"),LN("WHY"),LN("GA"),LN("Games"),AV("Maths"),AV("Library Session"),AV("Drawing"),AS("Drawing"),AS("WHY"),AS("GA")],
-7:[TF("Linguistic"),TF("Maths"),TF("Naitik Shiksha"),LN("Maths"),LN("Linguistic"),AV("Maths"),AV("Science"),AV("Linguistic"),AS("Linguistic"),AS("Maths")],
-8:[TF("Linguistic"),TF("Maths"),TF("Library Session"),LN("Maths"),LN("Linguistic"),AV("Maths"),AV("Science"),AV("Linguistic"),AS("Linguistic"),AS("Maths")],
-9:[TF("Linguistic"),TF("Maths"),TF("SEL Plans"),LN("Maths"),LN("Linguistic"),AV("Maths"),AV("Science"),AV("Yoga"),AS("Padho Padhao"),AS("Maths")],
-10:[TF("Linguistic"),TF("Maths"),TF("Yoga"),LN("EVS"),LN("Yoga"),AV("Maths"),AV("Science"),AV("Naitik Shiksha"),AS("Yoga"),AS("Science")],
-11:[TF("Linguistic"),TF("EVS"),TF("Games"),LN("EVS"),LN("Drawing"),AV("WHY"),AV("GA"),AV("Science"),AV("Children Panchayat"),AV("Animal Management"),AV("Games"),AS("Children Panchayat"),AS("Animal Management"),AS("Games"),AS("Science")],
-12:[TF("Naitik Shiksha"),TF("EVS"),TF("Drawing"),LN("WHY"),LN("GA"),LN("Games"),AV("Maths"),AV("Library Session"),AV("Drawing"),AS("Linguistic"),AS("Science")],
-13:[TF("Linguistic"),TF("Maths"),TF("Naitik Shiksha"),LN("Maths"),LN("Linguistic"),AV("Maths"),AV("Science"),AV("Linguistic"),AS("Linguistic"),AS("Maths")],
-14:[TF("Linguistic"),TF("Maths"),TF("Library Session"),LN("Maths"),LN("Linguistic"),AV("Maths"),AV("Science"),AV("Linguistic"),AS("Linguistic"),AS("Maths")],
-15:[TF("Linguistic"),TF("Maths"),TF("SEL Plans"),LN("Maths"),LN("Linguistic"),AV("Maths"),AV("Science"),AV("Linguistic"),AS("Gender Session"),AS("Maths")],
-16:[TF("Linguistic"),TF("Maths"),TF("Yoga"),LN("EVS"),LN("Gender Session"),AV("Maths"),AV("Gender Session"),AV("Yoga"),AS("Yoga"),AS("Science")],
-17:[TF("Naitik Shiksha"),TF("EVS"),TF("Games"),LN("EVS"),LN("Naitik Shiksha"),AV("WHY"),AV("GA"),AV("Science"),AV("Children Panchayat"),AV("Animal Management"),AV("Games"),AS("Children Panchayat"),AS("Animal Management"),AS("Games"),AS("Science")],
-18:[TF("Naitik Shiksha"),TF("EVS"),TF("Drawing"),LN("WHY"),LN("GA"),LN("Yoga"),AV("Maths"),AV("Library Session"),AV("Drawing"),AS("Drawing"),AS("Science")],
-19:[TF("Linguistic"),TF("Maths"),TF("Cleanliness Session"),LN("Maths"),LN("Linguistic"),AV("Maths"),AV("Science"),AV("Linguistic"),AS("Naitik Shiksha"),AS("Maths")],
-20:[TF("Linguistic"),TF("Maths"),TF("Library Session"),LN("Maths"),LN("Naitik Shiksha"),AV("Maths"),AV("Science"),AV("Linguistic"),AS("Naitik Shiksha"),AS("Maths")],
-21:[TF("Linguistic"),TF("Maths"),TF("Gender Session"),LN("Maths"),LN("Naitik Shiksha"),AV("Maths"),AV("Science"),AV("Linguistic"),AS("Naitik Shiksha"),AS("Maths")],
-22:[TF("Linguistic"),TF("Maths"),TF("Yoga"),LN("EVS"),LN("Yoga"),AV("Maths"),AV("Science"),AV("Yoga"),AS("Cleanliness Session"),AS("Science")],
-23:[TF("Naitik Shiksha"),TF("EVS"),TF("Games"),LN("EVS"),LN("Games"),AV("PTM"),AV("CleanlinessSession"),AV("Children Panchayat"),AV("Animal Management"),AV("Games"),AS("Children Panchayat"),AS("Animal Management"),AS("Library Session"),AS("Science")],
-24:[TF("Naitik Shiksha"),TF("EVS"),TF("Drawing"),LN("EVS"),LN("Games"),AV("WHY"),AV("GA"),AV("Science"),AV("Drawing"),AS("Drawing"),AS("Science")]
+  1:[TF("Linguistic"),TF("Maths"),TF("Naitik Shiksha"),LN("Maths"),LN("Linguistic"),AV("Maths"),AV("Science"),AV("Linguistic"),AS("Linguistic"),AS("Maths")],
+  2:[TF("Linguistic"),TF("Maths"),TF("Library Session"),LN("Maths"),LN("Linguistic"),AV("Maths"),AV("Science"),AV("Linguistic"),AS("Linguistic"),AS("Maths")],
+  3:[TF("Linguistic"),TF("Maths"),TF("Cleanliness Session"),LN("Maths"),LN("Linguistic"),AV("Maths"),AV("Science"),AV("Yoga"),AS("Linguistic"),AS("Maths")],
+  4:[TF("Linguistic"),TF("Maths"),TF("Yoga"),LN("EVS"),LN("Yoga"),AV("Maths"),AV("Science"),AV("Naitik Shiksha"),AS("Linguistic"),AS("Science")],
+  5:[TF("Linguistic"),TF("EVS"),TF("Games"),LN("EVS"),LN("Drawing"),AV("WHY"),AV("GA"),AV("Science"),AV("Children Panchayat"),AV("Animal Management"),AV("Games"),AS("Children Panchayat"),AS("Animal Management"),AS("Games"),AS("Science")],
+  6:[TF("Naitik Shiksha"),TF("EVS"),TF("Drawing"),LN("WHY"),LN("GA"),LN("Games"),AV("Maths"),AV("Library Session"),AV("Drawing"),AS("Drawing"),AS("WHY"),AS("GA")],
+  7:[TF("Linguistic"),TF("Maths"),TF("Naitik Shiksha"),LN("Maths"),LN("Linguistic"),AV("Maths"),AV("Science"),AV("Linguistic"),AS("Linguistic"),AS("Maths")],
+  8:[TF("Linguistic"),TF("Maths"),TF("Library Session"),LN("Maths"),LN("Linguistic"),AV("Maths"),AV("Science"),AV("Linguistic"),AS("Linguistic"),AS("Maths")],
+  9:[TF("Linguistic"),TF("Maths"),TF("SEL Plans"),LN("Maths"),LN("Linguistic"),AV("Maths"),AV("Science"),AV("Yoga"),AS("Padho Padhao"),AS("Maths")],
+  10:[TF("Linguistic"),TF("Maths"),TF("Yoga"),LN("EVS"),LN("Yoga"),AV("Maths"),AV("Science"),AV("Naitik Shiksha"),AS("Yoga"),AS("Science")],
+  11:[TF("Linguistic"),TF("EVS"),TF("Games"),LN("EVS"),LN("Drawing"),AV("WHY"),AV("GA"),AV("Science"),AV("Children Panchayat"),AV("Animal Management"),AV("Games"),AS("Children Panchayat"),AS("Animal Management"),AS("Games"),AS("Science")],
+  12:[TF("Naitik Shiksha"),TF("EVS"),TF("Drawing"),LN("WHY"),LN("GA"),LN("Games"),AV("Maths"),AV("Library Session"),AV("Drawing"),AS("Linguistic"),AS("Science")],
+  13:[TF("Linguistic"),TF("Maths"),TF("Naitik Shiksha"),LN("Maths"),LN("Linguistic"),AV("Maths"),AV("Science"),AV("Linguistic"),AS("Linguistic"),AS("Maths")],
+  14:[TF("Linguistic"),TF("Maths"),TF("Library Session"),LN("Maths"),LN("Linguistic"),AV("Maths"),AV("Science"),AV("Linguistic"),AS("Linguistic"),AS("Maths")],
+  15:[TF("Linguistic"),TF("Maths"),TF("SEL Plans"),LN("Maths"),LN("Linguistic"),AV("Maths"),AV("Science"),AV("Linguistic"),AS("Gender Session"),AS("Maths")],
+  16:[TF("Linguistic"),TF("Maths"),TF("Yoga"),LN("EVS"),LN("Gender Session"),AV("Maths"),AV("Gender Session"),AV("Yoga"),AS("Yoga"),AS("Science")],
+  17:[TF("Naitik Shiksha"),TF("EVS"),TF("Games"),LN("EVS"),LN("Naitik Shiksha"),AV("WHY"),AV("GA"),AV("Science"),AV("Children Panchayat"),AV("Animal Management"),AV("Games"),AS("Children Panchayat"),AS("Animal Management"),AS("Games"),AS("Science")],
+  18:[TF("Naitik Shiksha"),TF("EVS"),TF("Drawing"),LN("WHY"),LN("GA"),LN("Yoga"),AV("Maths"),AV("Library Session"),AV("Drawing"),AS("Drawing"),AS("Science")],
+  19:[TF("Linguistic"),TF("Maths"),TF("Cleanliness Session"),LN("Maths"),LN("Linguistic"),AV("Maths"),AV("Science"),AV("Linguistic"),AS("Naitik Shiksha"),AS("Maths")],
+  20:[TF("Linguistic"),TF("Maths"),TF("Library Session"),LN("Maths"),LN("Naitik Shiksha"),AV("Maths"),AV("Science"),AV("Linguistic"),AS("Naitik Shiksha"),AS("Maths")],
+  21:[TF("Linguistic"),TF("Maths"),TF("Gender Session"),LN("Maths"),LN("Naitik Shiksha"),AV("Maths"),AV("Science"),AV("Linguistic"),AS("Naitik Shiksha"),AS("Maths")],
+  22:[TF("Linguistic"),TF("Maths"),TF("Yoga"),LN("EVS"),LN("Yoga"),AV("Maths"),AV("Science"),AV("Yoga"),AS("Cleanliness Session"),AS("Science")],
+  23:[TF("Naitik Shiksha"),TF("EVS"),TF("Games"),LN("EVS"),LN("Games"),AV("PTM"),AV("Cleanliness Session"),AV("Children Panchayat"),AV("Animal Management"),AV("Games"),AS("Children Panchayat"),AS("Animal Management"),AS("Library Session"),AS("Science")],
+  24:[TF("Naitik Shiksha"),TF("EVS"),TF("Drawing"),LN("EVS"),LN("Games"),AV("WHY"),AV("GA"),AV("Science"),AV("Drawing"),AS("Drawing"),AS("Science")]
 };
 
-// SPECIAL
-const special=[
-"Games","Library Session","Children Panchayat",
-"Animal Management","Padho Padhao","PTM",
-"Cleanliness Session","Gender Session","SEL Plans",
-"Yoga","Drawing","WHY","GA"
-];
-
-// BASE + TIMETABLE
-const base={
-1:[TF("Linguistic"),TF("Maths"),TF("Naitik Shiksha"),LN("FLN"),LN("Linguistic"),LN("Maths"),LN("Naitik Shiksha"),AV("Maths"),AV("Linguistic"),AV("Science")],
-3:[TF("Linguistic"),TF("Maths"),TF("Cleanliness Session"),LN("FLN"),LN("Linguistic"),LN("Maths"),LN("Naitik Shiksha"),AV("Maths"),AV("Linguistic"),AV("Science")],
-4:[TF("Linguistic"),TF("Maths"),TF("Library Session"),LN("FLN"),LN("Linguistic"),LN("Maths"),LN("SEL Plans"),AV("Maths"),AV("Naitik Shiksha"),AV("Science")],
-5:[TF("Linguistic"),TF("EVS"),TF("Yoga"),LN("FLN"),LN("Library Session"),LN("EVS"),LN("Children Panchayat"),LN("Animal Management"),AV("Gender Session"),AV("Yoga"),AV("Games")],
-6:[TF("Drawing"),TF("EVS"),TF("Games"),LN("WHY"),LN("GA"),LN("Yoga"),LN("EVS"),LN("Drawing"),AV("WHY"),AV("GA"),AV("Drawing"),AV("Library Session")]
-};
-
-const timetable={
-1:base[1],2:base[1],3:base[3],4:base[4],5:base[5],6:base[6],
-7:base[1],8:base[1],9:base[1],10:base[4],11:base[5],12:base[6],
-13:base[1],14:base[1],15:base[1],16:base[4],17:base[5],18:base[6],
-19:base[4],20:base[1],21:base[4],22:base[3],23:base[5],24:base[6]
-};
-
-// TRANSFORM
-function transform(type,data){
-let x=[...data];
-
-if(type==="1"||type==="2"){
-x=x.filter(d=>d.s!=="FLN");
-}
-
-if(type==="3"){
-let adv=x.filter(d=>d.b==="Advancers");
-let asp=adv.map(d=>({b:"Aspirers",s:d.s}));
-x=[...x,...asp];
-}
-
-if(type==="S"){
-x.unshift({b:"Tenderfeet Slot 2",s:"Maths"});
-}
-
-return x;
-}
-
-// LOAD
+// ── LOAD DAY ──
 function loadDay(){
+  const day = parseInt(document.getElementById("daySelect").value);
+  const type = document.getElementById("roomType").value;
+  if(!day || !type){ alert("Please select Room Type and Day"); return; }
 
-let day = parseInt(document.getElementById("daySelect").value);
-let type = document.getElementById("roomType").value;
+  const maps = {"0":timetable0,"1":timetable1_5,"2":timetable5_10,"3":timetable10};
+  const data = maps[type] ? maps[type][day] : [];
+  if(!data || data.length===0){ alert("No timetable found for this selection"); return; }
 
-if(!day || !type){
-  alert("Please select Room Type and Day");
-  return;
+  const batchClass = {"Tenderfeet":"tf","Learners":"ln","Advancers":"av","Aspirers":"as"};
+  const pillClass  = {"Tenderfeet":"pill-tf","Learners":"pill-ln","Advancers":"pill-av","Aspirers":"pill-as"};
+
+  const table = document.getElementById("table");
+  table.innerHTML = `<tr><th>Batch</th><th>Subject</th><th>Chapter</th><th>Index</th><th>Lesson</th></tr>`;
+
+  data.forEach((d,i)=>{
+    const row = table.insertRow();
+    const isSpecial = SPECIALS.has(d.s);
+    row.classList.add(isSpecial ? "special" : (batchClass[d.b]||""));
+
+    row.insertCell(0).innerHTML = `<span class="batch-pill ${isSpecial?'pill-sp':(pillClass[d.b]||'')}">${d.b}</span>`;
+    row.insertCell(1).innerText = d.s;
+
+    if(isSpecial){
+      const td = row.insertCell(2);
+      td.innerHTML = `<select onchange="checkIncompleteFlag()"><option value="">Select</option><option value="1">1</option><option value="0">0</option></select>`;
+      row.insertCell(3).innerHTML = `<span style="color:#9CA3AF">—</span>`;
+      row.insertCell(4).innerHTML = `<span style="color:#9CA3AF">—</span>`;
+    } else {
+      const chData = subjectData[d.s] || null;
+      let chapterHTML = `<select onchange="updateIndex(this);checkIncompleteFlag()"><option value="">Select</option>`;
+      if(chData){
+        Object.keys(chData).forEach(ch=>{ chapterHTML += `<option value="${ch}">${ch}</option>`; });
+      } else {
+        chapterHTML += `<option value="General">General</option>`;
+      }
+      chapterHTML += `</select>`;
+      row.insertCell(2).innerHTML = chapterHTML;
+      row.insertCell(3).innerHTML = `<select onchange="updateLesson(this);checkIncompleteFlag()"><option value="">Select</option></select>`;
+      row.insertCell(4).innerHTML = `<input type="text" placeholder="Auto-filled" style="width:100%">`;
+    }
+  });
+  checkIncompleteFlag();
 }
 
-let data = [];
-
-// SELECT CORRECT TIMETABLE
-if(type === "0"){
-  data = timetable0[day] || [];
-}
-else if(type === "1"){
-  data = timetable1_5[day] || [];
-}
-else if(type === "2"){
-  data = timetable5_10[day] || [];
-}
-else if(type === "3"){
-  data = timetable10[day] || [];
-}
-else if(type === "S"){
-  data = timetableShalimar[day] || [];
+// ── UPDATE INDEX ──
+function updateIndex(chSel){
+  const row = chSel.closest("tr");
+  const subject = row.cells[1].innerText;
+  const chapter = chSel.value;
+  const idxSel = row.cells[3].querySelector("select");
+  idxSel.innerHTML = `<option value="">Select</option>`;
+  const chData = subjectData[subject];
+  if(chData && chData[chapter]){
+    Object.keys(chData[chapter]).forEach(idx=>{
+      idxSel.innerHTML += `<option value="${idx}">${idx}</option>`;
+    });
+  }
 }
 
-if(data.length === 0){
-  alert("No timetable found for this day");
-  return;
+// ── UPDATE LESSON ──
+function updateLesson(idxSel){
+  const row = idxSel.closest("tr");
+  const subject = row.cells[1].innerText;
+  const chapter = row.cells[2].querySelector("select")?.value;
+  const idx = idxSel.value;
+  const lessonInput = row.cells[4].querySelector("input");
+  if(lessonInput && subjectData[subject]?.[chapter]?.[idx]){
+    lessonInput.value = subjectData[subject][chapter][idx];
+  }
 }
 
-// LOAD TABLE
-let table = document.getElementById("table");
+// ── BUILD PAYLOAD (shared by save + submitAnyway) ──
+let _pendingPayload = null;
 
-table.innerHTML = `
-<tr>
-<th>Batch</th>
-<th>Subject</th>
-<th>Chapter</th>
-<th>Index</th>
-<th>Lesson</th>
-</tr>
-`;
+function buildPayload(){
+  const educator = document.getElementById("educator").value.trim();
+  const room = document.getElementById("room").value;
+  const execDate = document.getElementById("execDate").value;
+  const roomType = document.getElementById("roomType").value;
 
-data.forEach(d => {
+  if(!educator || !room || !execDate){
+    alert("Please fill Educator Name, Room, and Execution Date");
+    return null;
+  }
+  const rows = document.querySelectorAll("#table tr");
+  if(rows.length <= 1){ alert("No lesson plan loaded. Please load a day first."); return null; }
 
-let row = table.insertRow();
+  // Silent timestamp — captured without showing to educator
+  const submittedAt = new Date().toISOString();
+  const todayStr = document.getElementById("todayDisplay").dataset.iso;
+  const isLate = execDate < todayStr;
 
-row.insertCell(0).innerText = d.b;
-row.insertCell(1).innerText = d.s;
+  const payload = [];
+  const incomplete = [];
 
-// SPECIAL SUBJECT
-if(special.includes(d.s)){
+  for(let i=1; i<rows.length; i++){
+    const cells = rows[i].cells;
+    const batch = cells[0].innerText.trim();
+    const subject = cells[1].innerText.trim();
+    const base = {
+      educator_name: educator, level: roomType, batch,
+      subject, session_date: execDate, yellow_room: room,
+      slot_number: i,
+      _submitted_at: submittedAt,  // silent
+      _is_late: isLate             // silent
+    };
 
-row.insertCell(2).innerHTML = `
-<select>
-<option value="">Select</option>
-<option value="1">1</option>
-<option value="0">0</option>
-</select>
-`;
+    if(SPECIALS.has(subject)){
+      const chSel = cells[2].querySelector("select");
+      const val = chSel ? chSel.value : "";
+      if(!val) incomplete.push(`Row ${i}: ${subject} (${batch}) — not marked`);
+      payload.push({...base, chapter_name: val || "NA", index_code:"NA", lesson:"NA"});
+      continue;
+    }
 
-row.insertCell(3).innerText = "-";
-row.insertCell(4).innerText = "-";
+    const chSel = cells[2].querySelector("select");
+    const chapter = chSel ? chSel.value : "";
+    const idxSel = cells[3].querySelector("select");
+    const index = idxSel ? idxSel.value : "";
+    const lessonEl = cells[4].querySelector("input");
+    const lesson = lessonEl ? lessonEl.value.trim() : "";
 
+    if(!chapter || !index) incomplete.push(`${subject} (${batch}) — Chapter / Index missing`);
+    payload.push({...base, chapter_name: chapter||"NA", index_code: index||"NA", lesson: lesson||"NA"});
+  }
+
+  return { educator, room, roomType, execDate, payload, incomplete };
 }
-else{
 
-row.insertCell(2).innerHTML = `<select><option>Select Chapter</option></select>`;
-row.insertCell(3).innerHTML = `<select><option>Select Index</option></select>`;
-row.insertCell(4).innerHTML = `<input type="text">`;
-
-}
-
-});
-
-}
-
-// SAVE
+// ── SAVE ──
 function save(){
+  const result = buildPayload();
+  if(!result) return;
+  const { educator, room, roomType, execDate, payload, incomplete } = result;
 
-let educator=document.getElementById("educator").value;
-let date=document.getElementById("execDate").value;
+  if(incomplete.length > 0){
+    // Show modal listing what's missing
+    const list = incomplete.map(m=>`<li>${m}</li>`).join("");
+    document.getElementById("modalBody").innerHTML =
+      `<strong>${incomplete.length} area(s)</strong> are not fully filled:<ul>${list}</ul><br>Do you still want to submit?`;
+    _pendingPayload = { educator, room, roomType, execDate, payload };
+    document.getElementById("incompleteModal").classList.add("active");
+    return;
+  }
 
-if(!educator||!date){
-alert("Fill required fields");
-return;
+  _pendingPayload = { educator, room, roomType, execDate, payload };
+  dispatch();
 }
 
-let rows=document.querySelectorAll("#table tr");
-let data=[];
-
-for(let i=1;i<rows.length;i++){
-
-let c=rows[i].querySelectorAll("td");
-
-let chapter="",index="",lesson="";
-
-// SPECIAL SUBJECT CHECK
-if(c[2].querySelector("select") && c[3].innerText==="-"){
-
-chapter=c[2].querySelector("select").value;
-
-if(chapter===""){
-alert("Please select 1 or 0 for all special sessions");
-return;
+function closeModal(){
+  document.getElementById("incompleteModal").classList.remove("active");
+  _pendingPayload = null;
 }
 
-index="-";
-lesson="-";
-
-}else{
-
-chapter=c[2].querySelector("select")?.value||"";
-index=c[3].querySelector("select")?.value||"";
-lesson=c[4].querySelector("input")?.value||"";
-
+function submitAnyway(){
+  document.getElementById("incompleteModal").classList.remove("active");
+  dispatch();
 }
 
-data.push({
-batch:c[0].innerText,
-subject:c[1].innerText,
-chapter,
-index,
-lesson
-});
+function dispatch(){
+  if(!_pendingPayload) return;
+  const { educator, room, roomType, execDate, payload } = _pendingPayload;
 
+  try { localStorage.setItem("lastSession", JSON.stringify({educator, room, roomType, execDate, payload})); } catch(e){}
+
+  const btn = document.querySelector(".btn-save");
+  btn.innerText = "Saving...";
+  btn.disabled = true;
+
+  Promise.all(payload.map(row =>
+    fetch("/add-session",{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify(row)
+    })
+  ))
+  .then(()=>{
+    btn.innerText = "💾 Save Full Day";
+    btn.disabled = false;
+    _pendingPayload = null;
+    const toast = document.getElementById("toast");
+    toast.style.display = "block";
+    setTimeout(()=>{ toast.style.display="none"; }, 2500);
+  })
+  .catch(()=>{
+    btn.innerText = "💾 Save Full Day";
+    btn.disabled = false;
+    alert("⚠️ Error saving data. Please check your connection and try again.");
+  });
 }
-
-// SEND DATA TO SERVER
-
-data.forEach((row, index) => {
-
-fetch("/add-session", {
-method: "POST",
-headers: {
-"Content-Type": "application/json"
-},
-body: JSON.stringify({
-educator_name: document.getElementById("educator").value,
-level: document.getElementById("roomType").value,
-subject: row.subject,
-chapter_name: row.chapter,
-index_code: row.index,
-session_date: document.getElementById("execDate").value,
-yellow_room: document.getElementById("room").value,
-slot_number: index + 1
-})
-});
-
-});
-
-// SUCCESS UI
-document.getElementById("msg").style.display="block";
-setTimeout(()=>document.getElementById("msg").style.display="none",2000);
-
-// SUCCESS UI
-document.getElementById("msg").style.display="block";
-setTimeout(()=>document.getElementById("msg").style.display="none",2000);
-
-}
-
 </script>
-
 </body>
 </html>
