@@ -243,16 +243,18 @@ app.get('/dashboard/month', async(req,res)=>{
   try{
 
     const month = req.query.month;
+    const room = req.query.room || 'ALL';
 
     const start = `${month}-01`;
 
     const end = `${month}-31`;
 
     const result = await pool.query(`
-      SELECT *
-      FROM session_entries
-      WHERE session_date BETWEEN $1 AND $2
-    `,[start,end]);
+  SELECT *
+  FROM session_entries
+  WHERE session_date BETWEEN $1 AND $2
+  AND ($3 = 'ALL' OR yellow_room = $3)
+`,[start,end,room]);
 
     const rows = result.rows;
 

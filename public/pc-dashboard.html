@@ -66,8 +66,67 @@
 
 <h1>LP MIS Dashboard</h1>
 
-<input type="month" id="monthFilter">
-<button onclick="loadDashboard()">Load</button>
+<div style="display:flex;gap:12px;align-items:center;margin-bottom:20px;flex-wrap:wrap;">
+
+  <input type="month" id="monthFilter">
+
+  <select id="roomFilter">
+
+  <option value="ALL">All Rooms</option>
+
+  <option value="Abhay Nagar">Abhay Nagar</option>
+  <option value="Bahadurpur">Bahadurpur</option>
+  <option value="Badi kalan">Badi kalan</option>
+  <option value="Beniganj">Beniganj</option>
+  <option value="Bhadrukh">Bhadrukh</option>
+  <option value="Bhitauli Khurd">Bhitauli Khurd</option>
+  <option value="Chinhat">Chinhat</option>
+  <option value="Garden Bay">Garden Bay</option>
+  <option value="Gandhi Nagar">Gandhi Nagar</option>
+  <option value="Hans kheda">Hans kheda</option>
+  <option value="Hardasi Kheda">Hardasi Kheda</option>
+  <option value="Hasanpur Khewali">Hasanpur Khewali</option>
+  <option value="Hussainganj">Hussainganj</option>
+  <option value="Ismailganj">Ismailganj</option>
+  <option value="Jarhara">Jarhara</option>
+  <option value="Jodaura">Jodaura</option>
+  <option value="Jugguar">Jugguar</option>
+  <option value="Jyotishah Alampur">Jyotishah Alampur</option>
+  <option value="Kalli Paschim">Kalli Paschim</option>
+  <option value="Kashyap Nagar">Kashyap Nagar</option>
+  <option value="Kaudiyamau">Kaudiyamau</option>
+  <option value="Khazoor Gaon">Khazoor Gaon</option>
+  <option value="Kumharan">Kumharan</option>
+  <option value="Kutubpur">Kutubpur</option>
+  <option value="Laulai">Laulai</option>
+  <option value="Macchli Mohal">Macchli Mohal</option>
+  <option value="Mahmoodpur">Mahmoodpur</option>
+  <option value="Malhaur">Malhaur</option>
+  <option value="Mannat">Mannat</option>
+  <option value="Matiyari">Matiyari</option>
+  <option value="Meesa">Meesa</option>
+  <option value="Mozzam Nagar">Mozzam Nagar</option>
+  <option value="Munshipulia">Munshipulia</option>
+  <option value="Nanda Kheda">Nanda Kheda</option>
+  <option value="Nat Kheda">Nat Kheda</option>
+  <option value="Noida Sec 122">Noida Sec 122</option>
+  <option value="Noida Sec 17">Noida Sec 17</option>
+  <option value="One world">One world</option>
+  <option value="Pani Gaon">Pani Gaon</option>
+  <option value="Ram Das Hata">Ram Das Hata</option>
+  <option value="Ram Nagar">Ram Nagar</option>
+  <option value="Roshanabad">Roshanabad</option>
+  <option value="Sandauli">Sandauli</option>
+  <option value="Sikandar Nagar">Sikandar Nagar</option>
+  <option value="Sitarasoi">Sitarasoi</option>
+  <option value="Tindola">Tindola</option>
+  <option value="Ujariyaon">Ujariyaon</option>
+  <option value="Vishundaspur">Vishundaspur</option>
+
+</select>
+  <button onclick="loadDashboard()">Load</button>
+
+</div>
 
 <br><br>
 
@@ -152,7 +211,11 @@ async function loadDashboard(){
 
   const month = document.getElementById('monthFilter').value;
 
-  const res = await fetch(`/dashboard/month?month=${month}`);
+  const room = document.getElementById('roomFilter').value;
+
+const res = await fetch(
+  `/dashboard/month?month=${month}&room=${room}`
+);
 
   const data = await res.json();
 
