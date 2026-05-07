@@ -398,6 +398,62 @@ app.get('/dashboard/month', async(req,res)=>{
 
 });
 
+// ============================================================
+// RAW SESSION API
+// ============================================================
+app.get('/api/sessions/raw', async(req,res)=>{
+
+  try{
+
+    const month = req.query.month;
+    const toMonth = req.query.toMonth || month;
+    const room = req.query.room || 'ALL';
+
+    const start = `${month}-01`;
+
+    const endDate = new Date(`${toMonth}-01`);
+
+    endDate.setMonth(endDate.getMonth()+1);
+
+    const end = endDate.toISOString().slice(0,10);
+
+    const result = await pool.query(`
+      SELECT
+        id,
+        educator_name,
+        yellow_room,
+        level,
+        batch,
+        subject,
+        chapter_name,
+        index_code,
+        lesson,
+        session_date,
+        slot_number,
+        submitted_at,
+        is_late,
+        delay_days,
+        is_incomplete
+      FROM session_entries
+      WHERE session_date >= $1
+      AND session_date < $2
+      AND ($3='ALL' OR yellow_room=$3)
+      ORDER BY session_date ASC, slot_number ASC
+    `,[start,end,room]);
+
+    res.json(result.rows);
+
+  }catch(err){
+
+    console.log(err);
+
+    res.status(500).json({
+      error:'Raw fetch error'
+    });
+
+  }
+
+});
 
 // ============================================================
 // START SERVER

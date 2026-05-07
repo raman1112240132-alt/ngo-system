@@ -1,306 +1,896 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LP · MIS Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+:root{
+  --bg:#0D0F14;--surface:#161921;--surface2:#1E2330;--border:#2A3040;
+  --yellow:#F5C842;--yellow-dim:rgba(245,200,66,.12);
+  --green:#3DD68C;--green-dim:rgba(61,214,140,.12);
+  --red:#FF6B6B;--red-dim:rgba(255,107,107,.12);
+  --blue:#60A5FA;--blue-dim:rgba(96,165,250,.12);
+  --purple:#A78BFA;--purple-dim:rgba(167,139,250,.12);
+  --orange:#FB923C;
+  --text:#F1F5F9;--text-muted:#64748B;--text-sub:#94A3B8;
+  --tf:#60A5FA;--ln:#3DD68C;--av:#F472B6;--as:#A78BFA;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.025'/%3E%3C/svg%3E");pointer-events:none;z-index:0;}
 
-  <title>LP MIS Dashboard</title>
+/* HEADER */
+header{position:sticky;top:0;z-index:100;background:rgba(13,15,20,.94);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:0 28px;display:flex;align-items:center;justify-content:space-between;height:60px;}
+.logo{font-family:'Syne',sans-serif;font-weight:800;font-size:17px;letter-spacing:2px;color:var(--yellow);}
+.logo span{color:var(--text-muted);font-weight:400;}
+.hdr-r{display:flex;align-items:center;gap:10px;}
+.live-badge{display:flex;align-items:center;gap:5px;background:var(--green-dim);border:1px solid var(--green);border-radius:20px;padding:3px 10px;font-size:10px;font-weight:700;color:var(--green);font-family:'DM Mono',monospace;}
+.live-dot{width:5px;height:5px;background:var(--green);border-radius:50%;animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.5)}}
+#clock{font-family:'DM Mono',monospace;font-size:11px;color:var(--text-muted);}
 
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+/* TABS */
+.tabs{display:flex;border-bottom:1px solid var(--border);background:rgba(13,15,20,.8);backdrop-filter:blur(8px);position:sticky;top:60px;z-index:99;padding:0 28px;}
+.tab{padding:14px 20px;font-family:'Syne',sans-serif;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text-muted);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .2s;white-space:nowrap;}
+.tab:hover{color:var(--text);}
+.tab.active{color:var(--yellow);border-bottom-color:var(--yellow);}
 
-  <style>
+/* PANELS */
+.panel{display:none;}
+.panel.active{display:block;animation:fadeIn .25s ease;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
 
-    body{
-      margin:0;
-      padding:20px;
-      background:#f5f7fb;
-      font-family:Arial;
-    }
+/* CONTROLS */
+.controls{padding:14px 28px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;border-bottom:1px solid var(--border);}
+.ctrl-label{font-size:10px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;}
+input[type="month"],.ctrl-select{background:var(--surface);border:1px solid var(--border);border-radius:7px;color:var(--text);padding:7px 12px;font-family:'DM Sans',sans-serif;font-size:12px;cursor:pointer;transition:border-color .2s;appearance:none;-webkit-appearance:none;}
+input[type="month"]:focus,.ctrl-select:focus{outline:none;border-color:var(--yellow);}
+input[type="month"]::-webkit-calendar-picker-indicator{filter:invert(1) opacity(.35);}
+.btn-primary{background:var(--yellow);color:#0D0F14;border:none;border-radius:7px;padding:8px 18px;font-family:'Syne',sans-serif;font-weight:700;font-size:12px;cursor:pointer;transition:transform .15s,box-shadow .15s;}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(245,200,66,.3);}
+.period-tag{margin-left:auto;font-family:'DM Mono',monospace;font-size:10px;color:var(--text-muted);background:var(--surface2);border:1px solid var(--border);border-radius:5px;padding:4px 10px;}
 
-    .cards{
-      display:grid;
-      grid-template-columns:repeat(4,1fr);
-      gap:20px;
-      margin-bottom:25px;
-    }
+/* MAIN */
+main{max-width:1440px;margin:0 auto;padding:22px 28px 60px;position:relative;z-index:1;}
+.sh{display:flex;align-items:baseline;gap:10px;margin-bottom:12px;margin-top:22px;}
+.sh:first-child{margin-top:0;}
+.sh-title{font-family:'Syne',sans-serif;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:var(--text-muted);}
+.sh-rule{flex:1;height:1px;background:var(--border);}
 
-    .card{
-      background:white;
-      padding:20px;
-      border-radius:12px;
-      box-shadow:0 2px 10px rgba(0,0,0,0.1);
-    }
+/* SUMMARY STRIP */
+.summary-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:18px;}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px 18px;position:relative;overflow:hidden;transition:transform .2s;}
+.stat-card:hover{transform:translateY(-2px);}
+.stat-card::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--accent,var(--yellow));border-radius:12px 12px 0 0;}
+.stat-label{font-size:10px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:7px;}
+.stat-value{font-family:'Syne',sans-serif;font-size:36px;font-weight:800;line-height:1;color:var(--accent,var(--yellow));}
+.stat-sub{font-size:10px;color:var(--text-muted);margin-top:4px;}
 
-    .card h3{
-      margin-top:0;
-    }
+/* BIG METRICS */
+.big-metrics{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px;}
+.bmc{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px 22px;}
+.bmc.stem{border-top:3px solid var(--yellow);}
+.bmc.sepet{border-top:3px solid var(--purple);}
+.bmc-head{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px;}
+.bmc-title{font-family:'Syne',sans-serif;font-size:13px;font-weight:800;}
+.bmc-total{font-family:'DM Mono',monospace;font-size:32px;font-weight:500;}
+.stem .bmc-total{color:var(--yellow);}
+.sepet .bmc-total{color:var(--purple);}
+.bmc-sub{font-size:10px;color:var(--text-muted);margin-top:2px;line-height:1.4;}
+.batch-bars{display:flex;flex-direction:column;gap:8px;}
+.bbr{display:grid;grid-template-columns:90px 1fr 42px;align-items:center;gap:8px;}
+.bn{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;}
+.bn.tf{color:var(--tf)}.bn.ln{color:var(--ln)}.bn.av{color:var(--av)}.bn.as{color:var(--as)}
+.bar-track{height:6px;background:var(--surface2);border-radius:3px;overflow:hidden;}
+.bar-fill{height:100%;border-radius:3px;transition:width .8s cubic-bezier(.16,1,.3,1);}
+.tf .bar-fill{background:var(--tf)}.ln .bar-fill{background:var(--ln)}.av .bar-fill{background:var(--av)}.as .bar-fill{background:var(--as)}
+.bc{font-family:'DM Mono',monospace;font-size:11px;color:var(--text-sub);text-align:right;}
 
-    .card p{
-      font-size:32px;
-      font-weight:bold;
-    }
+/* DETAIL GRID */
+.detail-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px;}
+.metric-tile{background:var(--surface);border:1px solid var(--border);border-radius:11px;padding:14px 16px;}
+.mt-label{font-size:10px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px;}
+.bb-row{display:flex;align-items:center;justify-content:space-between;padding:4px 0;border-bottom:1px solid rgba(42,48,64,.5);}
+.bb-row:last-child{border-bottom:none;}
+.bb-left{display:flex;align-items:center;gap:6px;}
+.bb-badge{font-size:9px;font-weight:700;padding:2px 6px;border-radius:9px;letter-spacing:.3px;}
+.bb-badge.tf{background:rgba(96,165,250,.15);color:var(--tf)}
+.bb-badge.ln{background:rgba(61,214,140,.15);color:var(--ln)}
+.bb-badge.av{background:rgba(244,114,182,.15);color:var(--av)}
+.bb-badge.as{background:rgba(167,139,250,.15);color:var(--as)}
+.bb-badge.all{background:var(--yellow-dim);color:var(--yellow)}
+.bb-desc{font-size:10px;color:var(--text-muted);}
+.bb-val{font-family:'DM Mono',monospace;font-size:13px;font-weight:500;}
 
-    .section{
-      background:white;
-      padding:20px;
-      border-radius:12px;
-      margin-bottom:25px;
-    }
+/* CHARTS */
+.charts-row{display:grid;grid-template-columns:2fr 1fr;gap:10px;margin-bottom:18px;}
+.chart-card{background:var(--surface);border:1px solid var(--border);border-radius:13px;padding:18px 20px;}
+.chart-card canvas{max-height:250px;}
+.chart-title{font-family:'Syne',sans-serif;font-size:12px;font-weight:700;margin-bottom:12px;}
 
-    table{
-      width:100%;
-      border-collapse:collapse;
-    }
+/* ACTIVITIES */
+.activity-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:9px;margin-bottom:18px;}
+.act-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px;}
+.act-name{font-size:10px;font-weight:600;margin-bottom:6px;color:var(--text-sub);}
+.act-nums{display:flex;align-items:baseline;gap:4px;}
+.act-count{font-family:'DM Mono',monospace;font-size:24px;font-weight:500;}
+.act-exp{font-size:10px;color:var(--text-muted);}
+.act-pill{margin-top:6px;display:inline-block;font-size:9px;font-weight:700;padding:2px 7px;border-radius:20px;}
+.act-pill.done{background:var(--green-dim);color:var(--green)}
+.act-pill.pending{background:var(--red-dim);color:var(--red)}
 
-    th,td{
-      border:1px solid #ddd;
-      padding:10px;
-    }
+/* ROOMS TABLE */
+.rooms-block{background:var(--surface);border:1px solid var(--border);border-radius:13px;overflow:hidden;margin-bottom:18px;}
+.rooms-head{padding:14px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+.rooms-head-title{font-family:'Syne',sans-serif;font-size:12px;font-weight:700;}
+.filter-chips{display:flex;gap:5px;}
+.chip{font-size:10px;font-weight:700;padding:3px 9px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--text-muted);cursor:pointer;transition:all .15s;font-family:'DM Sans',sans-serif;}
+.chip.active{background:var(--yellow-dim);border-color:var(--yellow);color:var(--yellow);}
+.chip:hover:not(.active){border-color:var(--text-muted);color:var(--text);}
+.table-wrap{overflow-x:auto;}
+table.rt{width:100%;border-collapse:collapse;font-size:11px;}
+table.rt th{background:var(--surface2);padding:8px 13px;text-align:left;font-family:'DM Mono',monospace;font-size:9px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;white-space:nowrap;border-bottom:1px solid var(--border);}
+table.rt td{padding:8px 13px;border-bottom:1px solid rgba(42,48,64,.45);vertical-align:middle;white-space:nowrap;}
+table.rt tr:last-child td{border-bottom:none;}
+table.rt tr:hover td{background:rgba(255,255,255,.02);}
+.late-row td:first-child{border-left:3px solid var(--red);}
+.cb{display:flex;align-items:center;gap:5px;}
+.cb-track{width:55px;height:4px;background:var(--surface2);border-radius:2px;overflow:hidden;}
+.cb-fill{height:100%;border-radius:2px;background:var(--green);}
+.cb-fill.mid{background:var(--yellow);}
+.cb-fill.low{background:var(--red);}
+.cb-pct{font-family:'DM Mono',monospace;font-size:10px;color:var(--text-sub);}
+.late-pill{display:inline-flex;align-items:center;gap:3px;background:var(--red-dim);border:1px solid var(--red);color:var(--red);border-radius:20px;padding:1px 6px;font-size:9px;font-weight:700;}
+.mt-tag{background:var(--surface2);border:1px solid var(--border);color:var(--text-muted);border-radius:3px;padding:1px 5px;font-size:9px;margin-right:2px;margin-bottom:2px;display:inline-block;}
 
-    th{
-      background:#f3f4f6;
-    }
+/* ═══════════════════════════════════
+   YR DEEP VIEW
+═══════════════════════════════════ */
+.yr-controls{padding:14px 28px;display:flex;align-items:flex-start;gap:12px;flex-wrap:wrap;border-bottom:1px solid var(--border);}
+.month-chips-wrap{display:flex;align-items:center;gap:5px;flex-wrap:wrap;}
+.year-chip{font-size:10px;font-weight:700;padding:5px 10px;border-radius:6px;border:1px solid var(--border);background:transparent;color:var(--text-muted);cursor:pointer;transition:all .15s;font-family:'DM Mono',monospace;}
+.year-chip.active{background:var(--surface2);border-color:var(--text-sub);color:var(--text);}
+.month-chip{font-size:10px;font-weight:700;padding:5px 10px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--text-muted);cursor:pointer;transition:all .15s;font-family:'DM Mono',monospace;}
+.month-chip.sel{background:var(--yellow-dim);border-color:var(--yellow);color:var(--yellow);}
+.month-chip:hover:not(.sel){border-color:var(--text-sub);color:var(--text);}
 
-  </style>
+/* INDICATOR PANEL */
+.indicator-panel{background:var(--surface);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:18px;}
+.ip-header{padding:20px 24px;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap;}
+.ip-title{font-family:'Syne',sans-serif;font-size:18px;font-weight:800;}
+.ip-sub{font-size:11px;color:var(--text-muted);margin-top:2px;}
+.ip-period{font-family:'DM Mono',monospace;font-size:11px;color:var(--text-muted);background:var(--surface2);border:1px solid var(--border);border-radius:5px;padding:4px 10px;white-space:nowrap;}
 
+/* Two column grid in indicator panel */
+.ip-2col{display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid var(--border);}
+.ip-sec{padding:18px 22px;border-right:1px solid var(--border);}
+.ip-sec:last-child{border-right:none;}
+.ip-sec-title{font-family:'Syne',sans-serif;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:12px;padding-bottom:7px;border-bottom:1px solid var(--border);}
+.ip-sec-title.stem-c{color:var(--yellow);}
+.ip-sec-title.ling-c{color:var(--blue);}
+.ip-sec-title.nk-c{color:var(--green);}
+.ip-sec-title.sel-c{color:var(--blue);}
+.ip-sec-title.shared-c{color:var(--purple);}
+.ip-sec-title.special-c{color:var(--orange);}
+
+/* Indicator row */
+.ind-row{display:flex;align-items:center;padding:6px 0;border-bottom:1px solid rgba(42,48,64,.35);}
+.ind-row:last-child{border-bottom:none;}
+.ind-batch-badge{font-size:9px;font-weight:700;padding:2px 6px;border-radius:8px;margin-right:8px;white-space:nowrap;flex-shrink:0;}
+.ind-batch-badge.tf{background:rgba(96,165,250,.15);color:var(--tf)}
+.ind-batch-badge.ln{background:rgba(61,214,140,.15);color:var(--ln)}
+.ind-batch-badge.av{background:rgba(244,114,182,.15);color:var(--av)}
+.ind-batch-badge.as{background:rgba(167,139,250,.15);color:var(--as)}
+.ind-label-text{font-size:11px;color:var(--text-sub);flex:1;min-width:0;}
+.ind-bar-wrap{width:80px;height:5px;background:var(--surface2);border-radius:3px;overflow:hidden;margin:0 10px;flex-shrink:0;}
+.ind-bar{height:100%;border-radius:3px;transition:width .7s cubic-bezier(.16,1,.3,1);}
+.ind-count{font-family:'DM Mono',monospace;font-size:18px;font-weight:500;width:38px;text-align:right;flex-shrink:0;}
+.ind-count.zero{color:var(--text-muted);}
+
+/* Shared mini grid */
+.shared-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px;padding:18px 22px;}
+.shared-item{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:11px 14px;}
+.si-label{font-size:10px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.7px;margin-bottom:5px;}
+.si-val{font-family:'DM Mono',monospace;font-size:24px;font-weight:500;}
+
+/* Totals bar */
+.ip-totals{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border-top:1px solid var(--border);}
+.ipt-card{padding:14px 22px;text-align:center;border-right:1px solid var(--border);}
+.ipt-card:last-child{border-right:none;}
+.ipt-label{font-size:9px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:5px;}
+.ipt-val{font-family:'DM Mono',monospace;font-size:28px;font-weight:500;}
+
+/* YR charts */
+.yr-charts{display:grid;grid-template-columns:3fr 2fr;gap:10px;margin-bottom:18px;}
+
+/* Empty */
+.empty{text-align:center;padding:48px;color:var(--text-muted);font-size:12px;}
+
+/* Loading */
+#loading{position:fixed;inset:0;background:rgba(13,15,20,.75);z-index:9999;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px);transition:opacity .3s;}
+#loading.hidden{opacity:0;pointer-events:none;}
+.spinner{width:32px;height:32px;border:3px solid var(--border);border-top-color:var(--yellow);border-radius:50%;animation:spin .7s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* RESPONSIVE */
+@media(max-width:1100px){
+  .summary-strip{grid-template-columns:repeat(2,1fr);}
+  .big-metrics,.charts-row,.yr-charts{grid-template-columns:1fr;}
+  .activity-grid{grid-template-columns:repeat(3,1fr);}
+  .detail-grid{grid-template-columns:repeat(2,1fr);}
+  .ip-2col{grid-template-columns:1fr;}
+  .ip-sec{border-right:none;border-bottom:1px solid var(--border);}
+  .ip-totals{grid-template-columns:1fr;}
+  .ipt-card{border-right:none;border-bottom:1px solid var(--border);}
+}
+@media(max-width:700px){
+  main{padding:12px 14px 50px;}
+  .summary-strip{grid-template-columns:1fr 1fr;}
+  .detail-grid,.activity-grid{grid-template-columns:1fr;}
+  header{padding:0 14px;}
+  .controls,.yr-controls{padding:10px 14px;}
+  .tabs{padding:0 14px;overflow-x:auto;}
+}
+</style>
 </head>
 <body>
 
-<h1>LP MIS Dashboard</h1>
+<div id="loading"><div class="spinner"></div></div>
 
-<div style="display:flex;gap:12px;align-items:center;margin-bottom:20px;flex-wrap:wrap;">
+<!-- HEADER -->
+<header>
+  <div class="logo">LP · <span>MIS</span></div>
+  <div class="hdr-r">
+    <div class="live-badge"><div class="live-dot"></div>LIVE</div>
+    <div id="clock">—</div>
+  </div>
+</header>
 
-  <input type="month" id="monthFilter">
-
-  <select id="roomFilter">
-
-  <option value="ALL">All Rooms</option>
-
-  <option value="Abhay Nagar">Abhay Nagar</option>
-  <option value="Bahadurpur">Bahadurpur</option>
-  <option value="Badi kalan">Badi kalan</option>
-  <option value="Beniganj">Beniganj</option>
-  <option value="Bhadrukh">Bhadrukh</option>
-  <option value="Bhitauli Khurd">Bhitauli Khurd</option>
-  <option value="Chinhat">Chinhat</option>
-  <option value="Garden Bay">Garden Bay</option>
-  <option value="Gandhi Nagar">Gandhi Nagar</option>
-  <option value="Hans kheda">Hans kheda</option>
-  <option value="Hardasi Kheda">Hardasi Kheda</option>
-  <option value="Hasanpur Khewali">Hasanpur Khewali</option>
-  <option value="Hussainganj">Hussainganj</option>
-  <option value="Ismailganj">Ismailganj</option>
-  <option value="Jarhara">Jarhara</option>
-  <option value="Jodaura">Jodaura</option>
-  <option value="Jugguar">Jugguar</option>
-  <option value="Jyotishah Alampur">Jyotishah Alampur</option>
-  <option value="Kalli Paschim">Kalli Paschim</option>
-  <option value="Kashyap Nagar">Kashyap Nagar</option>
-  <option value="Kaudiyamau">Kaudiyamau</option>
-  <option value="Khazoor Gaon">Khazoor Gaon</option>
-  <option value="Kumharan">Kumharan</option>
-  <option value="Kutubpur">Kutubpur</option>
-  <option value="Laulai">Laulai</option>
-  <option value="Macchli Mohal">Macchli Mohal</option>
-  <option value="Mahmoodpur">Mahmoodpur</option>
-  <option value="Malhaur">Malhaur</option>
-  <option value="Mannat">Mannat</option>
-  <option value="Matiyari">Matiyari</option>
-  <option value="Meesa">Meesa</option>
-  <option value="Mozzam Nagar">Mozzam Nagar</option>
-  <option value="Munshipulia">Munshipulia</option>
-  <option value="Nanda Kheda">Nanda Kheda</option>
-  <option value="Nat Kheda">Nat Kheda</option>
-  <option value="Noida Sec 122">Noida Sec 122</option>
-  <option value="Noida Sec 17">Noida Sec 17</option>
-  <option value="One world">One world</option>
-  <option value="Pani Gaon">Pani Gaon</option>
-  <option value="Ram Das Hata">Ram Das Hata</option>
-  <option value="Ram Nagar">Ram Nagar</option>
-  <option value="Roshanabad">Roshanabad</option>
-  <option value="Sandauli">Sandauli</option>
-  <option value="Sikandar Nagar">Sikandar Nagar</option>
-  <option value="Sitarasoi">Sitarasoi</option>
-  <option value="Tindola">Tindola</option>
-  <option value="Ujariyaon">Ujariyaon</option>
-  <option value="Vishundaspur">Vishundaspur</option>
-
-</select>
-  <button onclick="loadDashboard()">Load</button>
-
+<!-- TABS -->
+<div class="tabs">
+  <div class="tab active" onclick="switchTab('ov',this)">Overview</div>
+  <div class="tab" onclick="switchTab('yr',this)">YR Deep View</div>
 </div>
 
-<br><br>
-
-<div class="cards">
-
-  <div class="card">
-    <h3>Total Sessions</h3>
-    <p id="totalSessions">0</p>
+<!-- ══════════════ OVERVIEW PANEL ══════════════ -->
+<div id="panel-ov" class="panel active">
+  <div class="controls">
+    <span class="ctrl-label">Month</span>
+    <input type="month" id="ov-month">
+    <span class="ctrl-label" style="margin-left:8px">Room</span>
+    <select class="ctrl-select" id="ov-room">
+      <option value="ALL">All Rooms</option>
+      <option>Abhay Nagar</option><option>Bahadurpur</option><option>Badi kalan</option>
+      <option>Beniganj</option><option>Bhadrukh</option><option>Bhitauli Khurd</option>
+      <option>Chinhat</option><option>Garden Bay</option><option>Gandhi Nagar</option>
+      <option>Hans kheda</option><option>Hardasi Kheda</option><option>Hasanpur Khewali</option>
+      <option>Hussainganj</option><option>Ismailganj</option><option>Jarhara</option>
+      <option>Jodaura</option><option>Jugguar</option><option>Jyotishah Alampur</option>
+      <option>Kalli Paschim</option><option>Kashyap Nagar</option><option>Kaudiyamau</option>
+      <option>Khazoor Gaon</option><option>Kumharan</option><option>Kutubpur</option>
+      <option>Laulai</option><option>Macchli Mohal</option><option>Mahmoodpur</option>
+      <option>Malhaur</option><option>Mannat</option><option>Matiyari</option>
+      <option>Meesa</option><option>Mozzam Nagar</option><option>Munshipulia</option>
+      <option>Nanda Kheda</option><option>Nat Kheda</option><option>Noida Sec 122</option>
+      <option>Noida Sec 17</option><option>One world</option><option>Pani Gaon</option>
+      <option>Ram Das Hata</option><option>Ram Nagar</option><option>Roshanabad</option>
+      <option>Sandauli</option><option>Sikandar Nagar</option><option>Sitarasoi</option>
+      <option>Tindola</option><option>Ujariyaon</option><option>Vishundaspur</option>
+    </select>
+    <button class="btn-primary" onclick="loadOverview()">Load</button>
+    <div class="period-tag" id="ov-period">—</div>
   </div>
 
-  <div class="card">
-    <h3>Late Entries</h3>
-    <p id="lateCount">0</p>
+  <main>
+    <div class="sh"><span class="sh-title">Overview</span><div class="sh-rule"></div></div>
+    <div class="summary-strip">
+      <div class="stat-card" style="--accent:var(--yellow)"><div class="stat-label">Total Sessions</div><div class="stat-value" id="s-total">—</div><div class="stat-sub">entries recorded</div></div>
+      <div class="stat-card" style="--accent:var(--red)"><div class="stat-label">Late Entries</div><div class="stat-value" id="s-late">—</div><div class="stat-sub">past execution date</div></div>
+      <div class="stat-card" style="--accent:var(--orange)"><div class="stat-label">Incomplete</div><div class="stat-value" id="s-inc">—</div><div class="stat-sub">missing fields</div></div>
+      <div class="stat-card" style="--accent:var(--green)"><div class="stat-label">Rooms Reporting</div><div class="stat-value" id="s-rooms">—</div><div class="stat-sub">unique Yellow Rooms</div></div>
+    </div>
+
+    <div class="sh"><span class="sh-title">STEM &amp; SEPEt</span><div class="sh-rule"></div></div>
+    <div class="big-metrics">
+      <div class="bmc stem">
+        <div class="bmc-head"><div><div class="bmc-title">STEM Sessions</div><div class="bmc-sub">EVS · Maths · FN/FLN · Science</div></div><div class="bmc-total" id="stem-total">—</div></div>
+        <div class="batch-bars" id="stem-bars"></div>
+      </div>
+      <div class="bmc sepet">
+        <div class="bmc-head"><div><div class="bmc-title">SEPEt Sessions</div><div class="bmc-sub">Naitik · SEL · Yoga · Games · Drawing · Cleanliness · Gender · Padho Padhao · Children Panchayat · Animal Mgmt · PTM</div></div><div class="bmc-total" id="sepet-total">—</div></div>
+        <div class="batch-bars" id="sepet-bars"></div>
+      </div>
+    </div>
+
+    <div class="sh"><span class="sh-title">Session Breakdown</span><div class="sh-rule"></div></div>
+    <div class="detail-grid">
+      <div class="metric-tile"><div class="mt-label">STEM per Batch</div><div id="ov-stem-detail"></div></div>
+      <div class="metric-tile"><div class="mt-label">Linguistic per Batch</div><div id="ov-ling-detail"></div></div>
+      <div class="metric-tile"><div class="mt-label">Naitik Shiksha + SEL Plans</div><div id="ov-naitik-detail"></div></div>
+      <div class="metric-tile"><div class="mt-label">WHY + General Awareness</div><div id="ov-why-detail"></div></div>
+      <div class="metric-tile"><div class="mt-label">Combined Sessions</div><div id="ov-combined-detail"></div></div>
+      <div class="metric-tile"><div class="mt-label">Special Programs</div><div id="ov-special-detail"></div></div>
+    </div>
+
+    <div class="sh"><span class="sh-title">Visual Analytics</span><div class="sh-rule"></div></div>
+    <div class="charts-row">
+      <div class="chart-card"><div class="chart-title">Subject Coverage</div><canvas id="ov-bar-chart"></canvas></div>
+      <div class="chart-card"><div class="chart-title">STEM vs SEPEt</div><canvas id="ov-donut-chart"></canvas></div>
+    </div>
+
+    <div class="sh"><span class="sh-title">Program Activities</span><div class="sh-rule"></div></div>
+    <div class="activity-grid" id="ov-activities"></div>
+
+    <div class="sh"><span class="sh-title">Yellow Room Report</span><div class="sh-rule"></div></div>
+    <div class="rooms-block">
+      <div class="rooms-head">
+        <div class="rooms-head-title">Per-Room Performance</div>
+        <div class="filter-chips">
+          <button class="chip active" onclick="filterRooms('all',this)">All</button>
+          <button class="chip" onclick="filterRooms('late',this)">Late Only</button>
+          <button class="chip" onclick="filterRooms('incomplete',this)">Incomplete</button>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table class="rt">
+          <thead><tr><th>Yellow Room</th><th>Batch</th><th>STEM</th><th>SEPEt</th><th>Linguistic</th><th>Completion</th><th>Late</th><th>Missing Subjects</th></tr></thead>
+          <tbody id="ov-room-body"></tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- ══════════════ YR DEEP VIEW PANEL ══════════════ -->
+<div id="panel-yr" class="panel">
+  <div class="yr-controls">
+    <div>
+      <div class="ctrl-label" style="margin-bottom:6px">Yellow Room</div>
+      <select class="ctrl-select" id="yr-room">
+        <option value="">Select Room</option>
+        <option>Abhay Nagar</option><option>Bahadurpur</option><option>Badi kalan</option>
+        <option>Beniganj</option><option>Bhadrukh</option><option>Bhitauli Khurd</option>
+        <option>Chinhat</option><option>Garden Bay</option><option>Gandhi Nagar</option>
+        <option>Hans kheda</option><option>Hardasi Kheda</option><option>Hasanpur Khewali</option>
+        <option>Hussainganj</option><option>Ismailganj</option><option>Jarhara</option>
+        <option>Jodaura</option><option>Jugguar</option><option>Jyotishah Alampur</option>
+        <option>Kalli Paschim</option><option>Kashyap Nagar</option><option>Kaudiyamau</option>
+        <option>Khazoor Gaon</option><option>Kumharan</option><option>Kutubpur</option>
+        <option>Laulai</option><option>Macchli Mohal</option><option>Mahmoodpur</option>
+        <option>Malhaur</option><option>Mannat</option><option>Matiyari</option>
+        <option>Meesa</option><option>Mozzam Nagar</option><option>Munshipulia</option>
+        <option>Nanda Kheda</option><option>Nat Kheda</option><option>Noida Sec 122</option>
+        <option>Noida Sec 17</option><option>One world</option><option>Pani Gaon</option>
+        <option>Ram Das Hata</option><option>Ram Nagar</option><option>Roshanabad</option>
+        <option>Sandauli</option><option>Sikandar Nagar</option><option>Sitarasoi</option>
+        <option>Tindola</option><option>Ujariyaon</option><option>Vishundaspur</option>
+      </select>
+    </div>
+
+    <div>
+      <div class="ctrl-label" style="margin-bottom:6px">Select Months <span style="color:var(--text-muted);font-weight:400">(tap to toggle)</span></div>
+      <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;">
+        <div id="yr-year-chips" style="display:flex;gap:4px;margin-right:6px;"></div>
+        <div id="yr-month-chips" class="month-chips-wrap"></div>
+      </div>
+    </div>
+
+    <div style="display:flex;align-items:flex-end;gap:8px;flex-direction:column;">
+      <button class="btn-primary" onclick="loadYRView()">Load YR</button>
+      <div style="display:flex;gap:5px;">
+        <button class="chip" onclick="selectAllMonths()">All</button>
+        <button class="chip" onclick="clearMonths()">Clear</button>
+      </div>
+    </div>
+    <div class="period-tag" id="yr-period">—</div>
   </div>
 
-  <div class="card">
-    <h3>Incomplete Entries</h3>
-    <p id="incompleteCount">0</p>
-  </div>
+  <main>
+    <div id="yr-empty" class="empty">Select a Yellow Room and at least one month, then click <strong>Load YR</strong>.</div>
 
-  <div class="card">
-    <h3>Complete Rooms</h3>
-    <p id="completeRooms">0</p>
-  </div>
+    <div id="yr-content" style="display:none">
+      <!-- INDICATOR PANEL -->
+      <div class="indicator-panel">
+        <div class="ip-header">
+          <div>
+            <div class="ip-title" id="ip-room">—</div>
+            <div class="ip-sub">Indicator Summary · Session Counts</div>
+          </div>
+          <div class="ip-period" id="ip-period">—</div>
+        </div>
 
+        <!-- STEM + Linguistic -->
+        <div class="ip-2col">
+          <div class="ip-sec">
+            <div class="ip-sec-title stem-c">STEM Sessions (EVS + Maths + FN + Science)</div>
+            <div id="ip-stem"></div>
+          </div>
+          <div class="ip-sec">
+            <div class="ip-sec-title ling-c">Linguistic Sessions</div>
+            <div id="ip-ling"></div>
+          </div>
+        </div>
+
+        <!-- Naitik + SEL -->
+        <div class="ip-2col">
+          <div class="ip-sec">
+            <div class="ip-sec-title nk-c">Naitik Shiksha</div>
+            <div id="ip-naitik"></div>
+          </div>
+          <div class="ip-sec">
+            <div class="ip-sec-title sel-c">SEL Plans</div>
+            <div id="ip-sel"></div>
+          </div>
+        </div>
+
+        <!-- Shared -->
+        <div style="padding:16px 22px 4px;border-top:1px solid var(--border);">
+          <div class="ip-sec-title shared-c" style="font-family:'Syne',sans-serif;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:10px;">Shared Sessions — All Batches Combined</div>
+        </div>
+        <div class="shared-grid" id="ip-shared"></div>
+
+        <!-- Special -->
+        <div style="padding:16px 22px 4px;border-top:1px solid var(--border);">
+          <div class="ip-sec-title special-c" style="font-family:'Syne',sans-serif;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:10px;color:var(--orange);">Special Programs</div>
+        </div>
+        <div class="shared-grid" id="ip-special"></div>
+
+        <!-- Totals -->
+        <div class="ip-totals">
+          <div class="ipt-card"><div class="ipt-label">Total Sessions</div><div class="ipt-val" id="ipt-total" style="color:var(--yellow)">—</div></div>
+          <div class="ipt-card"><div class="ipt-label">STEM Total</div><div class="ipt-val" id="ipt-stem" style="color:var(--yellow)">—</div></div>
+          <div class="ipt-card"><div class="ipt-label">SEPEt Total</div><div class="ipt-val" id="ipt-sepet" style="color:var(--purple)">—</div></div>
+        </div>
+      </div>
+
+      <!-- YR CHARTS -->
+      <div class="yr-charts">
+        <div class="chart-card"><div class="chart-title">Monthly Session Trend</div><canvas id="yr-trend"></canvas></div>
+        <div class="chart-card"><div class="chart-title">STEM · SEPEt · Linguistic Split</div><canvas id="yr-donut"></canvas></div>
+      </div>
+    </div>
+  </main>
 </div>
-
-
-<div class="section">
-
-  <h2>Yellow Room Performance</h2>
-
-  <table>
-
-    <thead>
-      <tr>
-        <th>Room</th>
-        <th>Batch</th>
-        <th>Completion %</th>
-        <th>Missing</th>
-      </tr>
-    </thead>
-
-    <tbody id="roomTable"></tbody>
-
-  </table>
-
-</div>
-
-
-<div class="section">
-
-  <h2>Program Activities</h2>
-
-  <table>
-
-    <thead>
-      <tr>
-        <th>Activity</th>
-        <th>Expected</th>
-        <th>Conducted</th>
-        <th>Status</th>
-      </tr>
-    </thead>
-
-    <tbody id="activityTable"></tbody>
-
-  </table>
-
-</div>
-
-
-<div class="section">
-  <h2>Subject Coverage</h2>
-  <canvas id="subjectChart"></canvas>
-</div>
-
 
 <script>
+// ═══ CONSTANTS ═══
+const STEM_S  = new Set(['EVS','Maths','FN','FLN','Science']);
+const SEPET_S = new Set(['Naitik Shiksha','SEL Plans','Yoga','Games','Drawing','Cleanliness','Cleanliness Session','Gender Session','Gender','Padho Padhao','Children Panchayat','Animal Management','PTM','Library Session']);
+const BATCHES = ['Tenderfeet','Learners','Advancers','Aspirers'];
+const BC = {Tenderfeet:'tf',Learners:'ln',Advancers:'av',Aspirers:'as'};
+const BAR_COL = {tf:'var(--tf)',ln:'var(--ln)',av:'var(--av)',as:'var(--as)'};
+const MONTHS_L = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const MONTHS_V = ['01','02','03','04','05','06','07','08','09','10','11','12'];
 
-async function loadDashboard(){
+let _ovRooms = [];
+let _charts  = {};
+let _activeYear;
 
-  const month = document.getElementById('monthFilter').value;
+// ═══ CLOCK ═══
+function tick(){
+  const n=new Date();
+  document.getElementById('clock').textContent =
+    n.toLocaleDateString('en-IN',{weekday:'short',day:'2-digit',month:'short',year:'numeric'})+
+    ' · '+n.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
+}
+setInterval(tick,1000); tick();
 
-  const room = document.getElementById('roomFilter').value;
-
-const res = await fetch(
-  `/dashboard/month?month=${month}&room=${room}`
-);
-
-  const data = await res.json();
-
-  document.getElementById('totalSessions').innerText = data.totalSessions;
-  document.getElementById('lateCount').innerText = data.lateCount;
-  document.getElementById('incompleteCount').innerText = data.incompleteCount;
-  document.getElementById('completeRooms').innerText = data.completeRooms;
-
-
-  // ============================================================
-  // ROOM TABLE
-  // ============================================================
-  const tbody = document.getElementById('roomTable');
-
-  tbody.innerHTML = '';
-
-  data.rooms.forEach(r=>{
-
-    tbody.innerHTML += `
-      <tr>
-        <td>${r.name}</td>
-        <td>${r.batch}</td>
-        <td>${r.completion}%</td>
-        <td>${r.missing.join(', ')}</td>
-      </tr>
-    `;
-
-  });
-
-
-  // ============================================================
-  // ACTIVITIES TABLE
-  // ============================================================
-  const act = document.getElementById('activityTable');
-
-  act.innerHTML = '';
-
-  data.activities.forEach(a=>{
-
-    act.innerHTML += `
-      <tr>
-        <td>${a.name}</td>
-        <td>${a.expected}</td>
-        <td>${a.conducted}</td>
-        <td>${a.status}</td>
-      </tr>
-    `;
-
-  });
-
-
-  // ============================================================
-  // CHART
-  // ============================================================
-  const labels = data.subjectCoverage.map(s=>s.subject);
-  const values = data.subjectCoverage.map(s=>s.percent);
-
-  const ctx = document.getElementById('subjectChart');
-
-  new Chart(ctx, {
-    type:'bar',
-    data:{
-      labels,
-      datasets:[{
-        label:'Subject Count',
-        data:values
-      }]
-    }
-  });
-
+// ═══ TABS ═══
+function switchTab(id,el){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('panel-'+id).classList.add('active');
 }
 
-window.onload = ()=>{
-
-  const today = new Date();
-
-  const month = today.toISOString().slice(0,7);
-
-  document.getElementById('monthFilter').value = month;
-
-  loadDashboard();
-
+// ═══ INIT ═══
+window.onload=()=>{
+  const today=new Date();
+  document.getElementById('ov-month').value=today.toISOString().slice(0,7);
+  buildYearChips(today.getFullYear());
+  loadOverview();
 };
 
+// ═══ YEAR + MONTH CHIPS ═══
+function buildYearChips(currentYear){
+  const yc=document.getElementById('yr-year-chips');
+  yc.innerHTML='';
+  [currentYear-1,currentYear].forEach(yr=>{
+    const b=document.createElement('button');
+    b.className='year-chip';
+    b.textContent=yr;
+    b.dataset.year=yr;
+    b.onclick=function(){
+      document.querySelectorAll('.year-chip').forEach(c=>c.classList.remove('active'));
+      this.classList.add('active');
+      _activeYear=yr;
+      buildMonthChips(yr);
+    };
+    yc.appendChild(b);
+  });
+  // Default to current year
+  yc.lastChild.classList.add('active');
+  _activeYear=currentYear;
+  buildMonthChips(currentYear);
+}
+
+function buildMonthChips(year){
+  const wrap=document.getElementById('yr-month-chips');
+  wrap.innerHTML='';
+  const today=new Date();
+  MONTHS_L.forEach((lbl,i)=>{
+    const val=`${year}-${MONTHS_V[i]}`;
+    const b=document.createElement('button');
+    b.className='month-chip';
+    b.textContent=lbl;
+    b.dataset.month=val;
+    b.onclick=function(){this.classList.toggle('sel');};
+    // Pre-select current month
+    if(year===today.getFullYear() && i===today.getMonth()) b.classList.add('sel');
+    wrap.appendChild(b);
+  });
+}
+
+function getSelectedMonths(){
+  return Array.from(document.querySelectorAll('.month-chip.sel')).map(c=>c.dataset.month).sort();
+}
+function selectAllMonths(){
+  document.querySelectorAll('.month-chip').forEach(c=>c.classList.add('sel'));
+}
+function clearMonths(){
+  document.querySelectorAll('.month-chip').forEach(c=>c.classList.remove('sel'));
+}
+
+// ═══ LOAD OVERVIEW ═══
+async function loadOverview(){
+  const month=document.getElementById('ov-month').value;
+  const room=document.getElementById('ov-room').value;
+  if(!month){alert('Select a month');return;}
+  showLoad(true);
+  try{
+    const [dash,raw]=await Promise.all([
+      fetch(`/dashboard/month?month=${month}&room=${room}`).then(r=>r.json()),
+      fetchRaw(month,month,room)
+    ]);
+    const today=new Date();
+    const [yr,mo]=month.split('-');
+    const isCur=today.getFullYear()===+yr&&today.getMonth()+1===+mo;
+    document.getElementById('ov-period').textContent=isCur
+      ?`${mName(month)} · up to ${today.toLocaleDateString('en-IN',{day:'2-digit',month:'short'})}`
+      :mName(month);
+    renderOverview(dash,raw);
+  }catch(e){console.error(e);alert('Failed to load');}
+  showLoad(false);
+}
+
+// ═══ LOAD YR VIEW ═══
+async function loadYRView(){
+  const room=document.getElementById('yr-room').value;
+  const months=getSelectedMonths();
+  if(!room){alert('Select a Yellow Room');return;}
+  if(!months.length){alert('Select at least one month');return;}
+  const from=months[0],to=months[months.length-1];
+  document.getElementById('yr-period').textContent=
+    months.length===1?mName(months[0]):`${mName(from)} → ${mName(to)} (${months.length} months)`;
+  showLoad(true);
+  try{
+    const raw=await fetchRaw(from,to,room);
+    const filtered=raw.filter(r=>months.includes(r.session_date?.slice(0,7)));
+    renderYR(filtered,room,months);
+  }catch(e){console.error(e);alert('Failed to load YR data');}
+  showLoad(false);
+}
+
+// ═══ FETCH RAW ═══
+async function fetchRaw(from,to,room){
+  try{
+    const r=await fetch(`/api/sessions/raw?month=${from}&toMonth=${to}&room=${encodeURIComponent(room)}`);
+    if(r.ok) return await r.json();
+  }catch(e){}
+  return [];
+}
+
+// ═══ RENDER OVERVIEW ═══
+function renderOverview(data,raw){
+  document.getElementById('s-total').textContent=data.totalSessions;
+  document.getElementById('s-late').textContent=data.lateCount;
+  document.getElementById('s-inc').textContent=data.incompleteCount;
+  document.getElementById('s-rooms').textContent=new Set(raw.map(r=>r.yellow_room)).size||(data.rooms?.length||'—');
+
+  const bsc=batchSubjectCounts(raw);
+
+  // STEM
+  const stemByB={};let sT=0;
+  BATCHES.forEach(b=>{stemByB[b]=countFor(bsc,b,STEM_S);sT+=stemByB[b];});
+  document.getElementById('stem-total').textContent=sT;
+  renderBars('stem-bars',stemByB,sT);
+
+  // SEPEt
+  const sepetByB={};let seT=0;
+  BATCHES.forEach(b=>{sepetByB[b]=countFor(bsc,b,SEPET_S);seT+=sepetByB[b];});
+  document.getElementById('sepet-total').textContent=seT;
+  renderBars('sepet-bars',sepetByB,seT);
+
+  // STEM detail
+  const stemD=document.getElementById('ov-stem-detail');stemD.innerHTML='';
+  BATCHES.forEach(b=>{
+    const sc=bsc[b]||{},ev=sc['EVS']||0,ma=sc['Maths']||0,fn=(sc['FN']||0)+(sc['FLN']||0),sci=sc['Science']||0;
+    stemD.innerHTML+=bbR(b,`EVS:${ev} Maths:${ma} FN:${fn} Sci:${sci}`,ev+ma+fn+sci);
+  });
+
+  // Linguistic detail
+  const lingD=document.getElementById('ov-ling-detail');lingD.innerHTML='';
+  BATCHES.forEach(b=>lingD.innerHTML+=bbR(b,'Linguistic sessions',bsc[b]?.['Linguistic']||0));
+
+  // Naitik+SEL
+  const nkD=document.getElementById('ov-naitik-detail');nkD.innerHTML='';
+  BATCHES.forEach(b=>{
+    const sc=bsc[b]||{},nk=sc['Naitik Shiksha']||0,sel=sc['SEL Plans']||0;
+    nkD.innerHTML+=bbR(b,`Naitik:${nk} SEL:${sel}`,nk+sel);
+  });
+
+  // WHY+GA
+  const whyD=document.getElementById('ov-why-detail');whyD.innerHTML='';
+  ['Learners','Advancers','Aspirers'].forEach(b=>{
+    const sc=bsc[b]||{},why=sc['WHY']||0,ga=(sc['GA']||0)+(sc['General Awareness']||0);
+    whyD.innerHTML+=bbR(b,`WHY:${why} GA:${ga}`,why+ga);
+  });
+
+  // Combined
+  const combD=document.getElementById('ov-combined-detail');combD.innerHTML='';
+  [['Yoga',['Yoga']],['Games',['Games']],['Drawing',['Drawing']],['Cleanliness',['Cleanliness','Cleanliness Session']],['Gender',['Gender Session','Gender']]].forEach(([lbl,keys])=>{
+    const c=raw.filter(r=>keys.includes(r.subject)).length;
+    combD.innerHTML+=bbRAll(lbl,'all batches',c);
+  });
+
+  // Special
+  const specD=document.getElementById('ov-special-detail');specD.innerHTML='';
+  [['Padho Padhao',['Padho Padhao']],['Children Panchayat',['Children Panchayat']],['Animal Management',['Animal Management']],['PTM',['PTM']]].forEach(([lbl,keys])=>{
+    const c=raw.filter(r=>keys.includes(r.subject)).length;
+    specD.innerHTML+=bbRAll(lbl,'sessions',c);
+  });
+
+  // Charts
+  renderBarChart('ov-bar-chart',data.subjectCoverage||[]);
+  renderDonut('ov-donut-chart',sT,seT);
+
+  // Activities
+  const actEl=document.getElementById('ov-activities');actEl.innerHTML='';
+  (data.activities||[]).forEach(a=>{
+    const done=a.status==='Completed';
+    actEl.innerHTML+=`<div class="act-card"><div class="act-name">${a.name}</div><div class="act-nums"><span class="act-count" style="color:${done?'var(--green)':'var(--red)'}">${a.conducted}</span><span class="act-exp">/ ${a.expected}</span></div><span class="act-pill ${done?'done':'pending'}">${done?'✓ Done':'● Pending'}</span></div>`;
+  });
+
+  // Rooms
+  _ovRooms=buildRoomRows(data.rooms||[],raw);
+  filterRooms('all',document.querySelector('#panel-ov .chip.active'));
+}
+
+// ═══ RENDER YR VIEW ═══
+function renderYR(rows,room,months){
+  document.getElementById('yr-empty').style.display='none';
+  document.getElementById('yr-content').style.display='block';
+  document.getElementById('ip-room').textContent=room;
+  document.getElementById('ip-period').textContent=
+    months.length===1?mName(months[0]):`${mName(months[0])} – ${mName(months[months.length-1])} (${months.length} months)`;
+
+  const bsc=batchSubjectCounts(rows);
+
+  // Max for bar scaling
+  const maxSTEM=Math.max(1,...BATCHES.map(b=>countFor(bsc,b,STEM_S)));
+  const maxLing=Math.max(1,...BATCHES.map(b=>bsc[b]?.['Linguistic']||0));
+  const maxNK=Math.max(1,...BATCHES.map(b=>bsc[b]?.['Naitik Shiksha']||0));
+  const maxSEL=Math.max(1,...BATCHES.map(b=>bsc[b]?.['SEL Plans']||0));
+
+  // STEM
+  const stemEl=document.getElementById('ip-stem');stemEl.innerHTML='';
+  BATCHES.forEach(b=>{
+    const sc=bsc[b]||{};
+    const ev=sc['EVS']||0,ma=sc['Maths']||0,fn=(sc['FN']||0)+(sc['FLN']||0),sci=sc['Science']||0,tot=ev+ma+fn+sci;
+    stemEl.appendChild(indRow(b,`${b} STEM`,tot,`EVS:${ev} · Maths:${ma} · FN:${fn} · Sci:${sci}`,maxSTEM));
+  });
+
+  // Linguistic
+  const lingEl=document.getElementById('ip-ling');lingEl.innerHTML='';
+  BATCHES.forEach(b=>{
+    const val=bsc[b]?.['Linguistic']||0;
+    lingEl.appendChild(indRow(b,`${b} Linguistic`,val,'sessions',maxLing));
+  });
+
+  // Naitik
+  const nkEl=document.getElementById('ip-naitik');nkEl.innerHTML='';
+  BATCHES.forEach(b=>{
+    const val=bsc[b]?.['Naitik Shiksha']||0;
+    nkEl.appendChild(indRow(b,`${b} Naitik Shiksha`,val,'sessions',maxNK));
+  });
+
+  // SEL
+  const selEl=document.getElementById('ip-sel');selEl.innerHTML='';
+  BATCHES.forEach(b=>{
+    const val=bsc[b]?.['SEL Plans']||0;
+    selEl.appendChild(indRow(b,`${b} SEL Plans`,val,'sessions',maxSEL));
+  });
+
+  // Shared
+  const sharedEl=document.getElementById('ip-shared');sharedEl.innerHTML='';
+  [{lbl:'Yoga',keys:['Yoga']},{lbl:'Games',keys:['Games']},{lbl:'Drawing',keys:['Drawing']},{lbl:'Cleanliness',keys:['Cleanliness','Cleanliness Session']},{lbl:'Gender Session',keys:['Gender Session','Gender']},{lbl:'WHY',keys:['WHY']},{lbl:'General Awareness',keys:['GA','General Awareness']}].forEach(({lbl,keys})=>{
+    const cnt=rows.filter(r=>keys.includes(r.subject)).length;
+    sharedEl.appendChild(sharedCard(lbl,cnt,'var(--purple)'));
+  });
+
+  // Special
+  const specEl=document.getElementById('ip-special');specEl.innerHTML='';
+  [{lbl:'PTM',keys:['PTM']},{lbl:'Padho Padhao',keys:['Padho Padhao']},{lbl:'Children Panchayat',keys:['Children Panchayat']},{lbl:'Animal Management',keys:['Animal Management']},{lbl:'Library Session',keys:['Library Session']}].forEach(({lbl,keys})=>{
+    const cnt=rows.filter(r=>keys.includes(r.subject)).length;
+    specEl.appendChild(sharedCard(lbl,cnt,'var(--orange)'));
+  });
+
+  // Totals
+  let sT=0,seT=0;
+  BATCHES.forEach(b=>{sT+=countFor(bsc,b,STEM_S);seT+=countFor(bsc,b,SEPET_S);});
+  document.getElementById('ipt-total').textContent=rows.length;
+  document.getElementById('ipt-stem').textContent=sT;
+  document.getElementById('ipt-sepet').textContent=seT;
+
+  // Charts
+  renderTrend(rows,months);
+  renderYRDonut(sT,seT,rows.filter(r=>r.subject==='Linguistic').length);
+}
+
+// ═══ DOM HELPERS ═══
+function indRow(batch,label,val,sub,maxVal){
+  const bCl=BC[batch]||'all';
+  const pct=maxVal>0?Math.round((val/maxVal)*100):0;
+  const color=BAR_COL[bCl]||'var(--yellow)';
+  const d=document.createElement('div');
+  d.className='ind-row';
+  d.innerHTML=`
+    <span class="ind-batch-badge ${bCl}">${batch.slice(0,3).toUpperCase()}</span>
+    <span class="ind-label-text">${label} <span style="color:var(--text-muted);font-size:10px">${sub}</span></span>
+    <div class="ind-bar-wrap"><div class="ind-bar" style="width:${pct}%;background:${color}"></div></div>
+    <div class="ind-count ${val===0?'zero':''}">${val}</div>`;
+  return d;
+}
+
+function sharedCard(label,val,color){
+  const d=document.createElement('div');
+  d.className='shared-item';
+  d.innerHTML=`<div class="si-label">${label}</div><div class="si-val" style="color:${val>0?color:'var(--text-muted)'}">${val}</div>`;
+  return d;
+}
+
+function bbR(batch,sub,val){
+  return `<div class="bb-row"><div class="bb-left"><span class="bb-badge ${BC[batch]}">${batch}</span><span class="bb-desc">${sub}</span></div><span class="bb-val">${val}</span></div>`;
+}
+function bbRAll(lbl,sub,val){
+  return `<div class="bb-row"><div class="bb-left"><span class="bb-badge all">${lbl}</span><span class="bb-desc">${sub}</span></div><span class="bb-val">${val}</span></div>`;
+}
+
+function renderBars(elId,byBatch,total){
+  const el=document.getElementById(elId);el.innerHTML='';
+  BATCHES.forEach(b=>{
+    const c=byBatch[b]||0,pct=total>0?Math.round((c/total)*100):0;
+    el.innerHTML+=`<div class="bbr ${BC[b]}"><div class="bn ${BC[b]}">${b}</div><div class="bar-track"><div class="bar-fill" style="width:${pct}%"></div></div><div class="bc">${c}</div></div>`;
+  });
+}
+
+// ═══ DATA HELPERS ═══
+function batchSubjectCounts(rows){
+  const map={};
+  rows.forEach(r=>{
+    if(!map[r.batch])map[r.batch]={};
+    map[r.batch][r.subject]=(map[r.batch][r.subject]||0)+1;
+  });
+  return map;
+}
+function countFor(bsc,batch,set){
+  const sc=bsc[batch]||{};
+  return Object.entries(sc).filter(([s])=>set.has(s)).reduce((a,[,c])=>a+c,0);
+}
+function buildRoomRows(rooms,raw){
+  return rooms.map(r=>{
+    const rr=raw.filter(row=>row.yellow_room===r.name&&row.batch===r.batch);
+    return {...r,stemCount:rr.filter(row=>STEM_S.has(row.subject)).length,sepetCount:rr.filter(row=>SEPET_S.has(row.subject)).length,lingCount:rr.filter(row=>row.subject==='Linguistic').length,lateCount:rr.filter(row=>row.is_late).length};
+  });
+}
+function mName(ym){
+  const [y,m]=ym.split('-');
+  return new Date(+y,+m-1,1).toLocaleString('en-IN',{month:'long',year:'numeric'});
+}
+
+// ═══ CHARTS ═══
+function renderBarChart(id,coverage){
+  if(_charts[id])_charts[id].destroy();
+  const labels=coverage.map(s=>s.subject),values=coverage.map(s=>s.percent);
+  const colors=labels.map((_,i)=>`hsl(${(i*37)%360},65%,58%)`);
+  _charts[id]=new Chart(document.getElementById(id),{type:'bar',data:{labels,datasets:[{label:'Sessions',data:values,backgroundColor:colors,borderRadius:5,borderSkipped:false}]},options:{responsive:true,plugins:{legend:{display:false}},scales:{x:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'#64748B',font:{size:9}}},y:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'#64748B',font:{size:9}}}}}});
+}
+function renderDonut(id,stem,sepet){
+  if(_charts[id])_charts[id].destroy();
+  _charts[id]=new Chart(document.getElementById(id),{type:'doughnut',data:{labels:['STEM','SEPEt'],datasets:[{data:[stem,sepet],backgroundColor:['#F5C842','#A78BFA'],borderColor:['#161921'],borderWidth:3,hoverOffset:8}]},options:{responsive:true,cutout:'68%',plugins:{legend:{labels:{color:'#94A3B8',font:{size:10},padding:14}}}}});
+}
+function renderYRDonut(stem,sepet,ling){
+  const id='yr-donut';
+  if(_charts[id])_charts[id].destroy();
+  _charts[id]=new Chart(document.getElementById(id),{type:'doughnut',data:{labels:['STEM','SEPEt','Linguistic'],datasets:[{data:[stem,sepet,ling],backgroundColor:['#F5C842','#A78BFA','#60A5FA'],borderColor:['#161921'],borderWidth:3,hoverOffset:8}]},options:{responsive:true,cutout:'65%',plugins:{legend:{labels:{color:'#94A3B8',font:{size:10},padding:12}}}}});
+}
+function renderTrend(rows,months){
+  const id='yr-trend';
+  if(_charts[id])_charts[id].destroy();
+  const labels=months.map(m=>{const[y,mo]=m.split('-');return MONTHS_L[+mo-1]+'\''+y.slice(2);});
+  const stemD=[],sepetD=[],totD=[];
+  months.forEach(m=>{
+    const mr=rows.filter(r=>r.session_date?.slice(0,7)===m);
+    const bsc=batchSubjectCounts(mr);
+    let s=0,se=0;
+    BATCHES.forEach(b=>{s+=countFor(bsc,b,STEM_S);se+=countFor(bsc,b,SEPET_S);});
+    stemD.push(s);sepetD.push(se);totD.push(mr.length);
+  });
+  _charts[id]=new Chart(document.getElementById(id),{
+    type:'bar',
+    data:{labels,datasets:[
+      {label:'STEM',data:stemD,backgroundColor:'rgba(245,200,66,.75)',borderRadius:4},
+      {label:'SEPEt',data:sepetD,backgroundColor:'rgba(167,139,250,.75)',borderRadius:4},
+      {label:'Total',data:totD,type:'line',borderColor:'#3DD68C',borderWidth:2,pointRadius:3,pointBackgroundColor:'#3DD68C',tension:.4,fill:false,yAxisID:'y'}
+    ]},
+    options:{responsive:true,plugins:{legend:{labels:{color:'#94A3B8',font:{size:10},padding:10}}},scales:{x:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'#64748B',font:{size:9}}},y:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'#64748B',font:{size:9}},stacked:true}}}
+  });
+}
+
+// ═══ ROOM TABLE FILTER ═══
+function filterRooms(filter,el){
+  document.querySelectorAll('#panel-ov .chip').forEach(c=>c.classList.remove('active'));
+  if(el)el.classList.add('active');
+  const body=document.getElementById('ov-room-body');
+  let list=_ovRooms;
+  if(filter==='late')list=list.filter(r=>r.lateCount>0);
+  if(filter==='incomplete')list=list.filter(r=>r.completion<100);
+  if(!list.length){body.innerHTML=`<tr><td colspan="8" class="empty">No data</td></tr>`;return;}
+  body.innerHTML=list.map(r=>{
+    const pct=r.completion,fc=pct>=80?'':pct>=50?'mid':'low',bCl=BC[r.batch]||'';
+    const miss=r.missing?.length
+      ?r.missing.slice(0,5).map(m=>`<span class="mt-tag">${m}</span>`).join('')+(r.missing.length>5?`<span class="mt-tag">+${r.missing.length-5}</span>`:'')
+      :`<span style="color:var(--green);font-size:10px">✓ All done</span>`;
+    return `<tr class="${r.lateCount>0?'late-row':''}">
+      <td style="font-weight:600">${r.name}</td>
+      <td><span class="bb-badge ${bCl}">${r.batch}</span></td>
+      <td style="font-family:'DM Mono',monospace;color:var(--yellow)">${r.stemCount}</td>
+      <td style="font-family:'DM Mono',monospace;color:var(--purple)">${r.sepetCount}</td>
+      <td style="font-family:'DM Mono',monospace;color:var(--tf)">${r.lingCount}</td>
+      <td><div class="cb"><div class="cb-track"><div class="cb-fill ${fc}" style="width:${pct}%"></div></div><span class="cb-pct">${pct}%</span></div></td>
+      <td>${r.lateCount>0?`<span class="late-pill">⚠ ${r.lateCount}</span>`:'<span style="color:var(--text-muted);font-size:10px">—</span>'}</td>
+      <td>${miss}</td>
+    </tr>`;
+  }).join('');
+}
+
+// ═══ LOADING ═══
+function showLoad(v){document.getElementById('loading').classList.toggle('hidden',!v);}
 </script>
 
+<!--
+BACKEND: add this route to server.js after /dashboard/month
+
+app.get('/api/sessions/raw', async(req,res)=>{
+  try{
+    const month=req.query.month, toMonth=req.query.toMonth||month, room=req.query.room||'ALL';
+    const start=`${month}-01`, end=`${toMonth}-31`;
+    const result=await pool.query(`
+      SELECT id,educator_name,yellow_room,level,batch,subject,chapter_name,
+             index_code,lesson,session_date,slot_number,submitted_at,
+             is_late,delay_days,is_incomplete
+      FROM session_entries
+      WHERE session_date BETWEEN $1 AND $2
+      AND ($3='ALL' OR yellow_room=$3)
+      ORDER BY session_date ASC, slot_number ASC
+    `,[start,end,room]);
+    res.json(result.rows);
+  }catch(err){console.error(err);res.status(500).json({error:'Raw fetch error'});}
+});
+-->
 </body>
 </html>
