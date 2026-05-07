@@ -1,174 +1,243 @@
 <!DOCTYPE html>
 <html>
-
 <head>
-<title>Program Coordinator Dashboard</title>
-</head>
 
+  <title>LP MIS Dashboard</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <style>
+
+    body{
+      margin:0;
+      padding:20px;
+      background:#f5f7fb;
+      font-family:Arial;
+    }
+
+    .cards{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:20px;
+      margin-bottom:25px;
+    }
+
+    .card{
+      background:white;
+      padding:20px;
+      border-radius:12px;
+      box-shadow:0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    .card h3{
+      margin-top:0;
+    }
+
+    .card p{
+      font-size:32px;
+      font-weight:bold;
+    }
+
+    .section{
+      background:white;
+      padding:20px;
+      border-radius:12px;
+      margin-bottom:25px;
+    }
+
+    table{
+      width:100%;
+      border-collapse:collapse;
+    }
+
+    th,td{
+      border:1px solid #ddd;
+      padding:10px;
+    }
+
+    th{
+      background:#f3f4f6;
+    }
+
+  </style>
+
+</head>
 <body>
 
-<h2>📊 Daily MIS Monitoring</h2>
+<h1>LP MIS Dashboard</h1>
 
-<!-- FILTERS -->
-<label>Date:</label>
-<input type="date" id="filterDate">
-
-<label>Room Type:</label>
-<select id="filterType">
-<option value="">All</option>
-<option value="1-5 Years">1-5 Years</option>
-<option value="5-10 Years">5-10 Years</option>
-<option value="10-15 Years">10-15 Years</option>
-</select>
-
+<input type="month" id="monthFilter">
 <button onclick="loadDashboard()">Load</button>
 
 <br><br>
 
-<!-- SUMMARY -->
-<h3>Summary</h3>
-<p id="summary"></p>
+<div class="cards">
 
-<br>
+  <div class="card">
+    <h3>Total Sessions</h3>
+    <p id="totalSessions">0</p>
+  </div>
 
-<!-- TABLE -->
-<table border="1" id="dashboard">
+  <div class="card">
+    <h3>Late Entries</h3>
+    <p id="lateCount">0</p>
+  </div>
 
-<tr>
-<th>Yellow Room</th>
-<th>Date</th>
-<th>Sessions Logged</th>
-<th>Status</th>
-</tr>
+  <div class="card">
+    <h3>Incomplete Entries</h3>
+    <p id="incompleteCount">0</p>
+  </div>
 
-</table>
+  <div class="card">
+    <h3>Complete Rooms</h3>
+    <p id="completeRooms">0</p>
+  </div>
+
+</div>
+
+
+<div class="section">
+
+  <h2>Yellow Room Performance</h2>
+
+  <table>
+
+    <thead>
+      <tr>
+        <th>Room</th>
+        <th>Batch</th>
+        <th>Completion %</th>
+        <th>Missing</th>
+      </tr>
+    </thead>
+
+    <tbody id="roomTable"></tbody>
+
+  </table>
+
+</div>
+
+
+<div class="section">
+
+  <h2>Program Activities</h2>
+
+  <table>
+
+    <thead>
+      <tr>
+        <th>Activity</th>
+        <th>Expected</th>
+        <th>Conducted</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+
+    <tbody id="activityTable"></tbody>
+
+  </table>
+
+</div>
+
+
+<div class="section">
+  <h2>Subject Coverage</h2>
+  <canvas id="subjectChart"></canvas>
+</div>
+
 
 <script>
 
-// 🔥 SAME MAPPING USED IN MIS
-const roomTypeMapping = {
-"Abhay Nagar":"1-5 Years",
-"Bahadurpur":"1-5 Years",
-"Badi kalan":"1-5 Years",
-"Beniganj":"1-5 Years",
-"Bhadrukh":"1-5 Years",
-"Bhitauli Khurd":"1-5 Years",
-"Chinhat":"10-15 Years",
-"Garden Bay":"1-5 Years",
-"Gandhi Nagar":"1-5 Years",
-"Hans kheda":"1-5 Years",
-"Hardasi Kheda":"1-5 Years",
-"Hasanpur Khewali":"1-5 Years",
-"Hussainganj":"1-5 Years",
-"Ismailganj":"5-10 Years",
-"Jarhara":"1-5 Years",
-"Jodaura":"1-5 Years",
-"Jugguar":"1-5 Years",
-"Jyotishah Alampur":"1-5 Years",
-"Kalli Paschim":"1-5 Years",
-"Kashyap Nagar":"1-5 Years",
-"Kaudiyamau":"1-5 Years",
-"Khazoor Gaon":"1-5 Years",
-"Kumharan":"1-5 Years",
-"Kutubpur":"1-5 Years",
-"Laulai":"1-5 Years",
-"Macchli Mohal":"1-5 Years",
-"Mahmoodpur":"1-5 Years",
-"Malhaur":"10-15 Years",
-"Mannat":"1-5 Years",
-"Matiyari":"1-5 Years",
-"Meesa":"1-5 Years",
-"Mozzam Nagar":"1-5 Years",
-"Munshipulia":"10-15 Years",
-"Nanda Kheda":"1-5 Years",
-"Nat Kheda":"1-5 Years",
-"Noida Sec 122":"1-5 Years",
-"Noida Sec 17":"1-5 Years",
-"One world":"1-5 Years",
-"Pani Gaon":"1-5 Years",
-"Ram Das Hata":"1-5 Years",
-"Ram Nagar":"1-5 Years",
-"Roshanabad":"1-5 Years",
-"Sandauli":"1-5 Years",
-"Sikandar Nagar":"1-5 Years",
-"Sitarasoi":"1-5 Years",
-"Tindola":"1-5 Years",
-"Ujariyaon":"1-5 Years",
-"Vishundaspur":"1-5 Years"
-};
-
-// DEFAULT DATE
-document.getElementById("filterDate").value =
-new Date().toISOString().split("T")[0];
-
 async function loadDashboard(){
 
-const date = document.getElementById("filterDate").value;
-const selectedType = document.getElementById("filterType").value;
+  const month = document.getElementById('monthFilter').value;
 
-const res = await fetch(`/pc-dashboard-data?date=${date}`);
-const data = await res.json();
+  const res = await fetch(`/dashboard/month?month=${month}`);
 
-const table = document.getElementById("dashboard");
+  const data = await res.json();
 
-// RESET TABLE
-table.innerHTML = `
-<tr>
-<th>Yellow Room</th>
-<th>Date</th>
-<th>Sessions Logged</th>
-<th>Status</th>
-</tr>
-`;
+  document.getElementById('totalSessions').innerText = data.totalSessions;
+  document.getElementById('lateCount').innerText = data.lateCount;
+  document.getElementById('incompleteCount').innerText = data.incompleteCount;
+  document.getElementById('completeRooms').innerText = data.completeRooms;
 
-// SUMMARY COUNTERS
-let total = 0;
-let complete = 0;
-let partial = 0;
-let missing = 0;
 
-data.forEach(r => {
+  // ============================================================
+  // ROOM TABLE
+  // ============================================================
+  const tbody = document.getElementById('roomTable');
 
-const roomType = roomTypeMapping[r.yellow_room] || "";
+  tbody.innerHTML = '';
 
-// 🔥 FILTER LOGIC
-if(selectedType && roomType !== selectedType){
-return;
+  data.rooms.forEach(r=>{
+
+    tbody.innerHTML += `
+      <tr>
+        <td>${r.name}</td>
+        <td>${r.batch}</td>
+        <td>${r.completion}%</td>
+        <td>${r.missing.join(', ')}</td>
+      </tr>
+    `;
+
+  });
+
+
+  // ============================================================
+  // ACTIVITIES TABLE
+  // ============================================================
+  const act = document.getElementById('activityTable');
+
+  act.innerHTML = '';
+
+  data.activities.forEach(a=>{
+
+    act.innerHTML += `
+      <tr>
+        <td>${a.name}</td>
+        <td>${a.expected}</td>
+        <td>${a.conducted}</td>
+        <td>${a.status}</td>
+      </tr>
+    `;
+
+  });
+
+
+  // ============================================================
+  // CHART
+  // ============================================================
+  const labels = data.subjectCoverage.map(s=>s.subject);
+  const values = data.subjectCoverage.map(s=>s.percent);
+
+  const ctx = document.getElementById('subjectChart');
+
+  new Chart(ctx, {
+    type:'bar',
+    data:{
+      labels,
+      datasets:[{
+        label:'Subject Count',
+        data:values
+      }]
+    }
+  });
+
 }
 
-total++;
+window.onload = ()=>{
 
-if(r.status === "Complete") complete++;
-if(r.status === "Partial") partial++;
-if(r.status === "Missing") missing++;
+  const today = new Date();
 
-let row = table.insertRow();
+  const month = today.toISOString().slice(0,7);
 
-row.insertCell(0).innerText = r.yellow_room;
-row.insertCell(1).innerText = r.date;
-row.insertCell(2).innerText = r.sessions_logged;
+  document.getElementById('monthFilter').value = month;
 
-let statusCell = row.insertCell(3);
-statusCell.innerText = r.status;
+  loadDashboard();
 
-// COLOR
-if(r.status === "Missing") statusCell.style.color = "red";
-if(r.status === "Partial") statusCell.style.color = "orange";
-if(r.status === "Complete") statusCell.style.color = "green";
-
-});
-
-// UPDATE SUMMARY
-document.getElementById("summary").innerText =
-`Total: ${total} | Complete: ${complete} | Partial: ${partial} | Missing: ${missing}`;
-
-}
-
-// LOAD DEFAULT
-loadDashboard();
+};
 
 </script>
 
 </body>
-
 </html>
